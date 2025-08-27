@@ -23,12 +23,12 @@ class User(db.Model):
             "image": self.image,
             "country": self.country,
             "score": self.score
-            # do not serialize the password, its a security breach
+         
         }
     
 class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(db.ForeingKey('user.id'), nullable=False)
+    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
     destination: Mapped[str] = mapped_column(String(120))
     description: Mapped[str] = mapped_column(String(255))
     divisas_one: Mapped[str] = mapped_column(String(50))
@@ -60,7 +60,7 @@ class Chat(db.Model):
 
 class Message (db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    chat_id: Mapped[int] = mapped_column(db.ForeingKey('chat.id'), nullable=False)
+    chat_id: Mapped[int] = mapped_column(db.ForeignKey('chat.id'), nullable=False)
     content: Mapped[str] = mapped_column(String(500),nullable=False)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
 
@@ -75,8 +75,8 @@ class Message (db.Model):
     
 class FavoritesChats(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(db.ForeingKey('user.id'), nullable=False)
-    chat_id: Mapped[int] = mapped_column(db.ForeingKey('chat.id'), nullable=False)
+    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
+    chat_id: Mapped[int] = mapped_column(db.ForeignKey('chat.id'), nullable=False)
 
     def selize(self):
         return {
@@ -87,8 +87,8 @@ class FavoritesChats(db.Model):
     
 class FavoritesPost(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(db.ForeingKey('user.id'), nullable=False)
-    post_id: Mapped[int] = mapped_column(db.ForeingKey('post.id'), nullable=False)
+    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
+    post_id: Mapped[int] = mapped_column(db.ForeignKey('post.id'), nullable=False)
 
     def serialize(self):
         return{
