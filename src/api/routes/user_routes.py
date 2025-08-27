@@ -24,17 +24,30 @@ def get_user(id):
 def post_user():
 # temporal pendiente de cambio
     data =request.get_json()
+
     username= data.get("username")
     email= data.get("email")
     password= data.get("password") 
+    dni=data.get("dni") 
+    image=data.get("image") 
+    country=data.get("country") 
+    score=data.get("score") 
 
-    if not username or not email or not password:
-        return jsonify({"msg":"Faltan datos por rellenar"})
+    if not all([username, email, password, dni]):
+        return jsonify({"msg": "Missing data to be filled in"}), 400
     user_is_exist=db.session.execute(db.select(User).where(User.email==email)).scalar_one_or_none()
     if user_is_exist:
         return jsonify({"msg":"User already exists"}),400
 
-    new_user = User(username= username, email= email, is_active=True)
+    new_user = User(
+        username=username,
+        email=email,
+        dni=dni,
+        image=image,
+        country=country,
+        score=score,
+        is_active=True
+    )
     new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
