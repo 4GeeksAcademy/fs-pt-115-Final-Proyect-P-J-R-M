@@ -40,6 +40,19 @@ def post_user():
     db.session.commit()
     return jsonify({"msg":"User created"})
 
+@user_bp.route("/<int:id>", methods=["DELETE"])
+def delete_user(id):
+    user_id= id
+    user= db.session.get(User,int(user_id))
+    if not user :
+        return jsonify("Data not found"),404
+    
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"msg": "User successfully deleted"})
+
+
+# Login
 @user_bp.route("/login", methods=["POST"])
 def login_user():
     data = request.get_json()
