@@ -1,8 +1,10 @@
 from flask import Blueprint, request, jsonify
-from models import db, Chat, User, Post
+from api.models import db, Chat, User, Post
+from flask_cors import CORS
 
 chat_bp = Blueprint('chat_bp', __name__, url_prefix="/chats")
 
+CORS(chat_bp)
 
 @chat_bp.route('/<int:post_id>/<int:user_id>', methods=['GET'])
 def get_chats(post_id, user_id):
