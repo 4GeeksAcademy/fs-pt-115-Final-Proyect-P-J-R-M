@@ -11,11 +11,11 @@ export const NavBar = () => {
     <nav className="navbar">
       <div className="navbar-logo">
         <img src={logoUrl} alt="Hand To Hand Logo" className="logo-img" />
-        HAND TO HAND
+        Hand to Hand
       </div>
       <div className="navbar-buttons">
-        <button className="btn btn-login">Sign in</button>
-        <button className="btn btn-register">Register</button>
+        <button className="btn btn-login"> Login </button>
+        <button className="btn btn-register"> Sign Up </button>
       </div>
     </nav>
   );

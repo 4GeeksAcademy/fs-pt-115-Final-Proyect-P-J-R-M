@@ -3,21 +3,21 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  background-color: #E2D4B7; 
+  background-color: #E2D4B7;
+  letter-spacing: 1px;
+  border-bottom: solid 2px #4a6741;
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.5rem;   
-  font-weight: 700;    
-  text-transform: uppercase; 
+  gap: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 .logo-img {
-  width: 3rem;
-  height: 3rem;
+  width: 4rem;
   display: block;
   background-color: #555555; 
   padding: 3px;
