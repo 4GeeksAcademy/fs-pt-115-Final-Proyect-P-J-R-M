@@ -6,26 +6,33 @@
   background-color: #E2D4B7;
   letter-spacing: 1px;
   border-bottom: solid 2px #4a6741;
+  overflow: visible;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;  
+  gap: 0.5rem;        
+  text-decoration: none; 
+  color: inherit;        
 }
 
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 .logo-img {
-  width: 4rem;
+  width: 7.5rem;
   display: block;
-  background-color: #555555; 
-  padding: 3px;
-  border-radius: 8px;
+  margin-top: 0.7rem;
+  max-height: 40px;
 }
 
 
-/* Botón neutro (Entrar) */
 .btn-login {
   background-color: #ffffff;
   color: #333;
@@ -50,8 +57,8 @@
   gap: 12px; 
 }
 
-/* Botón principal (Registrarse) */
-.btn-register {
+
+.btn-signup {
   background: linear-gradient(135deg, #4a6741, #5c7a52); 
   color: #ffffff;
   border: none;
@@ -63,7 +70,7 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
-.btn-register:hover {
+.btn-signup:hover {
   background: linear-gradient(135deg, #3a5133, #4d6242); 
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -72,7 +79,7 @@
 /* Pequeña reducción al pulsar */
 /* Sombra desaparece al clic */
 .btn-login:active,
-.btn-register:active {
+.btn-signup:active {
   transform: scale(0.97); 
   box-shadow: none;        
 }
