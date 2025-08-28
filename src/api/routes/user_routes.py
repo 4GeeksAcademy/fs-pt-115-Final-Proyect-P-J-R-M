@@ -7,6 +7,7 @@ user_bp = Blueprint("users", __name__, url_prefix="/users")
 
 CORS(user_bp)
 
+
 @user_bp.route("/", methods=["GET"])
 def get_users():
     users = User.query.all()
@@ -50,7 +51,7 @@ def post_user():
         password=password,
         country=country,
         score=score,
-        
+
     )
     db.session.add(new_user)
     db.session.commit()
@@ -66,6 +67,38 @@ def delete_user(id):
     db.session.delete(user)
     db.session.commit()
     return jsonify({"msg": "User successfully deleted"})
+
+
+@user_bp.route("/<int:id>", methods=["PATCH"])
+def update_user(id):
+    user = db.session.get(User, id)
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+    data = request.get_json()
+
+    username = data.get("username")
+    # email = data.get("email")
+    password = data.get("password")
+    # dni = data.get("dni")
+    image = data.get("image")
+    country = data.get("country")
+    score = data.get("score")
+
+    if username:
+        user.username = username
+    if password:
+        user.password = password
+    if image is not None:
+        user.image = image
+    if country:
+        user.country = country
+    if score:
+        user.score = score
+
+    db.session.commit()
+
+    return jsonify({"msg": "User updated successfully", "user": user.serialize()}), 200
 
 
 # Login
