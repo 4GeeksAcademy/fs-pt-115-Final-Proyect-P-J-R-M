@@ -39,7 +39,7 @@ def create_chat():
     user2 = User.query.get(user_two)
     if not user1 or not user2:
         return jsonify({'msg': 'One or both users not found'}), 400
-    # comprobar que ya tengan un chat en marcha ???
+    
     exist_chat = Chat.query.filter(
         ((Chat.user_one == user_one) & (Chat.user_two == user_two) |
          (Chat.user_one == user_two) & (Chat.user_two == user_one)) &
@@ -48,7 +48,7 @@ def create_chat():
 
     if exist_chat:
         return jsonify({'msg': 'Chat already exists'}), 400
-    # -----------
+    
     new_chat = Chat(
         user_one=user_one,
         user_two=user_two,
@@ -58,3 +58,14 @@ def create_chat():
     db.session.commit()
 
     return jsonify(new_chat.serialize()), 200
+
+@chat_bp.route("/<int:chat_for_id>", methods=["DELETE"])
+def delete_post(chat_for_id):
+    chat = Chat.query.get(chat_for_id)
+
+    if not chat:
+        return jsonify({"msg": "Chat not found"}), 400
+    db.session.delete(chat)
+    db.session.commit()
+
+    return jsonify({"msg": "Chat deleted successfully"}), 200

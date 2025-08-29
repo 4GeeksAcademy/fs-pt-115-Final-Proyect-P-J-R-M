@@ -46,3 +46,14 @@ def create_message():
     db.session.commit()
 
     return jsonify(new_message.serialize()), 200
+
+@message_bp.route("/<int:message_id>", methods=["DELETE"])
+def delete_post(message_id):
+    chat = Chat.query.get(message_id)
+
+    if not chat:
+        return jsonify({"msg": "Chat not found"}), 400
+    db.session.delete(chat)
+    db.session.commit()
+
+    return jsonify({"msg": "Chat deleted successfully"}), 200
