@@ -2,19 +2,19 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
   background-color: #E2D4B7;
   letter-spacing: 1px;
   border-bottom: solid 2px #4a6741;
   overflow: visible;
+  max-height: 5rem;
 }
 
 .logo-link {
   display: flex;
-  align-items: center;  
-  gap: 0.5rem;        
+  align-items: center;
+  gap: 2rem;
   text-decoration: none; 
-  color: inherit;        
+  color: inherit;
 }
 
 .navbar-logo {
@@ -23,13 +23,15 @@
   gap: 1rem;
   font-size: 1.5rem;
   font-weight: 700;
+  margin-left: 3rem;
 }
 
 .logo-img {
-  width: 7.5rem;
-  display: block;
-  margin-top: 0.7rem;
-  max-height: 40px;
+  width: 4rem;
+  height: 4rem;
+  background-color: #4d6242;
+  border: #333 solid 1px;
+  border-radius: 10px;
 }
 
 
@@ -38,7 +40,7 @@
   color: #333;
   border: 1px solid #ddd;
   padding: 8px 18px;
-  border-radius: 8px;           
+  border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
@@ -47,14 +49,15 @@
 
 .btn-login:hover {
   background-color: #f0f0f0;
-  transform: translateY(-1px);  
+  transform: translateY(-1px);
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 /* Espacio entre botones */
 .navbar-buttons {
   display: flex;
-  gap: 12px; 
+  gap: 1rem;
+  margin-right: 2rem;
 }
 
 
@@ -76,10 +79,10 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* Pequeña reducción al pulsar */
-/* Sombra desaparece al clic */
+/* Pequeña reducción al pulsar /
+/ Sombra desaparece al clic */
 .btn-login:active,
 .btn-signup:active {
   transform: scale(0.97); 
-  box-shadow: none;        
+  box-shadow: none;
 }
