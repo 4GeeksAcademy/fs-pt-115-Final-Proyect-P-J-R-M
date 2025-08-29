@@ -54,3 +54,24 @@ def delete_post(post_id):
     db.session.commit()
 
     return jsonify({"msg": "Post deleted successfully"}), 200
+
+@post_bp.route("/<int:post_id>", methods=["PATCH"])
+def update_post(post_id):
+    post = Post.query.get(post_id)
+    if not post:
+        return jsonify({"msg": "Post not found"}), 404
+
+    data = request.get_json()
+
+    if "destination" in data:
+        post.destination=data ["destination"]
+    if "description" in data:
+        post.destination=data["destination"]
+    if "divisas_one" in data:
+        post.divisas_one = data["divisas_one"]
+    if "divisas_two" in data:
+        post.divisas_two = data["divisas_two"]  
+
+    db.session.commit()
+    return jsonify(post.serializer()),200
+
