@@ -9,7 +9,7 @@ CORS(post_bp)
 
 @post_bp.route("/", methods=["GET"])
 @jwt_required()
-def get_books():
+def get_post():
     posts= Post.query.all()
     return jsonify ([p.serialize()for p in  posts]),200
 
