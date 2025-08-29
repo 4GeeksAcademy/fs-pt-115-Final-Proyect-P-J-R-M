@@ -1,8 +1,26 @@
+from typing import List
+from unittest.mock import Base
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Boolean, ForeignKey,Column,Table
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
+
+favorites_chats = Table(
+    "favorites_chats",
+    db.Model.metadata,
+    Column("user_id", ForeignKey("user.id"), primary_key=True),
+    Column("chat_id", ForeignKey("chat.id"), primary_key=True),
+)
+
+favorites_post = Table(
+    "favorites_post",
+    db.Model.metadata,
+    Column("user_id", ForeignKey("user.id"), primary_key=True),
+    Column("post_id", ForeignKey("post.id"), primary_key=True),
+)
+
+
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -13,6 +31,11 @@ class User(db.Model):
     image: Mapped[str] = mapped_column(String(255))
     country: Mapped[str] = mapped_column(String(120))
     score: Mapped[int] = mapped_column(String(20))
+
+    fav_chats: Mapped[List['Chat']] = relationship (secondary = favorites_chats )
+    fav_post: Mapped[list['Post']] = relationship ( secondary = favorites_post)
+
+
 
     def serialize(self):
         return {
@@ -73,29 +96,8 @@ class Message (db.Model):
 
         }
     
-class FavoritesChats(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
-    chat_id: Mapped[int] = mapped_column(db.ForeignKey('chat.id'), nullable=False)
 
-    def selize(self):
-        return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "chat_id": self.chat_id
-        }
-    
-class FavoritesPost(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
-    post_id: Mapped[int] = mapped_column(db.ForeignKey('post.id'), nullable=False)
 
-    def serialize(self):
-        return{
-            "id": self.id,
-            "user_id": self.user_id,
-            "post_id": self.post_id
-        }
     
 
 
