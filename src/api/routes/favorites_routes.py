@@ -1,15 +1,17 @@
 from flask import Blueprint, jsonify,request 
 from flask_cors import CORS
 from api.models import  User, Post, Chat , db
-
+from flask_jwt_extended import  get_jwt_identity, jwt_required
 favorites_bp=Blueprint("favorite",__name__, url_prefix="/favorites")
 
 
 CORS(favorites_bp)
 
-@favorites_bp.route('/<int:user_id>', methods=['GET'])
-def get_user_favorites(user_id):
-    user = User.query.get(user_id)
+@favorites_bp.route('/', methods=['GET'])
+@jwt_required()
+def get_user_favorites():
+    user_id=get_jwt_identity()
+    user = User.query.get(int(user_id))
 
     if not user:
         return jsonify({"error": "User not found"}), 400
@@ -22,13 +24,14 @@ def get_user_favorites(user_id):
 
 #post
 @favorites_bp.route('/post', methods=['POST'])
+@jwt_required()
 def add_favorite_post():
     data = request.get_json()
-    user_id = data.get("user_id")
+    user_id=get_jwt_identity()
     post_id= data.get("post_id")
 
-    user = User.query.get(user_id)
-    post =Post.query.get(post_id)
+    user = User.query.get(int(user_id))
+    post = Post.query.get(post_id)
 
     if not user or not post:
         return jsonify({"error":"User or Post not found"}),400
@@ -39,13 +42,16 @@ def add_favorite_post():
     return jsonify({"message": "Post added to favorites"}), 200
 
 @favorites_bp.route('/post', methods=['DELETE'])
+@jwt_required()
 def remove_favorite_post():
     data = request.get_json()
-    user_id = data.get("user_id")
-    post_id = data.get("post_id")
+    user_id=get_jwt_identity()
+    post_id= data.get("post_id")
 
-    user = User.query.get(user_id)
+    user = User.query.get(int(user_id))
     post = Post.query.get(post_id)
+
+    
 
     if not user or not post:
         return jsonify({"error": "User or Post not found"}), 404
@@ -58,12 +64,13 @@ def remove_favorite_post():
 
 #chat
 @favorites_bp.route('/chat', methods=['POST'])
+@jwt_required()
 def add_favorite_chat():
     data = request.get_json()
-    user_id = data.get("user_id")
+    user_id=get_jwt_identity()
     chat_id = data.get("chat_id")
 
-    user = User.query.get(user_id)
+    user = User.query.get(int(user_id))
     chat = Chat.query.get(chat_id)
 
     if not user or not chat:
@@ -76,12 +83,13 @@ def add_favorite_chat():
     return jsonify({"message": "Chat added to favorites"}), 200
 
 @favorites_bp.route('/chat', methods=['DELETE'])
+@jwt_required()
 def remove_favorite_chat():
     data = request.get_json()
-    user_id = data.get("user_id")
+    user_id=get_jwt_identity()
     chat_id = data.get("chat_id")
 
-    user = User.query.get(user_id)
+    user = User.query.get(int(user_id))
     chat = Chat.query.get(chat_id)
 
     if not user or not chat:
