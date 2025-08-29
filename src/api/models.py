@@ -1,7 +1,7 @@
 from typing import List
 from unittest.mock import Base
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, ForeignKey,Column,Table
+from sqlalchemy import String, Boolean, ForeignKey,Column,Table, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_bcrypt import Bcrypt
 from flask_bcrypt import generate_password_hash, check_password_hash
@@ -33,7 +33,7 @@ class User(db.Model):
     dni: Mapped [str] = mapped_column(String(120), unique=True, nullable=False)
     image: Mapped[str] = mapped_column(String(255))
     country: Mapped[str] = mapped_column(String(120))
-    score: Mapped[int] = mapped_column()
+    score: Mapped[int] = mapped_column(Integer)
 
     fav_chats: Mapped[List['Chat']] = relationship (secondary = favorites_chats )
     fav_post: Mapped[List['Post']] = relationship ( secondary = favorites_post)
