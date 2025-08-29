@@ -55,6 +55,7 @@ def post_user():
 
     )
     new_user.set_password(password)
+    db.session.add(new_user)
     db.session.commit()
     return jsonify({"msg": "User created"})
 

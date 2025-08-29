@@ -51,7 +51,6 @@ def remove_favorite_post():
     user = User.query.get(int(user_id))
     post = Post.query.get(post_id)
 
-    
 
     if not user or not post:
         return jsonify({"error": "User or Post not found"}), 404
