@@ -6,14 +6,16 @@ message_bp = Blueprint('message_bp', __name__, url_prefix="/messages")
 
 CORS(message_bp)
 
+
 @message_bp.route('/<int:chat_for_id>', methods=['GET'])
 def get_messages(chat_for_id):
-    messages = Message.query.filter( Message.chat_id == chat_for_id).all()
+    messages = Message.query.filter(Message.chat_id == chat_for_id).all()
 
     if not messages:
         return jsonify({"msg": "No messages found for this chat"}), 400
 
     return jsonify([msg.serialize() for msg in messages]), 200
+
 
 @message_bp.route('/', methods=['POST'])
 def create_message():
@@ -32,10 +34,10 @@ def create_message():
     user = User.query.get(user_id)
     if not user:
         return jsonify({'msg': 'User not found'}), 400
-    #intento alerta por paseate de texto
+    # intento alerta por paseate de texto
     if len(content) > 500:
         return jsonify({'msg': 'Content exceeds 500 characters limit'}), 400
-    
+
     new_message = Message(
         chat_id=chat_id,
         user_id=user_id,
@@ -46,6 +48,7 @@ def create_message():
     db.session.commit()
 
     return jsonify(new_message.serialize()), 200
+
 
 @message_bp.route("/<int:message_id>", methods=["DELETE"])
 def delete_post(message_id):

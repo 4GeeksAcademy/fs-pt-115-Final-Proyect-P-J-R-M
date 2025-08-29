@@ -33,7 +33,7 @@ class User(db.Model):
     score: Mapped[int] = mapped_column(String(20))
 
     fav_chats: Mapped[List['Chat']] = relationship (secondary = favorites_chats )
-    fav_post: Mapped[list['Post']] = relationship ( secondary = favorites_post)
+    fav_post: Mapped[List['Post']] = relationship ( secondary = favorites_post)
 
 
 
