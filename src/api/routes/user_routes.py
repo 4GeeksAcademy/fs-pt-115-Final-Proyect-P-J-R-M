@@ -49,7 +49,6 @@ def post_user():
         email=email,
         dni=dni,
         image=image,
-        password=password,
         country=country,
         score=score,
 
@@ -66,7 +65,7 @@ def delete_user():
     user_id = get_jwt_identity()
     user = db.session.get(User, int(user_id))
     if not user:
-        return jsonify("Data not found"), 400
+        return jsonify("User not found"), 400
     db.session.delete(user)
     db.session.commit()
     return jsonify({"msg": "User successfully deleted"})
@@ -96,9 +95,9 @@ def update_user():
         user.set_password(password)
     if image is not None:
         user.image = image
-    if country:
+    if country is not None:
         user.country = country
-    if score:
+    if score is not None:
         user.score = score
 
     db.session.commit()
@@ -121,10 +120,8 @@ def login_user():
 
     if not user or not user.check_password(password):
         return jsonify({"msg": "Incorrect email or password"}), 401
+
+    token = create_access_token(identity=str(user.id))
+    return jsonify({"msg": "ok", "token": token}), 200
     
-    if user.check_password(password):
-        token= create_access_token(identity= str(user.id))
-        return jsonify({"msg": "ok", "token": token}),200
     
-    else :
-        return jsonify({"msg": "Missing data to be filled in"}),400
