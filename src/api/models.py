@@ -1,10 +1,13 @@
 from typing import List
 from unittest.mock import Base
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, ForeignKey,Column,Table
+from sqlalchemy import String, Boolean, ForeignKey,Column,Table, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from flask_bcrypt import Bcrypt
+
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
 
 favorites_chats = Table(
     "favorites_chats",
@@ -30,14 +33,29 @@ class User(db.Model):
     dni: Mapped [str] = mapped_column(String(120), unique=True, nullable=False)
     image: Mapped[str] = mapped_column(String(255))
     country: Mapped[str] = mapped_column(String(120))
-    score: Mapped[int] = mapped_column(String(20))
+    score: Mapped[int] = mapped_column(Integer)
 
     fav_chats: Mapped[List['Chat']] = relationship (secondary = favorites_chats )
-    fav_post: Mapped[list['Post']] = relationship ( secondary = favorites_post)
+    fav_post: Mapped[List['Post']] = relationship ( secondary = favorites_post)
 
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
+    def check_password(self, password):
+        return bcrypt.check_password_hash(self.password, password)
 
     def serialize(self):
+        try:
+            f_chats = [c.serialize() for c in self.fav_chats]
+        except Exception:
+            f_chats = None
+
+        try:
+            f_post = [p.serialize() for p in self.fav_post]
+        except Exception:
+            f_post = None    
+
+
         return {
             "id": self.id,
             "username": self.username,
@@ -45,8 +63,9 @@ class User(db.Model):
             "dni": self.dni,
             "image": self.image,
             "country": self.country,
-            "score": self.score
-         
+            "score": self.score,
+            "favorite_chats": f_chats,
+            "favorite_post": f_post
         }
     
 class Post(db.Model):
@@ -84,7 +103,7 @@ class Chat(db.Model):
 class Message (db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     chat_id: Mapped[int] = mapped_column(db.ForeignKey('chat.id'), nullable=False)
-    content: Mapped[str] = mapped_column(String(500),nullable=False)
+    content: Mapped[str] = mapped_column(String(255),nullable=False)
     user_id: Mapped[int] = mapped_column(db.ForeignKey('user.id'), nullable=False)
 
     def serialize(self):

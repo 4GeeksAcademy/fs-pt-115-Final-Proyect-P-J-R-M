@@ -1,17 +1,19 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Chat, User, Post
 from flask_cors import CORS
-
+from flask_jwt_extended import  get_jwt_identity, jwt_required
 chat_bp = Blueprint('chat_bp', __name__, url_prefix="/chats")
 
 CORS(chat_bp)
 
-@chat_bp.route('/<int:post_id>/<int:user_id>', methods=['GET'])
-def get_chats(post_id, user_id):
-    user = user_id
+
+@chat_bp.route('/<int:post_id>', methods=['GET'])
+@jwt_required()
+def get_chats(post_id):
+    user_id = get_jwt_identity()
     post = post_id
     chats = Chat.query.filter(
-        ((Chat.user_one == user) | (Chat.user_two == user)) & (Chat.post_id == post)
+        (Chat.user_one == int(user_id)) | (Chat.user_two == int(user_id)) & (Chat.post_id == post)
     ).all()
 
     if not chats:
@@ -21,6 +23,7 @@ def get_chats(post_id, user_id):
 
 
 @chat_bp.route('/', methods=['POST'])
+@jwt_required()
 def create_chat():
     data = request.get_json()
 
@@ -39,7 +42,7 @@ def create_chat():
     user2 = User.query.get(user_two)
     if not user1 or not user2:
         return jsonify({'msg': 'One or both users not found'}), 400
-    # comprobar que ya tengan un chat en marcha ???
+
     exist_chat = Chat.query.filter(
         ((Chat.user_one == user_one) & (Chat.user_two == user_two) |
          (Chat.user_one == user_two) & (Chat.user_two == user_one)) &
@@ -48,7 +51,7 @@ def create_chat():
 
     if exist_chat:
         return jsonify({'msg': 'Chat already exists'}), 400
-    # -----------
+
     new_chat = Chat(
         user_one=user_one,
         user_two=user_two,
@@ -58,3 +61,16 @@ def create_chat():
     db.session.commit()
 
     return jsonify(new_chat.serialize()), 200
+
+
+@chat_bp.route("/<int:chat_for_id>", methods=["DELETE"])
+@jwt_required()
+def delete_post(chat_for_id):
+    chat = Chat.query.get(chat_for_id)
+
+    if not chat:
+        return jsonify({"msg": "Chat not found"}), 400
+    db.session.delete(chat)
+    db.session.commit()
+
+    return jsonify({"msg": "Chat deleted successfully"}), 200
