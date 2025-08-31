@@ -51,7 +51,7 @@ class User(db.Model):
             f_chats = None
 
         try:
-            f_post = [p.serialize() for p in self.f_post]
+            f_post = [p.serialize() for p in self.fav_post]
         except Exception:
             f_post = None    
 
