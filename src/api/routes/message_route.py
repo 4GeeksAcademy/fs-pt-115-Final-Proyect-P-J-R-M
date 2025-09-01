@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from api.models import db, Message, Chat, User
 from flask_cors import CORS
-from flask_jwt_extended import  get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required
 message_bp = Blueprint('message_bp', __name__, url_prefix="/messages")
 
 CORS(message_bp)
@@ -33,14 +33,13 @@ def create_message():
     if not chat:
         return jsonify({'msg': 'Chat not found'}), 400
 
-    
     # intento alerta por paseate de texto
     if len(content) > 255:
         return jsonify({'msg': 'Content exceeds 255 characters limit'}), 400
 
     new_message = Message(
         chat_id=chat_id,
-        user_id= int(user_id),
+        user_id=int(user_id),
         content=content
     )
 
@@ -53,11 +52,12 @@ def create_message():
 @message_bp.route("/<int:message_id>", methods=["DELETE"])
 @jwt_required()
 def delete_post(message_id):
-    chat = Chat.query.get(message_id)
+    message = Message.query.get(message_id)
 
-    if not chat:
-        return jsonify({"msg": "Chat not found"}), 400
-    db.session.delete(chat)
+    if not message:
+        return jsonify({"msg": "Message not found"}), 400
+
+    db.session.delete(message)
     db.session.commit()
 
-    return jsonify({"msg": "Chat deleted successfully"}), 200
+    return jsonify({"msg": "Message deleted successfully"}), 200
