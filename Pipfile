@@ -19,8 +19,8 @@ typing-extensions = "*"
 wtforms = "==3.1.2"
 sqlalchemy = "*"
 flask-migrate = "*"
-flask-jwt-extended = "*"
 flask-bcrypt = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.13"
