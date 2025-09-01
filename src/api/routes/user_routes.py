@@ -124,4 +124,4 @@ def login_user():
     token = create_access_token(identity=str(user.id))
     return jsonify({"msg": "ok", "token": token}), 200
     
-    
+
