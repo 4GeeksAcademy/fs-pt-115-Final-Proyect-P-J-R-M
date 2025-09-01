@@ -20,8 +20,8 @@ wtforms = "==3.1.2"
 sqlalchemy = "*"
 alembic = "*"
 flask-migrate = "*"
-flask-jwt-extended = "*"
 flask-bcrypt = "*"
+flask-jwt-extended = "*"
 
 [requires]
 python_version = "3.13"
