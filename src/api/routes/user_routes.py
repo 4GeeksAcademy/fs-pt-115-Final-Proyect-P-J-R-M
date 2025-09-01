@@ -7,6 +7,7 @@ user_bp = Blueprint("users", __name__, url_prefix="/users")
 
 CORS(user_bp)
 
+
 @user_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_users():
@@ -51,8 +52,8 @@ def post_user():
         image=image,
         country=country,
         score=score,
-
     )
+    
     new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
@@ -123,5 +124,3 @@ def login_user():
 
     token = create_access_token(identity=str(user.id))
     return jsonify({"msg": "ok", "token": token}), 200
-    
-
