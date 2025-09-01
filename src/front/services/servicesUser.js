@@ -35,6 +35,22 @@ export const getUserProfile = async () => {
   return data;
 };
 
+export const postUser = async (userData) => {
+  const response = await fetch(`${urlUser}/api/users`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify(userData),
+  });
+
+  if (!response.ok) {
+    console.error("Error al crear usuario");
+    return null;
+  }
+
+  const data = await response.json();
+  return data;
+};
+
 export const patchUser = async (id, partialData) => {
   const response = await fetch(`${urlUser}/api/users/${id}`, {
     method: "PATCH",
@@ -69,4 +85,3 @@ export const deleteUser = async (id) => {
     return true;
   }
 };
-
