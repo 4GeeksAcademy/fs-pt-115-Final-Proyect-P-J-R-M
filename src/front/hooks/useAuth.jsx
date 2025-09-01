@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (user) => {
         setLoading(true)
         console.log(user);
-        
+
         try {
             const response = await fetch(`${urlApi}/api/users/login`, {
                 method: "POST",
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify(user),
             });
             console.log(response);
-            
+
 
             if (!response.ok) {
                 const responseError = await response.json()

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { postUser } from "../../services/servicesUser";
+import { postUser } from "../../../services/servicesUser";
 
 export function SignUp() {
   const [userData, setUserData] = useState({
@@ -25,7 +25,7 @@ export function SignUp() {
       return;
     }
 
-    try { 
+    try {
       const responseApi = await postUser({
         username: userData.username,
         email: userData.email,

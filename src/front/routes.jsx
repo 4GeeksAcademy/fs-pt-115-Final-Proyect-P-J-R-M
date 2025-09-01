@@ -10,7 +10,8 @@ import { PublicLayout } from "./layout/Public.layout";
 import { AuthLayout } from "./layout/Auth.layout";
 import { UserLayout } from "./layout/User.layout";
 import { Home } from "./pages/Home";
-
+import { SignUp } from "./pages/auth/singup/SignUp"
+import { LogIn } from "./pages/auth/login/LogIn"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
