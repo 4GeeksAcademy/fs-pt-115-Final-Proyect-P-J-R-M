@@ -1,26 +1,27 @@
 from flask import Blueprint, jsonify, request
 from flask_cors import CORS
 from api.models import User, db
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 user_bp = Blueprint("users", __name__, url_prefix="/users")
 
-
 CORS(user_bp)
 
-
 @user_bp.route("/", methods=["GET"])
+@jwt_required()
 def get_users():
     users = User.query.all()
     return jsonify([user.serialize()for user in users])
 
 
-@user_bp.route("/profile/<int:id>", methods=["GET"])
-def get_user(id):
-    user_id = id
+@user_bp.route("/profile", methods=["GET"])
+@jwt_required()
+def get_user():
+    user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
     if user:
         return jsonify(user.serialize()), 200
-    return jsonify({"msg": "User not found"}), 404
+    return jsonify({"msg": "User not found"}), 400
 
 
 @user_bp.route("/", methods=["POST"])
@@ -48,32 +49,35 @@ def post_user():
         email=email,
         dni=dni,
         image=image,
-        password=password,
         country=country,
         score=score,
 
     )
+    new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"msg": "User created"})
 
 
-@user_bp.route("/<int:id>", methods=["DELETE"])
-def delete_user(id):
-    user_id = id
+@user_bp.route("/", methods=["DELETE"])
+@jwt_required()
+def delete_user():
+    user_id = get_jwt_identity()
     user = db.session.get(User, int(user_id))
     if not user:
-        return jsonify("Data not found"), 404
+        return jsonify("User not found"), 400
     db.session.delete(user)
     db.session.commit()
     return jsonify({"msg": "User successfully deleted"})
 
 
-@user_bp.route("/<int:id>", methods=["PATCH"])
-def update_user(id):
-    user = db.session.get(User, id)
+@user_bp.route("/", methods=["PATCH"])
+@jwt_required()
+def update_user():
+    user_id = get_jwt_identity()
+    user = db.session.get(User, int(user_id))
     if not user:
-        return jsonify({"msg": "User not found"}), 404
+        return jsonify({"msg": "User not found"}), 400
 
     data = request.get_json()
 
@@ -88,12 +92,12 @@ def update_user(id):
     if username:
         user.username = username
     if password:
-        user.password = password
+        user.set_password(password)
     if image is not None:
         user.image = image
-    if country:
+    if country is not None:
         user.country = country
-    if score:
+    if score is not None:
         user.score = score
 
     db.session.commit()
@@ -117,4 +121,7 @@ def login_user():
     if not user or not user.check_password(password):
         return jsonify({"msg": "Incorrect email or password"}), 401
 
-    return jsonify({"msg": "Login successful", "user": user.serialize()}), 200
+    token = create_access_token(identity=str(user.id))
+    return jsonify({"msg": "ok", "token": token}), 200
+    
+    
