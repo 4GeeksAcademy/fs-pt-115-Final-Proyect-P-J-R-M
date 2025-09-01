@@ -51,8 +51,8 @@ export const postUser = async (userData) => {
   return data;
 };
 
-export const patchUser = async (id, partialData) => {
-  const response = await fetch(`${urlUser}/api/users/${id}`, {
+export const patchUser = async (partialData) => {
+  const response = await fetch(`${urlUser}/api/users`, {
     method: "PATCH",
     headers: authHeaders(),
     body: JSON.stringify(partialData),
@@ -67,8 +67,8 @@ export const patchUser = async (id, partialData) => {
   return data;
 };
 
-export const deleteUser = async (id) => {
-  const response = await fetch(`${urlUser}/api/users/${id}`, {
+export const deleteUser = async () => {
+  const response = await fetch(`${urlUser}/api/users`, {
     method: "DELETE",
     headers: authHeaders(),
   });
@@ -84,4 +84,25 @@ export const deleteUser = async (id) => {
   } catch {
     return true;
   }
+};
+
+// Login
+export const loginUser = async (UserData) => {
+  const response = await fetch(`${urlUser}/api/users/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(UserData),
+  });
+
+  if (!response.ok) {
+    console.error("Error al iniciar sesión");
+    return null;
+  }
+
+  const data = await response.json();
+
+  if (data.token) {
+    localStorage.setItem("token", data.token);
+  }
+  return data;
 };
