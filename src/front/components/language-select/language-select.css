@@ -1,0 +1,56 @@
+.langsel { 
+  position: relative; 
+  display: inline-flex; 
+}
+
+.langsel-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #E2D4B7;
+  border: 1px solid #4a6741;
+  border-radius: 6px;
+  padding: 2px 16px 2px 6px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+.langsel-trigger:hover { background: #d6c5a6; }
+
+.langsel .flag {
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 1.2rem;
+}
+
+.langsel .arrow { position: absolute; right: 6px; font-size: 10px; opacity: .85; }
+
+.langsel-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  background: white;
+  border: 1px solid #4a6741;
+  border-radius: 6px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.15);
+  padding: 2px;
+}
+
+.langsel-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #222;
+  font-size: 12px;
+  line-height: 1.1;
+}
+.langsel-item:hover { background: #CADBC8; }
+.langsel-item.selected { font-weight: 600; background: #8ab4c3; }
+
+.langsel,
+.langsel-trigger,
+.langsel-item {
+  cursor: pointer;         
+  user-select: none;       
+}

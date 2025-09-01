@@ -1,24 +1,23 @@
 import React from "react";
-import "./NavBar.css";
+import "./navbar.css";
 import { Link } from "react-router-dom";
-import logoUrl from "../../assets/img/DEFINILOGO.png";
-
-
+import logoUrl from "../../assets/img/FINALLOGO.png";
+import { LanguageSelector} from "../language-select/LanguageSelect.jsx";
 
 export const NavBar = () => {
-
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <Link href="/" className="logo-link">
+        <Link to="/" className="logo-link">
           <img src={logoUrl} alt="Hand To Hand Logo" className="logo-img" />
-          Hand to Hand
+          <span className="logo-text">Hand to Hand</span>
         </Link>
       </div>
       <div className="navbar-buttons">
-        <button className="btn btn-login"> Login </button>
-        <button className="btn btn-signup"> Sign Up </button>
+        <Link to="/login" className="btn btn-login">Login</Link>
+        <Link to="/signup" className="btn btn-signup">Sign Up</Link>
+        <LanguageSelector />
       </div>
     </nav>
   );
-}
+};
