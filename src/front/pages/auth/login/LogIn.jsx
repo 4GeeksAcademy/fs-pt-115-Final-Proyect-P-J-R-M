@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export const LogIn = () => {
     const [userData, setUserData] = useState({
@@ -50,6 +51,9 @@ export const LogIn = () => {
                 required
             />
             <button type="submit">{loading ? "Cargando...." : "Login"}</button>
+            <Link to="/posts" className="btn btn-login">
+          Ir a Posts
+        </Link>
         </form>
     )
 }

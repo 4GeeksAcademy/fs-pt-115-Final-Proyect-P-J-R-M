@@ -12,7 +12,7 @@ import { UserLayout } from "./layout/User.layout";
 import { Home } from "./pages/Home";
 import { SignUp } from "./pages/auth/singup/SignUp"
 import { LogIn } from "./pages/auth/login/LogIn"
-
+import { PostsPage } from "./pages/public/posts/PostPage";
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<RootLayout />}>
@@ -24,7 +24,9 @@ export const router = createBrowserRouter(
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
       </Route>
-      <Route element={<UserLayout />}></Route>
+      <Route element={<UserLayout />}>
+      <Route path="/posts" element={<PostsPage />} />
+      </Route>
     </Route>
   )
 );
