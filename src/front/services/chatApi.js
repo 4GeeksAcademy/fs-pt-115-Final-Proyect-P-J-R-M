@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_BACKEND_URL + "/chats";
+const apiUrl = import.meta.env.VITE_BACKEND_URL + "/api/chats";
 
 
 export const getChats = async (postId, token) => {
@@ -24,7 +24,7 @@ export const getChats = async (postId, token) => {
 
 export const createChat = async (chatData, token) => {
   try {
-    const response = await fetch(`${apiUrl}/`, {
+    const response = await fetch(`${apiUrl}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_BACKEND_URL + "/posts";
+const apiUrl = import.meta.env.VITE_BACKEND_URL + "/api/posts";
 
 export const getPosts = async (token) => {
   try {
