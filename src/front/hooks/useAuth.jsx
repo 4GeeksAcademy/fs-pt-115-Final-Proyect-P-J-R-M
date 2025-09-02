@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 const urlApi = import.meta.env.VITE_BACKEND_URL;
 
 const AuthContext = createContext();
@@ -64,8 +64,46 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
+    const logout = () => {
+        setUser(null)
+        setToken(null)
+        localStorage.removeItem("token")
+    }
+
+    const getUserProfile = async () => {
+        setLoading(true)
+        try {
+            const response = await fetch(`${urlApi}/api/users/profile`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            });
+            if (!response.ok) {
+                const responseError = await response.json()
+                throw new Error(responseError.detail || "Error desconocido")
+            }
+            
+            const data = await response.json();
+            setUser(data)
+
+        } catch (error) {
+            setError(error.message)
+        } finally {
+            setLoading(false)
+        }
+
+    };
+
+    useEffect(() => {
+        if (token) {
+            getUserProfile()
+        }
+    }, [token])
+
     return (
-        <AuthContext.Provider value={{ user, token, loading, error, signUp, login }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ user, token, loading, error, signUp, login, logout }}>{children}</AuthContext.Provider>
     )
 }
 

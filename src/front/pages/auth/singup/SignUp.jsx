@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { postUser } from "../../../services/servicesUser";
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export function SignUp() {
+  const { signUp } = useAuth()
+  const navigate = useNavigate()
   const [userData, setUserData] = useState({
     username: "",
     dni: "",
@@ -12,12 +15,13 @@ export function SignUp() {
     score: 0,
   });
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!userData.username || !userData.dni || !userData.email || !userData.password) {
@@ -25,30 +29,18 @@ export function SignUp() {
       return;
     }
 
-    try {
-      const responseApi = await postUser({
-        username: userData.username,
-        email: userData.email,
-        password: userData.password,
-        dni: userData.dni,
-        image: userData.image || "",
-        score: userData.score || 0,
-        country: userData.country || ""
-      });
+    signUp({
+      username: userData.username,
+      email: userData.email,
+      password: userData.password,
+      dni: userData.dni,
+      image: userData.image || "",
+      score: userData.score || 0,
+      country: userData.country || ""
+    });
 
-      alert("¡Usuario creado exitosamente!");
-      setUserData({
-        username: "",
-        dni: "",
-        email: "",
-        password: "",
-        image: "",
-        country: "",
-        score: 0,
-      });
-    } catch (error) {
-      alert(error.message || "Error al crear usuario");
-    }
+    navigate("/login")
+
   };
 
   return (

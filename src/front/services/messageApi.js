@@ -1,4 +1,4 @@
-const apiUrl = import.meta.env.VITE_BACKEND_URL + "/messages";
+const apiUrl = import.meta.env.VITE_BACKEND_URL + "/api/messages";
 
 export const getMessages = async (chatId, token) => {
   try {

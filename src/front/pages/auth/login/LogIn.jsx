@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { loginUser } from "../../../services/servicesUser";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const LogIn = () => {
     const [userData, setUserData] = useState({
         email: "",
         password: ""
     });
+
+    const { login, loading, error, token } = useAuth()
 
     const handleChange = (e) => {
         setUserData({
@@ -22,21 +24,15 @@ export const LogIn = () => {
             return;
         }
 
-        loginUser(userData).then(result => {
-            if (result && result.token) {
-                alert("Login exitoso");
-            } else {
-                alert("Email o contraseña incorrectos");
-            }
-        }).catch(error => {
-            alert("Error de conexión");
-            console.error(error);
-        });
+        login(userData)
     };
-    
+
     return (
         <form onSubmit={handleSubmit}>
-            <h1>Log In</h1>
+            <h1>Login</h1>
+
+            {error && <p className="text-warning">{error}</p>}
+            <p>{token}</p>
             <input
                 type="email"
                 name="email"
@@ -53,7 +49,7 @@ export const LogIn = () => {
                 onChange={handleChange}
                 required
             />
-            <button type="submit">Log In</button>
+            <button type="submit">{loading ? "Cargando...." : "Login"}</button>
         </form>
     )
 }
