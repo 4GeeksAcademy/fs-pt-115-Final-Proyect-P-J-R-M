@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { loginUser } from "../../services/servicesUser";
+import { loginUser } from "../../../services/servicesUser";
 
 export const LogIn = () => {
-    const [userData , setUserData] = useState({
+    const [userData, setUserData] = useState({
         email: "",
         password: ""
     });
@@ -16,12 +16,12 @@ export const LogIn = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if (!userData.email || !userData.password) {
             alert("Todos los campos son obligatorios");
             return;
         }
-        
+
         loginUser(userData).then(result => {
             if (result && result.token) {
                 alert("Login exitoso");
@@ -33,26 +33,27 @@ export const LogIn = () => {
             console.error(error);
         });
     };
+    
     return (
         <form onSubmit={handleSubmit}>
-      <h1>Log In</h1>
-      <input
-        type="email"
-        name="email"
-        placeholder="Correo electrónico"
-        value={userData.email}
-        onChange={handleChange}
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        value={userData.password}
-        onChange={handleChange}
-        required
-      />
-      <button type="submit">Log In</button>
-    </form>
+            <h1>Log In</h1>
+            <input
+                type="email"
+                name="email"
+                placeholder="Correo electrónico"
+                value={userData.email}
+                onChange={handleChange}
+                required
+            />
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                value={userData.password}
+                onChange={handleChange}
+                required
+            />
+            <button type="submit">Log In</button>
+        </form>
     )
 }

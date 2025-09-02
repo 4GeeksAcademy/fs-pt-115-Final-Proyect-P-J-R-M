@@ -4,7 +4,8 @@ from .post_route import post_bp
 from .chat_routes import chat_bp
 from .message_route import message_bp
 from .favorites_routes import favorites_bp
-api= Blueprint("api",__name__)
+
+api = Blueprint("api", __name__)
 
 api.register_blueprint(user_bp)
 api.register_blueprint(post_bp)
