@@ -1,0 +1,59 @@
+const apiUrl = import.meta.env.VITE_BACKEND_URL + "/api/users";
+
+const authHeaders = () => ({
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${localStorage.getItem("token")}`,
+});
+
+export const getUsers = async () => {
+  try {
+    const response = await fetch(`${apiUrl}`, {
+      method: "GET",
+      headers: authHeaders(),
+    });
+
+    if (!response.ok) throw new Error("Error al obtener usuarios");
+
+    return await response.json();
+  } catch (error) {
+    console.error("getUsers error:", error);
+    throw error;
+  }
+};
+
+export const patchUser = async (partialData) => {
+  try {
+    const response = await fetch(`${apiUrl}`, {
+      method: "PATCH",
+      headers: authHeaders(),
+      body: JSON.stringify(partialData),
+    });
+
+    if (!response.ok) throw new Error("Error al actualizar usuario");
+
+    return await response.json();
+  } catch (error) {
+    console.error("patchUser error:", error);
+    throw error;
+  }
+};
+
+export const deleteUser = async () => {
+  try {
+    const response = await fetch(`${apiUrl}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    });
+
+    if (!response.ok) throw new Error("Error al eliminar usuario");
+
+    try {
+      return await response.json();
+    } catch {
+      return true;
+    }
+  } catch (error) {
+    console.error("deleteUser error:", error);
+    throw error;
+  }
+};
