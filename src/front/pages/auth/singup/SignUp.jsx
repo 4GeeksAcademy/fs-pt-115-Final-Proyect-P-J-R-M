@@ -34,7 +34,7 @@ export function SignUp() {
       email: userData.email,
       password: userData.password,
       dni: userData.dni,
-      image: userData.image || "potron",
+      image: userData.image || "",
       score: userData.score || 0,
       country: userData.country || ""
     });
