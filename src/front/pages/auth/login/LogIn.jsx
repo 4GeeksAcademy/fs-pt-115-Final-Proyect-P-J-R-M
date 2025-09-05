@@ -8,8 +8,8 @@ export const LogIn = () => {
         password: ""
     });
 
-    const { login, loading, error, token } = useAuth()
-
+    const { login, loading, error, token, user } = useAuth()
+    
     const handleChange = (e) => {
         setUserData({
             ...userData,

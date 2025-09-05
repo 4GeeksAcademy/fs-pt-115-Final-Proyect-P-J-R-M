@@ -1,9 +1,15 @@
-from flask import Blueprint, jsonify, request
+import app
+from flask import Blueprint, jsonify, request, render_template
 from flask_cors import CORS
 from api.models import User, db
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_mail import Message
+from api.mail_config import mail
 
-user_bp = Blueprint("users", __name__, url_prefix="/users")
+
+
+
+user_bp = Blueprint("users", __name__, url_prefix="/users",template_folder = '../templates')
 
 CORS(user_bp)
 
@@ -16,7 +22,6 @@ def get_users():
 
 
 @user_bp.route("/profile", methods=["GET"])
-@jwt_required()
 def get_user():
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
@@ -38,12 +43,14 @@ def post_user():
     country = data.get("country")
     score = data.get("score")
 
+
     if not all([username, email, password, dni]):
         return jsonify({"msg": "Missing data to be filled in"}), 400
     user_is_exist = db.session.execute(db.select(User).where(
         User.email == email)).scalar_one_or_none()
     if user_is_exist:
         return jsonify({"msg": "User already exists"}), 400
+    
 
     new_user = User(
         username=username,
@@ -53,8 +60,17 @@ def post_user():
         country=country,
         score=score,
     )
-    
     new_user.set_password(password)
+
+    html_welcome = render_template ('welcome.html', username = username)
+    msg = Message ( 
+                
+                   subject = 'bienvenido', 
+                   recipients = [email],
+                    html = html_welcome )
+    
+    mail.send(msg)
+    
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"msg": "User created"})

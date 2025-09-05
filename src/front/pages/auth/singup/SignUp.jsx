@@ -21,9 +21,9 @@ export function SignUp() {
     setUserData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!userData.username || !userData.dni || !userData.email || !userData.password) {
       alert("Todos los campos son requeridos");
       return;
