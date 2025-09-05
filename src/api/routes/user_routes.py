@@ -25,6 +25,7 @@ def get_users():
 
 
 @user_bp.route("/profile", methods=["GET"])
+@jwt_required()
 def get_user():
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
@@ -166,7 +167,7 @@ def upload_ing():
         ]
     )
 
-    user.img = transformed_url
+    user.image = transformed_url
 
     db.session.commit()
     return jsonify({"msg": "ya esta en la nube", "imageUrl": upload_result["secure_url"]}), 200

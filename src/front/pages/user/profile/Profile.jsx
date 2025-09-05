@@ -1,85 +1,82 @@
 import { useAuth } from "../../../hooks/useAuth"
 import { useState } from "react";
-import { uploadImge }from "../../../services/userApi"
-
+import { uploadImge } from "../../../services/userApi"
+import "./profile.css"
 export const Profile = () => {
 
-    const { user, loading, error } = useAuth()
+    const { user, loading, error, refreshUser } = useAuth()
     console.log(user);
-    
+
     const [file, setFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-    console.log(file);
 
-    const handelClick = async () => {
-        if (!file) return;
-        setUploading(true); // mostrar loader de imagen
+    console.log("Loading:", loading);
+    console.log("User:", user);
+    console.log("Error:", error);
 
+    const handleClick = async () => {
+        if (!file || !file.type.startsWith("image/")) {
+            alert("Por favor selecciona una imagen válida.");
+            return;
+        }
+        setUploading(true);
         try {
-            await uploadImge(file) // subir imagen
-            await  refreshUser()//  actualiza el perfil del usuario
+            await uploadImge(file);
+            await refreshUser();
             setFile(null);
         } catch (error) {
             console.error("Error uploading image:", error);
         } finally {
-            setUploading(false); 
+            setUploading(false);
         }
     };
 
     if (loading || !user) {
+        return (
+            <div className="loader-auth text-center py-5">
+                <p>Cargando mamahuevo....</p>
+            </div>
+        );
+    }
+
     return (
-      <div className="loader-auth text-center py-5">
-        <p>Cargando mamahuevo....</p>
-      </div>
+        <main className="container-fluid bg-main min-vh-100 py-5">
+            <section className="row justify-content-start">
+                <div className="col-12 col-md-12 col-lg-4 p-4 bg-light rounded shadow">
+
+                    <div className="mb-4 text-center">
+                        <h1>{user.username}</h1>
+                    </div>
+                    <div className="mb-3">
+                        <input
+                            type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+                        <button onClick={handleClick} disabled={uploading} className="btn btn-upload" >
+
+
+                            {uploading ? "Guardando..." : "Guardar"}
+                        </button>
+                        {uploading ? (
+                            <div className="loader-image"></div>  
+                        ) : user.image ? (
+                            <img src={user.image} alt="User profile" />
+                        ) : (
+                            <div
+                                style={{
+                                    fontSize: "100px",
+                                    textAlign: "center",
+                                    marginBottom: "1rem",
+                                }}
+                            >
+                                🤖
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="text-secondary mb-1"><strong>Email:</strong> {user.email}</div>
+                    <div className="text-secondary mb-1"><strong>País:</strong> {user.country}</div>
+                    <div className="text-secondary mb-1"><strong>⭐:</strong> {user.score}</div>
+                </div>
+            </section>
+        </main>
     );
-  }
-
-  return (
-    <main className="container-fluid bg-main min-vh-100 py-5">
-      <section className="row justify-content-start">
-        <div className="col-12 col-md-6 col-lg-4 p-4 bg-light rounded shadow">
-
-          <div className="mb-4 text-center">
-            {user.image ? (
-              <img
-                src={user.image}
-                alt="Foto de perfil"
-                width={120}
-                className="rounded-circle border border-secondary"
-              />
-            ) : (
-              <p>No hay imagen de perfil</p>
-            )}
-          </div>
-
-          <div className="mb-3">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files[0])}
-              className="form-control bg-input border-0"
-            />
-          </div>
-
-          <div className="d-grid mb-3">
-            <button
-              onClick={handelClick}
-              disabled={uploading}
-              className="btn btn-upload"
-            >
-              {uploading ? "Guardando..." : "Guardar"}
-            </button>
-          </div>
-
-          {uploading && (
-            <div className="loader-image mx-auto mb-3"></div>
-          )}
-
-          <div className="text-secondary mb-1"><strong>Email:</strong> {user.email}</div>
-          <div className="text-secondary mb-1"><strong>País:</strong> {user.country}</div>
-          <div className="text-secondary mb-1"><strong>Puntaje:</strong> {user.score}</div>
-        </div>
-      </section>
-    </main>
-  );
 };
