@@ -13,6 +13,8 @@ import { Home } from "./pages/Home";
 import { SignUp } from "./pages/auth/singup/SignUp"
 import { LogIn } from "./pages/auth/login/LogIn"
 import { PostsPage } from "./pages/public/posts/PostPage";
+import { Profile } from "./pages/user/profile/Profile";
+
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<RootLayout />}>
@@ -25,7 +27,8 @@ export const router = createBrowserRouter(
         <Route path="/login" element={<LogIn />} />
       </Route>
       <Route element={<UserLayout />}>
-      <Route path="/posts" element={<PostsPage />} />
+        <Route path="/posts" element={<PostsPage />} />
+        <Route path="/profile" element={<Profile />}></Route>
       </Route>
     </Route>
   )

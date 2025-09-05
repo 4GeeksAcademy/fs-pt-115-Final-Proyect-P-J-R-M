@@ -8,6 +8,7 @@ export const PostsPage = () => {
     const { token } = useAuth();
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState("");
+    
 
     const fetchPosts = async () => {
         setError("");
