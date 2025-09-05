@@ -8,9 +8,11 @@ from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
+from api.mail_config import mail
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -69,8 +71,24 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
+# Setup the Flask-JWT-Extended extension
+
+app.config['MAIL_SERVER'] = os.getenv ('MAIL_SERVER')
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = os.getenv ('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv ('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv ('MAIL_USERNAME')
+
+mail.init_app (app)
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
+
+
+
