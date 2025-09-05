@@ -8,10 +8,11 @@ from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
+from api.mail_config import mail
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
-from flask_mail import Mail
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -72,15 +73,15 @@ def serve_any_other_file(path):
 
 # Setup the Flask-JWT-Extended extension
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_SERVER'] = os.getenv ('MAIL_SERVER')
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'handtohand87@gmail.com'
-app.config['MAIL_PASSWORD'] = 'djrr sdmt wlpw qxly'
-app.config['MAIL_DEFAULT_SENDER'] = 'handtohand87@gmail.com'
+app.config['MAIL_USERNAME'] = os.getenv ('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv ('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv ('MAIL_USERNAME')
 
-mail = Mail(app)
+mail.init_app (app)
 
 
 
@@ -89,15 +90,5 @@ if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
 
-# Configure the Flask-mail extension
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'handtohand87@gmail.com'
-app.config['MAIL_PASSWORD'] = 'djrr sdmt wlpw qxly'
-app.config['MAIL_DEFAULT_SENDER'] = 'handtohand87@gmail.com'
-
-mail = Mail(app)
 
