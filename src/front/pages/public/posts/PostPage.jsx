@@ -6,6 +6,7 @@ import { PostList } from "./PostList";
 import { DestinationCurrencyFilter } from "./DestinationCurrencyFilter"; 
 
 export const PostsPage = () => {
+
   const { token, error, user } = useAuth(); 
   const [posts, setPosts] = useState([]);
   const [to, setTo] = useState("");
