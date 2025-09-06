@@ -5,7 +5,10 @@ from api.models import User, db
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_mail import Message
 from api.mail_config import mail
-
+import cloudinary
+import cloudinary.uploader
+import os
+from cloudinary import CloudinaryImage
 
 
 
@@ -22,6 +25,7 @@ def get_users():
 
 
 @user_bp.route("/profile", methods=["GET"])
+@jwt_required()
 def get_user():
     user_id = get_jwt_identity()
     user = User.query.get(int(user_id))
@@ -140,3 +144,30 @@ def login_user():
 
     token = create_access_token(identity=str(user.id))
     return jsonify({"msg": "ok", "token": token}), 200
+
+# cloudinari endpoint
+
+@user_bp.route("/upload-img", methods=["POST"])
+@jwt_required()
+def upload_ing():
+    user_id = get_jwt_identity()
+    file = request.files.get("file")
+    user = db.session.get(User, int(user_id))
+    if not file:
+        return jsonify({"error": "No se envio el archivo mamaguevo"}), 400
+    upload_result = cloudinary.uploader.upload(file)
+
+    # Obtenemos el public_id de la imagen subida desde upload_result
+    public_id = upload_result.get("public_id")
+
+    image = CloudinaryImage(public_id)
+    transformed_url = image.build_url(
+        transformation=[
+            {"crop": "fill", "gravity": "face", "width": 400, "height": 400}
+        ]
+    )
+
+    user.image = transformed_url
+
+    db.session.commit()
+    return jsonify({"msg": "ya esta en la nube", "imageUrl": upload_result["secure_url"]}), 200

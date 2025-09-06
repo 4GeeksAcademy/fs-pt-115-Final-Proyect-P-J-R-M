@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Optional
 from unittest.mock import Base
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, ForeignKey,Column,Table, Integer
+from sqlalchemy import String, Boolean, ForeignKey,Column,Table, Integer,Table,Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_bcrypt import Bcrypt
 
@@ -31,7 +31,7 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
     dni: Mapped [str] = mapped_column(String(120), unique=True, nullable=False)
-    image: Mapped[str] = mapped_column(String(255))
+    image: Mapped[Optional[str]] = mapped_column(Text)
     country: Mapped[str] = mapped_column(String(120))
     score: Mapped[int] = mapped_column(Integer)
 
