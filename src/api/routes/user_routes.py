@@ -65,7 +65,7 @@ def post_user():
     html_welcome = render_template ('welcome.html', username = username)
     msg = Message ( 
                 
-                   subject = 'bienvenido', 
+                   subject = 'Bienvenido', 
                    recipients = [email],
                     html = html_welcome )
     

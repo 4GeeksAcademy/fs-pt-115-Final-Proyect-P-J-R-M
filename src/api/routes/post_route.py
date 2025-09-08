@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify,request 
+from flask import Blueprint, jsonify,request,render_template 
 from flask_cors import CORS
-from api.models import Post, User, db
+from api.models import Post, db
 from flask_jwt_extended import  get_jwt_identity, jwt_required
+from flask_mail import Message
 post_bp=Blueprint("post",__name__, url_prefix="/posts")
 
 
@@ -38,8 +39,29 @@ def create_post():
         destination=data["destination"],
         description=data["description"],
         divisas_one=data["divisas_one"],
-        divisas_two=data["divisas_two"]
+        divisas_two=data["divisas_two"],
+        created_data=data["created_data"],
     )
+
+    html_post = render_template ('new_post.html', 
+                                username = username,
+                                destination=data["destination"],
+                                description=data["description"],
+                                divisas_one=data["divisas_one"],
+                                divisas_two=data["divisas_two"],
+                                created_data=data["created_data"]
+
+                                 )
+    msg = Message ( 
+                
+                   subject = 'Has creado un nuevo post en Hand to Hand', 
+                   recipients = [email],
+                   html = html_post )
+    
+    mail.send(msg)
+
+
+
 
     db.session.add(new_post)
     db.session.commit()
