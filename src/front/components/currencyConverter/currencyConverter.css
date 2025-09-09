@@ -1,0 +1,112 @@
+
+.converter-container {
+    max-width: 540px;
+    margin: 80px auto;
+    padding: 40px;
+    background: linear-gradient(145deg, #E2D4B7 0%, #CADBC8 100%); /* Fondo con transición */
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15), inset 0 1px 6px rgba(255, 255, 255, 0.2);
+    font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+    color: #2a2a2a;
+    border: 1px solid #B0BBBF;
+}
+
+.converter-container h2 {
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: #9C9583;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    border-bottom: none;
+    position: relative;
+}
+.converter-container h2::after {
+    content: "";
+    display: block;
+    width: 50px;
+    height: 3px;
+    background: #9C9583;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+
+.converter-container label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #4a4a4a;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.converter-container select,
+.converter-container input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 22px;
+    font-size: 15px;
+    border: 1px solid #A1A499;
+    border-radius: 8px;
+    background: #fff;
+    color: #2a2a2a;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+.converter-container select:focus,
+.converter-container input:focus {
+    border-color: #9C9583;
+    box-shadow: 0 0 8px rgba(156, 149, 131, 0.4);
+    outline: none;
+}
+
+/* Botón con estilo tecnológico */
+.converter-container button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #9C9583, #A1A499);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, background 0.3s ease;
+}
+.converter-container button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #7f7866, #9C9583);
+    transform: translateY(-2px);
+}
+.converter-container button:disabled {
+    background-color: #B0BBBF;
+    cursor: not-allowed;
+}
+
+/* Resultados con estilo fino */
+.converter-container p {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 16px;
+    color: #2f2f2f;
+}
+.converter-container p strong {
+    color: #9C9583;
+    font-weight: 700;
+}
+
+/* Mensaje de error más tecnológico */
+.converter-container .error-message {
+    margin-top: 20px;
+    background-color: #ffeded;
+    color: #9a2c2c;
+    padding: 14px;
+    border-left: 4px solid #d9534f;
+    border-radius: 6px;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

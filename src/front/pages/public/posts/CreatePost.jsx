@@ -1,95 +1,133 @@
 import { useState } from "react";
-import { createPost } from "../../../services/postApi"
+import { createPost } from "../../../services/postApi";
 import { useAuth } from "../../../hooks/useAuth";
+import { todayYMD } from "./ExchangeDate"; 
 
 const INITIAL = {
-    destination: "",
-    description: "",
-    divisas_one: "EUR",
-    divisas_two: "USD",
+  destination: "",
+  description: "",
+  divisas_one: "EUR",
+  divisas_two: "USD",
+  exchangeDate: "", 
 };
 
 const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "MXN", "ARS"];
 
 export const CreatePost = ({ onSuccess }) => {
-    const [form, setForm] = useState(INITIAL);
-    const [error, setError] = useState("");
-    const { token } = useAuth();
+  const [form, setForm] = useState(INITIAL);
+  const { token, error, loading } = useAuth();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({ ...prev, [name]: value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (loading) return;
+
+    if (!form.destination.trim() || !form.description.trim()) return;
+    if (form.divisas_one === form.divisas_two) return;
+    if (!token) return;
+
+    if (form.exchangeDate) {
+      const chosen = new Date(form.exchangeDate);
+      const today = new Date(todayYMD());
+      if (isNaN(chosen.getTime()) || chosen < today) {
+        return;
+      }
+    }
+
+    const descWithTag = form.exchangeDate
+      ? `${form.description} [exchange:${form.exchangeDate}]`
+      : form.description;
+
+    const payload = {
+      destination: form.destination,
+      description: descWithTag,
+      divisas_one: form.divisas_one,
+      divisas_two: form.divisas_two,
+      ...(form.exchangeDate ? { exchange_date: form.exchangeDate } : {}),
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
+    await createPost(payload, token);
+    setForm(INITIAL);
+    onSuccess?.();
+  };
 
-        if (!form.destination.trim() || !form.description.trim()) {
-            setError("Destino y descripción son obligatorios");
-            return;
-        }
-        if (form.divisas_one === form.divisas_two) {
-            setError("Las divisas no pueden ser iguales");
-            return;
-        }
-        if (!token) {
-            setError("No hay sesión iniciada");
-            return;
-        }
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Crear post</h2>
 
-        try {
-            await createPost(form, token);
-            setForm(INITIAL);
-            onSuccess?.();
-        } catch {
-            setError("Error al crear el post");
-        }
-    };
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <h2>Crear post</h2>
+      <label>
+        Divisa origen
+        <select
+          name="divisas_one"
+          value={form.divisas_one}
+          onChange={handleChange}
+          disabled={loading}
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+      </label>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+      <label>
+        Divisa destino
+        <select
+          name="divisas_two"
+          value={form.divisas_two}
+          onChange={handleChange}
+          disabled={loading}
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c} value={c}>{c}</option>
+          ))}
+        </select>
+      </label>
 
-            <label>
-                Divisa origen
-                <select name="divisas_one" value={form.divisas_one} onChange={handleChange}>
-                    {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-            </label>
+      <label>
+        Destino
+        <input
+          type="text"
+          name="destination"
+          value={form.destination}
+          onChange={handleChange}
+          placeholder="Ciudad o zona"
+          disabled={loading}
+        />
+      </label>
 
-            <label>
-                Divisa destino
-                <select name="divisas_two" value={form.divisas_two} onChange={handleChange}>
-                    {CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
-                </select>
-            </label>
+      <label>
+        Descripción
+        <textarea
+          name="description"
+          value={form.description}
+          onChange={handleChange}
+          rows={3}
+          placeholder="Detalles del cambio"
+          disabled={loading}
+        />
+      </label>
 
-            <label>
-                Destino
-                <input
-                    type="text"
-                    name="destination"
-                    value={form.destination}
-                    onChange={handleChange}
-                    placeholder="Ciudad o zona"
-                />
-            </label>
+      <label>
+        Fecha prevista de intercambio (opcional)
+        <input
+          type="date"
+          name="exchangeDate"
+          min={todayYMD()}
+          value={form.exchangeDate}
+          onChange={handleChange}
+          disabled={loading}
+        />
+      </label>
 
-            <label>
-                Descripción
-                <textarea
-                    name="description"
-                    value={form.description}
-                    onChange={handleChange}
-                    rows={3}
-                    placeholder="Detalles del cambio"
-                />
-            </label>
-
-            <button type="submit">Crear</button>
-        </form>
-    );
+      <button type="submit" disabled={loading}>
+        {loading ? "Creando..." : "Crear"}
+      </button>
+    </form>
+  );
 };
