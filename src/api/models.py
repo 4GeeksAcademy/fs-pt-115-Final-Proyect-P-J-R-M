@@ -1,5 +1,4 @@
 from typing import List
-from unittest.mock import Base
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, ForeignKey, Column, Table, Integer, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
