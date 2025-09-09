@@ -10,9 +10,8 @@ import cloudinary.uploader
 import os
 from cloudinary import CloudinaryImage
 
-
-
-user_bp = Blueprint("users", __name__, url_prefix="/users",template_folder = '../templates')
+user_bp = Blueprint("users", __name__, url_prefix="/users",
+                    template_folder='../templates')
 
 CORS(user_bp)
 
@@ -47,14 +46,12 @@ def post_user():
     country = data.get("country")
     score = data.get("score")
 
-
     if not all([username, email, password, dni]):
         return jsonify({"msg": "Missing data to be filled in"}), 400
     user_is_exist = db.session.execute(db.select(User).where(
         User.email == email)).scalar_one_or_none()
     if user_is_exist:
         return jsonify({"msg": "User already exists"}), 400
-    
 
     new_user = User(
         username=username,
@@ -66,15 +63,15 @@ def post_user():
     )
     new_user.set_password(password)
 
-    html_welcome = render_template ('welcome.html', username = username)
-    msg = Message ( 
-                
-                   subject = 'bienvenido', 
-                   recipients = [email],
-                    html = html_welcome )
-    
+    html_welcome = render_template('welcome.html', username=username)
+    msg = Message(
+
+        subject='Bienvenido',
+        recipients=[email],
+        html=html_welcome)
+
     mail.send(msg)
-    
+
     db.session.add(new_user)
     db.session.commit()
     return jsonify({"msg": "User created"})
