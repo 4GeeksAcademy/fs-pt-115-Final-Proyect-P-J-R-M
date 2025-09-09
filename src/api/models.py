@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import String, Boolean, ForeignKey, Column, Table, Integer, DateTime
+
+from sqlalchemy import String, Boolean, ForeignKey, Column, Table, Integer, DateTime, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_bcrypt import Bcrypt
 from datetime import datetime
@@ -31,6 +32,8 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(
         String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
+    dni: Mapped [str] = mapped_column(String(120), unique=True, nullable=False)
+    image: Mapped[Optional[str]] = mapped_column(Text)
     dni: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     image: Mapped[str] = mapped_column(String(255))
     country: Mapped[str] = mapped_column(String(120))

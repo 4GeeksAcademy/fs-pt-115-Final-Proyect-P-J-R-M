@@ -1,3 +1,5 @@
+import { CurrencyConverter } from "../components/currencyConverter/CurrencyConverter";
+import {BankingGraphics} from "../components/BankingGraphics/BankingGraphics"
 import { useAuth } from "../hooks/useAuth";
 
 export const Home = () => {
@@ -20,6 +22,8 @@ export const Home = () => {
 			<p>{token}</p>
 			<button onClick={() => login({email: newUser.email, password: newUser.password})} className="btn btn-success">Login</button>
 			<button onClick={() => signUp(newUser)} className="btn btn-success">Sign Up</button>
+			<CurrencyConverter/>
+			<BankingGraphics/>
 		</>
 
 	)

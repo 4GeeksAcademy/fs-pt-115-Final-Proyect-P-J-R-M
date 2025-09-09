@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
         } catch (error) {
 
-            setError(Error.message)
+            setError(error.message)
 
         } finally {
             setLoading(false)
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
         } catch (error) {
 
-            setError(Error.message)
+            setError(error.message)
 
         } finally {
             setLoading(false)
@@ -77,7 +77,7 @@ export const AuthProvider = ({ children }) => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                    Authorization: `Bearer ${token}`
                 }
             });
             if (!response.ok) {
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
     }, [token])
 
     return (
-        <AuthContext.Provider value={{ user, token, loading, error, signUp, login, logout }}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{ user, token, loading, error, signUp, login, logout, refreshUser: getUserProfile }}>{children}</AuthContext.Provider>
     )
 }
 
