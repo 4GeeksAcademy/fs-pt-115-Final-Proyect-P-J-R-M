@@ -1,154 +1,144 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { getHistoricalRates } from "../../services/frankfurter";
+import React, { useEffect, useState } from 'react';
+import Typography from '@mui/material/Typography';
+import {
+  ChartContainer,
+  ChartsXAxis,
+  ChartsYAxis,
+  ChartsTooltip,
+  ChartsAxisHighlight
+} from '@mui/x-charts';
+import { LinePlot, LineHighlightPlot } from '@mui/x-charts/LineChart';
 
-export const BankingGraphics = ({ from = "USD", to = "EUR", start = "2023-01-01" }) => {
+import { getHistoricalRates } from '../../services/frankfurter';
 
-    const canvasRef = useRef(null);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+const currencies = ['EUR', 'JPY', 'GBP', 'CAD'];
+const baseCurrency = 'USD';
+const startDate = '2023-01-01';
 
-    const end = new Date().toISOString().split('T')[0];
+// 🎨 Colores personalizados por moneda (puedes ajustar)
+const currencyColors = {
+  EUR: '#1976d2', // Azul
+  JPY: '#d32f2f', // Rojo
+  GBP: '#388e3c', // Verde
+  CAD: '#f9a825'  // Amarillo
+};
 
-    useEffect(() => {
-        const drawChart = async () => {
-            if (!canvasRef.current) return;
+export const BankingGraphics = () => {
+  const [series, setSeries] = useState([]);
+  const [xAxisDates, setXAxisDates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-            setError(null);
-            setLoading(true);
+  const endDate = new Date().toISOString().split('T')[0]; // Fecha actual
 
-            try {
-                const data = await getHistoricalRates(from, to, start, end);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
 
-                if (!data || !data.rates) {
-                    setError("No se recibieron datos válidos");
-                    setLoading(false);
-                    return;
-                }
+      try {
+        const allRates = await Promise.all(
+          currencies.map((currency) =>
+            getHistoricalRates(currency, baseCurrency, startDate, endDate)
+              .then((data) => ({
+                currency,
+                rates: data.rates
+              }))
+          )
+        );
 
-                const allDates = Object.keys(data.rates).sort();
-                const dates = allDates.filter(date =>
-                    data.rates[date] &&
-                    typeof data.rates[date][to] === "number"
-                );
+        const allDatesSet = new Set();
+        allRates.forEach(({ rates }) => {
+          Object.keys(rates).forEach((date) => allDatesSet.add(date));
+        });
 
-                if (dates.length === 0) {
-                    setError('No hay datos disponibles para este rango y moneda');
-                    setLoading(false);
-                    return;
-                }
+        const sortedDates = Array.from(allDatesSet).sort();
+        setXAxisDates(sortedDates);
 
-                const values = dates.map(date => data.rates[date][to]);
-
-                const ctx = canvasRef.current.getContext('2d');
-                const width = canvasRef.current.width;
-                const height = canvasRef.current.height;
-
-                // Fondo con gradiente
-                const gradient = ctx.createLinearGradient(0, 0, 0, height);
-                gradient.addColorStop(0, '#f0f4f8');
-                gradient.addColorStop(1, '#d9e2ec');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, width, height);
-
-                // Padding y escala
-                const padding = 50;
-                const maxVal = Math.max(...values);
-                const minVal = Math.min(...values);
-
-                const xStep = (width - 2 * padding) / Math.max(1, dates.length - 1);
-                const yScale = (height - 2 * padding) / (maxVal - minVal);
-
-                // Dibujar ejes
-                ctx.beginPath();
-                ctx.strokeStyle = '#333';
-                ctx.lineWidth = 2;
-                // eje Y
-                ctx.moveTo(padding, padding);
-                ctx.lineTo(padding, height - padding);
-                // eje X
-                ctx.lineTo(width - padding, height - padding);
-                ctx.stroke();
-
-                // Etiquetas eje Y (max y min)
-                ctx.fillStyle = '#222';
-                ctx.font = '14px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(maxVal.toFixed(4), 10, padding);
-                ctx.fillText(minVal.toFixed(4), 10, height - padding);
-
-                // Etiquetas eje X (fechas)
-                ctx.textAlign = 'center';
-                ctx.fillText(dates[0], padding, height - padding + 25);
-                ctx.fillText(dates[dates.length - 1], width - padding, height - padding + 25);
-
-                // Dibujo línea de datos con sombra
-                ctx.beginPath();
-                values.forEach((val, i) => {
-                    const x = padding + i * xStep;
-                    const y = height - padding - (val - minVal) * yScale;
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                });
-                ctx.strokeStyle = '#007bff';
-                ctx.lineWidth = 3;
-                ctx.shadowColor = 'rgba(0, 123, 255, 0.5)';
-                ctx.shadowBlur = 10;
-                ctx.stroke();
-                ctx.shadowBlur = 0;
-
-                // Dibujo puntos con borde blanco y sombra
-                values.forEach((val, i) => {
-                    const x = padding + i * xStep;
-                    const y = height - padding - (val - minVal) * yScale;
-                    ctx.beginPath();
-                    ctx.arc(x, y, 5, 0, Math.PI * 2);
-                    ctx.fillStyle = '#007bff';
-                    ctx.shadowColor = 'rgba(0, 123, 255, 0.6)';
-                    ctx.shadowBlur = 6;
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                    ctx.lineWidth = 2;
-                    ctx.strokeStyle = '#fff';
-                    ctx.stroke();
-                });
-
-                setLoading(false);
-
-            } catch (err) {
-                setError('Error al cargar los datos');
-                setLoading(false);
+        const chartSeries = allRates.map(({ currency, rates }) => {
+          const data = sortedDates.map((date) => {
+            const value = rates[date];
+            if (value && typeof value === 'object' && value[baseCurrency] !== undefined) {
+              return value[baseCurrency];
+            } else if (typeof value === 'number') {
+              return value;
+            } else {
+              return null;
             }
-        };
+          });
 
-        drawChart();
-    }, [from, to, start, end]);
+          return {
+            type: 'line',
+            label: currency,
+            data,
+            color: currencyColors[currency] || undefined, // 🎨 Aplica color por moneda
+            highlightScope: { highlight: 'item' }
+          };
+        });
 
-    if (error) return <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>;
+        console.log('Series generadas:', chartSeries);
+        setSeries(chartSeries);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError('Error al cargar los datos.');
+        setLoading(false);
+      }
+    };
 
-    return (
-        <div style={{
-            maxWidth: 850,
-            margin: '30px auto',
-            padding: 20,
-            boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
-            borderRadius: 12,
-            backgroundColor: '#ffffff',
-            fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
-            textAlign: 'center'
-        }}>
-            <h3 style={{ marginBottom: 20, color: '#333' }}>Tasa de cambio de {from} a {to}</h3>
-            {loading && <p style={{ fontStyle: 'italic', color: '#555' }}>Cargando gráfico...</p>}
-            <canvas
-                ref={canvasRef}
-                width={800}
-                height={400}
-                style={{
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
-                    backgroundColor: '#f9fafb',
-                    boxShadow: 'inset 0 0 8px #e1e7f0'
-                }}
-            />
-        </div>
-    );
+    fetchData();
+  }, []);
+
+  if (loading) return <p style={{ textAlign: 'center' }}>Cargando gráfico...</p>;
+  if (error) return <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>;
+
+  return (
+    <div style={{
+      width: '100%',
+      maxWidth: 900,
+      margin: '30px auto',
+      padding: 20,
+      borderRadius: 12,
+      backgroundColor: '#fff',
+      boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
+    }}>
+      <Typography variant="h6" align="center" gutterBottom>
+        Historial de tasas frente al USD
+      </Typography>
+
+      <ChartContainer
+        series={series}
+        height={450}
+        xAxis={[{
+          id: 'date',
+          data: xAxisDates.map(date => new Date(date)),
+          scaleType: 'time',
+          valueFormatter: (value) => value.toLocaleDateString(),
+          height: 40
+        }]}
+        yAxis={[{
+          id: 'price',
+          scaleType: 'linear',
+          position: 'left',
+          label: `Valor en ${baseCurrency}`,
+          width: 60
+        }]}
+      >
+        <ChartsAxisHighlight x="line" />
+        <LinePlot />
+        <LineHighlightPlot />
+        <ChartsXAxis
+          label="Fecha"
+          axisId="date"
+          tickLabelStyle={{ fontSize: 10 }}
+        />
+        <ChartsYAxis
+          label={`Valor (${baseCurrency})`}
+          axisId="price"
+          tickLabelStyle={{ fontSize: 10 }}
+        />
+        <ChartsTooltip />
+      </ChartContainer>
+    </div>
+  );
 };
