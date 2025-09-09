@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { createPost } from "../../../services/postApi";
 import { useAuth } from "../../../hooks/useAuth";
+import { todayYMD } from "./ExchangeDate"; 
 
 const INITIAL = {
   destination: "",
   description: "",
   divisas_one: "EUR",
   divisas_two: "USD",
+  exchangeDate: "", 
 };
 
 const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "MXN", "ARS"];
 
 export const CreatePost = ({ onSuccess }) => {
   const [form, setForm] = useState(INITIAL);
-  const { token, error, loading } = useAuth(); 
+  const { token, error, loading } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,13 +24,33 @@ export const CreatePost = ({ onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return; 
+    if (loading) return;
 
     if (!form.destination.trim() || !form.description.trim()) return;
     if (form.divisas_one === form.divisas_two) return;
     if (!token) return;
 
-    await createPost(form, token); 
+    if (form.exchangeDate) {
+      const chosen = new Date(form.exchangeDate);
+      const today = new Date(todayYMD());
+      if (isNaN(chosen.getTime()) || chosen < today) {
+        return;
+      }
+    }
+
+    const descWithTag = form.exchangeDate
+      ? `${form.description} [exchange:${form.exchangeDate}]`
+      : form.description;
+
+    const payload = {
+      destination: form.destination,
+      description: descWithTag,
+      divisas_one: form.divisas_one,
+      divisas_two: form.divisas_two,
+      ...(form.exchangeDate ? { exchange_date: form.exchangeDate } : {}),
+    };
+
+    await createPost(payload, token);
     setForm(INITIAL);
     onSuccess?.();
   };
@@ -87,6 +109,18 @@ export const CreatePost = ({ onSuccess }) => {
           onChange={handleChange}
           rows={3}
           placeholder="Detalles del cambio"
+          disabled={loading}
+        />
+      </label>
+
+      <label>
+        Fecha prevista de intercambio (opcional)
+        <input
+          type="date"
+          name="exchangeDate"
+          min={todayYMD()}
+          value={form.exchangeDate}
+          onChange={handleChange}
           disabled={loading}
         />
       </label>
