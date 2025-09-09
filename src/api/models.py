@@ -1,5 +1,6 @@
 from typing import List, Optional
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import String, Boolean, ForeignKey, Column, Table, Integer, DateTime, Text
 
 from sqlalchemy import String, Boolean, ForeignKey, Column, Table, Integer, DateTime, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -70,7 +71,6 @@ class User(db.Model):
             "favorite_chats": f_chats,
             "favorite_post": f_post
         }
-
 
 class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
