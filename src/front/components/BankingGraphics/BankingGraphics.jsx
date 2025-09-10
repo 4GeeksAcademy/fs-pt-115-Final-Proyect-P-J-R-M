@@ -11,24 +11,29 @@ import { LinePlot, LineHighlightPlot } from '@mui/x-charts/LineChart';
 
 import { getHistoricalRates } from '../../services/frankfurter';
 
-const currencies = ['EUR', 'JPY', 'GBP', 'CAD'];
-const baseCurrency = 'USD';
-const startDate = '2023-01-01';
 
-// 🎨 Colores personalizados por moneda (puedes ajustar)
-const currencyColors = {
-  EUR: '#1976d2', // Azul
-  JPY: '#d32f2f', // Rojo
-  GBP: '#388e3c', // Verde
-  CAD: '#f9a825'  // Amarillo
-};
+
+
 
 export const BankingGraphics = () => {
+
+
+
   const [series, setSeries] = useState([]);
   const [xAxisDates, setXAxisDates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
+  // Colores personalizados por moneda (puedes ajustar)
+  const currencyColors = {
+    EUR: '#1976d2', // Azul
+    JPY: '#d32f2f', // Rojo
+    GBP: '#388e3c', // Verde
+    CAD: '#f9a825'  // Amarillo
+  };
+  const currencies = ['EUR', 'JPY', 'GBP', 'CAD'];
+  const baseCurrency = 'USD';
+  const startDate = '2023-01-01';
   const endDate = new Date().toISOString().split('T')[0]; // Fecha actual
 
   useEffect(() => {
@@ -71,7 +76,7 @@ export const BankingGraphics = () => {
             type: 'line',
             label: currency,
             data,
-            color: currencyColors[currency] || undefined, // 🎨 Aplica color por moneda
+            color: currencyColors[currency] || undefined, // color por moneda
             highlightScope: { highlight: 'item' }
           };
         });
@@ -96,10 +101,10 @@ export const BankingGraphics = () => {
     <div style={{
       width: '100%',
       maxWidth: 900,
-      margin: '30px auto',
-      padding: 20,
+      margin: '2px auto',
+      padding: 6,
       borderRadius: 12,
-      backgroundColor: '#fff',
+      backgroundColor: '#fff',//pendiente de modificar
       boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
     }}>
       <Typography variant="h6" align="center" gutterBottom>

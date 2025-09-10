@@ -12,6 +12,7 @@ export const NavBar = () => {
   const [open, setOpen] = useState(false);
 
   return (
+    
     <>
       <nav className="navbar" aria-label="Principal">
         <div className="navbar-logo">
@@ -26,6 +27,7 @@ export const NavBar = () => {
             <>
               <Link to="/profile" className="btn btn-signup">Profile</Link>
               <ButtonAvatar onClick={() => setOpen(true)} />
+              <Link to="/dasborde" className="btn btn-signup">Dasborde</Link>
             </>
           ) : (
             <>
