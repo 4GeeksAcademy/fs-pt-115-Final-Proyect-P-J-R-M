@@ -2,21 +2,21 @@ import { useEffect, useMemo, useState } from "react";
 import { getPosts } from "../../../services/postApi";
 import { getUsers } from "../../../services/userApi";
 import { useAuth } from "../../../hooks/useAuth";
-import { CreatePost } from "./CreatePost";
-import { PostList } from "./PostList";
-import { DestinationCurrencyFilter } from "./DestinationCurrencyFilter"; 
+import { CreatePost } from "../../../components/posts/CreatePost";
+import { PostList } from "../../../components/posts/PostList";
+import { DestinationCurrencyFilter } from "../../../components/posts/DestinationCurrencyFilter";
 
 export const PostsPage = () => {
-  const { token, error, user } = useAuth(); 
+  const { token, error, user } = useAuth();
   const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);          
+  const [users, setUsers] = useState([]);
   const [to, setTo] = useState("");
 
   const fetchAll = async () => {
     if (!token) return;
     const [postsData, usersData] = await Promise.all([
       getPosts(token),
-      getUsers(), 
+      getUsers(),
     ]);
     setPosts(Array.isArray(postsData) ? postsData : []);
     setUsers(Array.isArray(usersData) ? usersData : []);
@@ -48,7 +48,7 @@ export const PostsPage = () => {
   }, [postsWithAuthor, to]);
 
   const handleDeleted = (id) => {
-    setPosts(prev => prev.filter(p => p.id !== id)); 
+    setPosts(prev => prev.filter(p => p.id !== id));
   };
 
   if (!token) return <p>Inicia sesión para crear posts.</p>;
@@ -64,8 +64,8 @@ export const PostsPage = () => {
         <h3>Posts existentes</h3>
         <PostList
           posts={filteredPosts}
-          currentUserId={user?.id} 
-          onDeleted={handleDeleted}  
+          currentUserId={user?.id}
+          onDeleted={handleDeleted}
         />
       </div>
     </div>

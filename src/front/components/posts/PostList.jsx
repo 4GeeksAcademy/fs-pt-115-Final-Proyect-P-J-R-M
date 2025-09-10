@@ -8,8 +8,8 @@ export const PostList = ({ posts = [], currentUserId, onDeleted, onOpenChat }) =
       {posts.map((p) => {
         const author = p.author;
         const isOwner = currentUserId && (currentUserId === (author?.id ?? p.user_id));
-        const exchangeDate = getExchangeDate(p);                   
-        const description = stripExchangeTag(p.description || ""); 
+        const exchangeDate = getExchangeDate(p);
+        const description = stripExchangeTag(p.description || "");
 
         return (
           <li key={p.id} style={{ border: "1px solid #eaeaea", borderRadius: 12, padding: 12 }}>
