@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import String, Boolean, ForeignKey, Column, Table, Integer, DateTime, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_bcrypt import Bcrypt
-from datetime import datetime
+from datetime import datetime, date
 
 
 db = SQLAlchemy()
@@ -76,10 +76,11 @@ class Post(db.Model):
         db.ForeignKey('user.id'), nullable=False)
     destination: Mapped[str] = mapped_column(String(120))
     description: Mapped[str] = mapped_column(String(255))
+    day_exchange: Mapped[date] = mapped_column(db.Date, nullable=True)
     divisas_one: Mapped[str] = mapped_column(String(50))
     divisas_two: Mapped[str] = mapped_column(String(50))
     created_data: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow)
+        DateTime, default=datetime.now)
 
     def serialize(self):
         return {
@@ -87,6 +88,7 @@ class Post(db.Model):
             "user_id": self.user_id,
             "destination": self.destination,
             "description": self.description,
+            "day_exchangue":self.day_exchange,
             "divisas_one": self.divisas_one,
             "divisas_two": self.divisas_two,
             "created_data": self.created_data.strftime("%d/%m/%Y %H:%M")

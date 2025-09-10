@@ -48,6 +48,7 @@ def create_post():
         user_id=int(use_id),
         destination=data["destination"],
         description=data["description"],
+        day_exchange=data["day_exchange"],
         divisas_one=data["divisas_one"],
         divisas_two=data["divisas_two"],
         
@@ -65,6 +66,7 @@ def create_post():
         username=username,
         destination=new_post.destination,
         description=new_post.description,
+        day_exchange=new_post.day_exchange,
         divisas_one=new_post.divisas_one,
         divisas_two=new_post.divisas_two,
         data_created=data_created,
@@ -107,6 +109,8 @@ def update_post(post_id):
         post.destination = data["destination"]
     if "description" in data:
         post.description = data["description"]
+    if "day_exchange" in data:
+        post.day_exchange = data["day_exchangue"]
     if "divisas_one" in data:
         post.divisas_one = data["divisas_one"]
     if "divisas_two" in data:
