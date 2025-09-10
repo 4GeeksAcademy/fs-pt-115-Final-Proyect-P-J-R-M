@@ -1,0 +1,54 @@
+
+.dasborde-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #e2d4b7; /* Fondo general */
+}
+
+.sidebar {
+  width: 280px;
+  background-color: #b0bbbf; /* Color del sidebar */
+  padding: 20px;
+  border-right: 1px solid #ccc;
+}
+
+.sidebar-user {
+  text-align: center;
+}
+
+.sidebar-user img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.sidebar-section {
+  margin-bottom: 20px;
+}
+
+.toggle-button {
+  margin-bottom: 10px;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+.content-inner {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 20px;
+}
+
+.calendar-container {
+  flex: 1.2;
+  min-width: 300px;
+}
+
+.converter-container {
+  flex: 1;
+}
