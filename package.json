@@ -60,6 +60,8 @@
 		"@mui/icons-material": "^7.3.2",
 		"@mui/material": "^7.3.2",
 		"@mui/x-charts": "^8.11.1",
+		"@mui/x-date-pickers": "^8.11.1",
+		"dayjs": "^1.11.18",
 		"prop-types": "^15.8.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",

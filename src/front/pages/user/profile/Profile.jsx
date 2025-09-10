@@ -52,7 +52,6 @@ export const Profile = () => {
                             type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
                         <button onClick={handleClick} disabled={uploading} className="btn btn-upload" >
 
-
                             {uploading ? "Guardando..." : "Guardar"}
                         </button>
                         {uploading ? (
