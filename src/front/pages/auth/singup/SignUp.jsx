@@ -3,6 +3,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 export function SignUp() {
+  const [error, setError] = useState(null)
   const { signUp } = useAuth()
   const navigate = useNavigate()
   const [userData, setUserData] = useState({
@@ -18,12 +19,23 @@ export function SignUp() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData(prev => ({ ...prev, [name]: value }));
-  };
+    const updateData = prev => ({ ...prev, [name]: value })
+    setUserData(updateData);
+    if (updateData.password2 &&
+       updateData.password !== 
+       updateData.password2){
+        setError("Contraseña no coincide")
+        return
+      }else {
+        setError(null);
+      }
+       }
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
+
     if (!userData.username || !userData.dni || !userData.email || !userData.password) {
       alert("Todos los campos son requeridos");
       return;
@@ -71,15 +83,26 @@ export function SignUp() {
         onChange={handleChange}
         required
       />
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        value={userData.password}
-        onChange={handleChange}
-        required
-      />
-
+      {
+        <>
+          <input
+            type="password"
+            name="password"
+            placeholder="Contraseña"
+            value={userData.password}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="password"
+            name="password2"
+            placeholder="Confirmar Contraseña"
+            
+            onChange={handleChange}
+            required
+          />
+        </>
+      }
       <button type="submit">Crear cuenta</button>
     </form>
   );
