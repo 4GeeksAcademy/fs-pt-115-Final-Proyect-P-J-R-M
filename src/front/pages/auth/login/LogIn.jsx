@@ -26,7 +26,6 @@ export const LogIn = () => {
         icon: "error",
         title: "Oops...",
         text: "Usuario o contraseña incorrecta...",
-        footer: '<a href="#">Restaurar contraseña</a>'
       });
     }
   }, [error]);
