@@ -1,4 +1,3 @@
-
 export function DestinationCurrencyFilter({ currencies = [], active = "", onSelect }) {
   return (
     <div>

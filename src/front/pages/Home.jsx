@@ -2,6 +2,7 @@ import { CurrencyConverter } from "../components/currencyConverter/CurrencyConve
 import { BankingGraphics } from "../components/BankingGraphics/BankingGraphics"
 import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { Calendar } from "../components/Calendar/Calendar";
 
 export const Home = () => {
 	const { signUp, login, token, error } = useAuth()

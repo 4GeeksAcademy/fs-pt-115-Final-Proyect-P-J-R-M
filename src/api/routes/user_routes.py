@@ -154,7 +154,7 @@ def upload_ing():
     file = request.files.get("file")
     user = db.session.get(User, int(user_id))
     if not file:
-        return jsonify({"error": "No se envio el archivo mamaguevo"}), 400
+        return jsonify({"error": "No se envio el archivo "}), 400
     upload_result = cloudinary.uploader.upload(file)
 
     # Obtenemos el public_id de la imagen subida desde upload_result

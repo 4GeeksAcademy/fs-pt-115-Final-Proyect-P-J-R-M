@@ -23,6 +23,8 @@ flask-bcrypt = "*"
 flask-jwt-extended = "*"
 flask-mail = "*"
 cloudinary = "*"
+flask-socketio = "*"
+eventlet = "*"
 
 [requires]
 python_version = "3.13"

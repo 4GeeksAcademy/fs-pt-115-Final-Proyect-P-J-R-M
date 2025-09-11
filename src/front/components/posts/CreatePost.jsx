@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { createPost } from "../../../services/postApi";
-import { useAuth } from "../../../hooks/useAuth";
-import { todayYMD } from "./ExchangeDate"; 
+import { createPost } from "../../services/postApi";
+import { useAuth } from "../../hooks/useAuth";
+import { todayYMD } from "./ExchangeDate";
 
 const INITIAL = {
   destination: "",
   description: "",
   divisas_one: "EUR",
   divisas_two: "USD",
-  exchangeDate: "", 
+  exchangeDate: "",
 };
 
 const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "MXN", "ARS"];
@@ -38,16 +38,12 @@ export const CreatePost = ({ onSuccess }) => {
       }
     }
 
-    const descWithTag = form.exchangeDate
-      ? `${form.description} [exchange:${form.exchangeDate}]`
-      : form.description;
-
     const payload = {
       destination: form.destination,
-      description: descWithTag,
+      description: form.description,
       divisas_one: form.divisas_one,
       divisas_two: form.divisas_two,
-      ...(form.exchangeDate ? { exchange_date: form.exchangeDate } : {}),
+      day_exchange: form.exchangeDate || null,
     };
 
     await createPost(payload, token);

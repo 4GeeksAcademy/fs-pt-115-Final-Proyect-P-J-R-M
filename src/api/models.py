@@ -33,8 +33,6 @@ class User(db.Model):
     password: Mapped[str] = mapped_column(nullable=False)
     dni: Mapped [str] = mapped_column(String(120), unique=True, nullable=False)
     image: Mapped[Optional[str]] = mapped_column(Text)
-    dni: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
-    image: Mapped[str] = mapped_column(String(255))
     country: Mapped[str] = mapped_column(String(120))
     score: Mapped[int] = mapped_column(Integer)
 

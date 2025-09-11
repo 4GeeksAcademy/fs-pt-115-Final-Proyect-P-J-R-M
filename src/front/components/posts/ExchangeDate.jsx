@@ -1,7 +1,8 @@
 export function getExchangeDate(post) {
   if (post?.exchange_date) return String(post.exchange_date);
-  const m = /\[exchange:(\d{4}-\d{2}-\d{2})\]/.exec(post?.description || "");
-  return m ? m[1] : null;
+
+  if (post?.day_exchange) return String(post.day_exchange);
+
 }
 
 export function stripExchangeTag(text = "") {
