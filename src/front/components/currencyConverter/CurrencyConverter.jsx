@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getCurrencies, getLatestRate } from "../../services/frankfurter"
+import { getCurrencies, getLatestRate } from "../../services/frankfurterApi"
 import "./currencyConverter.css"
 
 export const CurrencyConverter = () => {
