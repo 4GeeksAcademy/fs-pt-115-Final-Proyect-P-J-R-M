@@ -13,6 +13,13 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
 import cloudinary
+from flask_cors import CORS
+from api.routes.user_routes import user_bp
+
+
+
+
+
 
 # from models import Person
 
@@ -21,6 +28,9 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+CORS(app, resources={r"/users/*": {"origins": "https://animated-spork-v64ggp4r65v2w6rg-3000.app.github.dev"}}, supports_credentials=True)
+app.register_blueprint(user_bp)
+
 
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = os.getenv('VARIABLE_NAME')  
@@ -84,7 +94,7 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv ('MAIL_USERNAME')
 
 mail.init_app (app)
 
-#######cloudinary
+#cloudinary
 cloudinary.config( 
     cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'), 
     api_key = os.getenv('CLOUDINARY_API_KEY'), 

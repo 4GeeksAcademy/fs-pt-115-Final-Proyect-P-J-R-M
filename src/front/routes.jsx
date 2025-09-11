@@ -14,6 +14,8 @@ import { SignUp } from "./pages/auth/singup/SignUp"
 import { LogIn } from "./pages/auth/login/LogIn"
 import { PostsPage } from "./pages/public/posts/PostPage";
 import { Profile } from "./pages/user/profile/Profile";
+import { ResetPasswordRequest } from "./components/ResetPasswordRequest";
+
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,6 +32,7 @@ export const router = createBrowserRouter(
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/profile" element={<Profile />}></Route>
       </Route>
+      <Route path="/request-reset" element={<ResetPasswordRequest />} />
     </Route>
   )
 );
