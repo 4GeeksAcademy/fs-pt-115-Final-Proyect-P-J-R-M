@@ -9,7 +9,7 @@ import {
 } from '@mui/x-charts';
 import { LinePlot, LineHighlightPlot } from '@mui/x-charts/LineChart';
 
-import { getHistoricalRates } from '../../services/frankfurter';
+import { getHistoricalRates } from '../../services/frankfurterApi';
 
 
 
