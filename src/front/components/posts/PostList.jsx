@@ -1,3 +1,4 @@
+import { StartChatButton } from "../StartChatButton";
 import { getExchangeDate, stripExchangeTag } from "./ExchangeDate";
 
 export const PostList = ({ posts = [], currentUserId, onDeleted, onOpenChat }) => {
@@ -28,9 +29,7 @@ export const PostList = ({ posts = [], currentUserId, onDeleted, onOpenChat }) =
               </div>
 
               <div style={{ marginLeft: "auto", display: "flex", gap: 8 }}>
-                {!isOwner && author && (
-                  <button type="button" onClick={() => onOpenChat?.(author, p)}>Chatear</button>
-                )}
+                {<StartChatButton userTwo={p.user_id} postId={p.id} />}
                 {isOwner && (
                   <button type="button" onClick={() => onDeleted?.(p.id)}>Eliminar</button>
                 )}
