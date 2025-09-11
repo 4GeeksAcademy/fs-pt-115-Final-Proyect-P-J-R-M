@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Calendar } from "../../../components/Calendar/Calendar";
 import { CurrencyConverter } from "../../../components/currencyConverter/CurrencyConverter";
 import { useAuth } from "../../../hooks/useAuth";
-import { getFavorites } from "../../../services/userApi";
+import { getFavorites } from "../../../services/favoritesApi";
 import "./dasborde.css";
 
 export const Dasborde = () => {
