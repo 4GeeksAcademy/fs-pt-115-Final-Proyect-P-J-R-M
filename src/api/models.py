@@ -86,7 +86,7 @@ class Post(db.Model):
             "user_id": self.user_id,
             "destination": self.destination,
             "description": self.description,
-            "day_exchangue":self.day_exchange,
+            "day_exchange":self.day_exchange,
             "divisas_one": self.divisas_one,
             "divisas_two": self.divisas_two,
             "created_data": self.created_data.strftime("%d/%m/%Y %H:%M")

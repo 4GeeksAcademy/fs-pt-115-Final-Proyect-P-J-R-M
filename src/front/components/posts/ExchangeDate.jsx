@@ -1,8 +1,6 @@
 export function getExchangeDate(post) {
   if (post?.exchange_date) return String(post.exchange_date);
-
   if (post?.day_exchange) return String(post.day_exchange);
-
 }
 
 export function stripExchangeTag(text = "") {

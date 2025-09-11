@@ -396,6 +396,7 @@
 //         </form>
 //     );
 // }
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
@@ -686,7 +687,7 @@ export default function ChatSocketClient() {
   // refresco de lista cada 15s (se mantiene), pero ya NO cambia el chat activo
   useEffect(() => {
     if (!connected) return;
-    const id = setInterval(() => loadChats(), 15000);
+    const id = setInterval(() => loadChats(), 100);
     return () => clearInterval(id);
   }, [connected]);
 

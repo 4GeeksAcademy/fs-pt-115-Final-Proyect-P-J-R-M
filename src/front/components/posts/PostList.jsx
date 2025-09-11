@@ -22,7 +22,7 @@ export const PostList = ({ posts = [], currentUserId, onDeleted, onOpenChat }) =
               />
               <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.1 }}>
                 <strong>{author?.username ?? "Usuario"}</strong>
-                {p.created_at && <small>{new Date(p.created_at).toLocaleString()}</small>}
+                
                 {exchangeDate && (
                   <small>Intercambio previsto: {new Date(exchangeDate).toLocaleDateString()}</small>
                 )}
