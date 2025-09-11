@@ -27,7 +27,6 @@ export const NavBar = () => {
             <>
               <Link to="/profile" className="btn btn-signup">Profile</Link>
               <ButtonAvatar onClick={() => setOpen(true)} />
-              <Link to="/dasborde" className="btn btn-signup">Dasborde</Link>
             </>
           ) : (
             <>

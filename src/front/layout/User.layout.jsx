@@ -6,7 +6,6 @@ export const UserLayout = () => {
 
     return (
         <>
-            <NavBar />
             <Outlet />
         </>
     )

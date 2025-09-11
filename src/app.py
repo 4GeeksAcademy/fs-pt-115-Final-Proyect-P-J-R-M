@@ -2,6 +2,8 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
+from flask_socketio import SocketIO
+from api.sockets.handlers import register_socket_handlers
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
@@ -23,7 +25,7 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.getenv('VARIABLE_NAME')  
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
 
 # database condiguration
@@ -64,6 +66,8 @@ def sitemap():
     return send_from_directory(static_file_dir, 'index.html')
 
 # any other endpoint will try to serve it like a static file
+
+
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
@@ -74,28 +78,39 @@ def serve_any_other_file(path):
 
 # Setup the Flask-JWT-Extended extension
 
-app.config['MAIL_SERVER'] = os.getenv ('MAIL_SERVER')
+
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = os.getenv ('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv ('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv ('MAIL_USERNAME')
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
 
-mail.init_app (app)
+mail.init_app(app)
 
-#######cloudinary
-cloudinary.config( 
-    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'), 
-    api_key = os.getenv('CLOUDINARY_API_KEY'), 
-    api_secret = os.getenv('CLOUDINARY_API_SECRET') ,
+# cloudinary
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
     secure=True
 )
+
+# Scoketio
+app.config['SECRET_KEY'] = os.getenv('SOCKET_SECRET_KEY')
+
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    path="/socket.io",
+    logger=True,
+    engineio_logger=False,
+)
+
+register_socket_handlers(socketio, app)
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
-    app.run(host='0.0.0.0', port=PORT, debug=True)
-
-
-
+    socketio.run(app, host='0.0.0.0', port=PORT, debug=True)
