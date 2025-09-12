@@ -79,7 +79,7 @@ export const PostList = ({refresh = 0}) => {
                     <small>Intercambio previsto: {post.day_exchange}</small>
                   )}
                 </div>
-                
+                {<StartChatButton userTwo={post.user_id} postId={post.id} />}
                 {user?.id === post.user_id && (
                   <button
                     style={{ marginLeft: "auto" }}
