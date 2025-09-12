@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { createPost } from "../../services/postApi";
 import { useAuth } from "../../hooks/useAuth";
-import { todayYMD } from "./ExchangeDate";
 
 const INITIAL = {
   destination: "",
@@ -12,6 +11,14 @@ const INITIAL = {
 };
 
 const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "MXN", "ARS"];
+
+function todayYMD() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
 
 export const CreatePost = ({ onSuccess }) => {
   const [form, setForm] = useState(INITIAL);
@@ -33,13 +40,8 @@ export const CreatePost = ({ onSuccess }) => {
     if (form.divisas_one === form.divisas_two) return;
     if (!token) return;
 
-    if (form.exchangeDate) {
-      const chosen = new Date(form.exchangeDate);
-      const today = new Date(todayYMD());
-      if (isNaN(chosen.getTime()) || chosen < today) {
-        return;
-      }
-    }
+    if (form.exchangeDate && form.exchangeDate < todayYMD()) return; 
+     
 
     const payload = {
       destination: form.destination,
