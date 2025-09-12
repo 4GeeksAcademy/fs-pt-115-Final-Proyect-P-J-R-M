@@ -5,10 +5,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { enUS, deDE, esES, frFR } from '@mui/x-date-pickers/locales'; // Añade aquí los locales que necesites
 import dayjs from 'dayjs';
+import { PickersDay } from '@mui/x-date-pickers/PickersDay';
 
 
-
-export const Calendar = () => {
+export const Calendar = ({ markedDates = [] }) => {
     // Funcion para mapear idioma a configuracion MUI y dayjs para traduccion dekl usuario
     const getLocaleData = (locale) => {
         switch (locale) {
@@ -41,6 +41,34 @@ export const Calendar = () => {
                 setLocaleInfo(getLocaleData('en'));
             });
     }, []);
+    //----------------------
+    //Marcar los dias de los post
+
+    const markedDayjsDates = markedDates.map(date => dayjs(date).startOf('day'));
+
+    const renderDay = (day, _selectedDate, dayInCurrentMonth, props) => {
+        const isMarked = markedDayjsDates.some(markedDay =>
+            markedDay.isSame(day, 'day')
+        );
+
+        return (
+            <PickersDay
+                {...props}
+                day={day}
+                outsideCurrentMonth={!dayInCurrentMonth}
+                sx={{
+                    backgroundColor: isMarked ? 'primary.light' : undefined,
+                    color: isMarked ? 'white' : undefined,
+                    borderRadius: '50%',
+                    '&:hover': {
+                        backgroundColor: isMarked ? 'primary.main' : undefined,
+                    },
+                }}
+            />
+        );
+    };
+
+
 
     return (
         <LocalizationProvider
