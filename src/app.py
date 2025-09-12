@@ -15,6 +15,9 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
 import cloudinary
+from flask_cors import CORS
+from api.routes.user_routes import user_bp
+
 
 # from models import Person
 
@@ -23,6 +26,9 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+CORS(app, resources={r"/users/*": {"origins": os.getenv('VITE_BACKEND_URL')}}, supports_credentials=True)
+app.register_blueprint(user_bp)
+
 
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
@@ -111,6 +117,6 @@ socketio = SocketIO(
 register_socket_handlers(socketio, app)
 
 # this only runs if `$ python src/main.py` is executed
-if __name__ == '__main__':
-    PORT = int(os.environ.get('PORT', 3001))
-    socketio.run(app, host='0.0.0.0', port=PORT, debug=True)
+# if __name__ == '__main__':
+#     PORT = int(os.environ.get('PORT', 3001))
+#     socketio.run(app, host='0.0.0.0', port=PORT, debug=True)
