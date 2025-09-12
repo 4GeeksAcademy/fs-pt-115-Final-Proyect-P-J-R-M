@@ -1,82 +1,112 @@
-
-import React, { useEffect, useState } from 'react';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import React, { useEffect, useState, useMemo } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { enUS, deDE, esES, frFR } from '@mui/x-date-pickers/locales'; // Añade aquí los locales que necesites
-import dayjs from 'dayjs';
+import { enUS, deDE, esES, frFR } from '@mui/x-date-pickers/locales';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-
+import StarIcon from '@mui/icons-material/Star';
+import dayjs from 'dayjs';
 
 export const Calendar = ({ markedDates = [] }) => {
-    // Funcion para mapear idioma a configuracion MUI y dayjs para traduccion dekl usuario
-    const getLocaleData = (locale) => {
-        switch (locale) {
-            case 'de':
-                return { mui: deDE, dayjsLocale: 'de' };
-            case 'es':
-                return { mui: esES, dayjsLocale: 'es' };
-            case 'fr':
-                return { mui: frFR, dayjsLocale: 'fr' };
-            case 'en':
-            default:
-                return { mui: enUS, dayjsLocale: 'en' };
-        }
-    };
-    //--------
-    const [localeInfo, setLocaleInfo] = useState(getLocaleData('en'));
+  const getLocaleData = (locale) => {
+    switch (locale) {
+      case 'de':
+        return { mui: deDE, dayjsLocale: 'de' };
+      case 'es':
+        return { mui: esES, dayjsLocale: 'es' };
+      case 'fr':
+        return { mui: frFR, dayjsLocale: 'fr' };
+      case 'en':
+      default:
+        return { mui: enUS, dayjsLocale: 'en' };
+    }
+  };
 
-    useEffect(() => {
-        const userLang = navigator.language?.split('-')[0] || 'en';
-        const localeData = getLocaleData(userLang);
+  const [localeInfo, setLocaleInfo] = useState(getLocaleData('en'));
+  const [value, setValue] = useState(dayjs());
 
-        import(`dayjs/locale/${localeData.dayjsLocale}`)
-            .then(() => {
-                dayjs.locale(localeData.dayjsLocale);
-                setLocaleInfo(localeData);
-            })
-            .catch(() => {
-                console.warn(`No se pudo cargar el locale "${userLang}", usando inglés por defecto`) //mostrar mensajes de advertencia
-                dayjs.locale('en');
-                setLocaleInfo(getLocaleData('en'));
-            });
-    }, []);
-    //----------------------
-    //Marcar los dias de los post
+  useEffect(() => {
+    const userLang = navigator.language?.split('-')[0] || 'en';
+    const localeData = getLocaleData(userLang);
 
-    const markedDayjsDates = markedDates.map(date => dayjs(date).startOf('day'));
+    import(`dayjs/locale/${localeData.dayjsLocale}`)
+      .then(() => {
+        dayjs.locale(localeData.dayjsLocale);
+        setLocaleInfo(localeData);
+      })
+      .catch(() => {
+        console.warn(`No se pudo cargar el locale "${userLang}", usando inglés por defecto`);
+        dayjs.locale('en');
+        setLocaleInfo(getLocaleData('en'));
+      });
+  }, []);
 
-    const renderDay = (day, _selectedDate, dayInCurrentMonth, props) => {
-        const isMarked = markedDayjsDates.some(markedDay =>
-            markedDay.isSame(day, 'day')
-        );
+  // Normalizamos las fechas marcadas para facilitar comparación
+  const normalizedMarkedDates = useMemo(() => {
+    return markedDates
+      .map(date => {
+        const d = dayjs(date);
+        return d.isValid() ? d.format('YYYY-MM-DD') : null;
+      })
+      .filter(Boolean);
+  }, [markedDates]);
 
-        return (
-            <PickersDay
-                {...props}
-                day={day}
-                outsideCurrentMonth={!dayInCurrentMonth}
-                sx={{
-                    backgroundColor: isMarked ? 'primary.light' : undefined,
-                    color: isMarked ? 'white' : undefined,
-                    borderRadius: '50%',
-                    '&:hover': {
-                        backgroundColor: isMarked ? 'primary.main' : undefined,
-                    },
-                }}
-            />
-        );
-    };
+  useEffect(() => {
+    console.log("Fechas marcadas (strings YYYY-MM-DD):", normalizedMarkedDates);
+  }, [normalizedMarkedDates]);
 
-
+  const renderDay = (day, _selectedDate, dayInCurrentMonth, props) => {
+    const formattedDay = day.format('YYYY-MM-DD');
+    const isMarked = normalizedMarkedDates.includes(formattedDay);
 
     return (
-        <LocalizationProvider
-            dateAdapter={AdapterDayjs}
-            adapterLocale={localeInfo.dayjsLocale}
-            localeText={localeInfo.mui.components.MuiLocalizationProvider.defaultProps.localeText}//para la traduccion por idiomas
-        >
-            <DateCalendar />
-        </LocalizationProvider>
+      <PickersDay
+        {...props}
+        day={day}
+        sx={{
+          backgroundColor: isMarked ? '#1976d2' : undefined,
+          color: isMarked ? 'white' : undefined,
+          border: isMarked ? '2px solid #004a9f' : undefined,
+          borderRadius: '50%',
+          position: 'relative',
+          '&:hover': {
+            backgroundColor: isMarked ? '#1565c0' : undefined,
+          },
+        }}
+      >
+        {isMarked && (
+          <StarIcon
+            fontSize="small"
+            sx={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              color: '#ffeb3b',
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              borderRadius: '50%',
+              padding: '2px',
+              width: 16,
+              height: 16,
+            }}
+          />
+        )}
+      </PickersDay>
     );
+  };
+
+  return (
+    <LocalizationProvider
+      dateAdapter={AdapterDayjs}
+      adapterLocale={localeInfo.dayjsLocale}
+      localeText={localeInfo.mui.components.MuiLocalizationProvider.defaultProps.localeText}
+    >
+      <StaticDatePicker
+        key={normalizedMarkedDates.join('-')}
+        displayStaticWrapperAs="desktop"
+        value={value}
+        onChange={(newValue) => setValue(newValue)}
+        renderDay={renderDay}
+      />
+    </LocalizationProvider>
+  );
 };

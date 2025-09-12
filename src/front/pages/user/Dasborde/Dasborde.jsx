@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import { Calendar } from "../../../components/Calendar/Calendar";
 import { useAuth } from "../../../hooks/useAuth";
-import { getFavorites } from "../../../services/favorites"
+import { getFavorites } from "../../../services/favoritesApi"
 import { getPosts } from "../../../services/postApi";
-
-
+import dayjs from 'dayjs';
 
 import "./dasborde.css";
 
 export const Dasborde = () => {
   const { user, loading, error } = useAuth();
   const [postfavo, setPostFavo] = useState([]);
-  const [chatsfavo, setChatsFavo] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +64,6 @@ export const Dasborde = () => {
               <p><strong>Email:</strong> {user.email}</p>
               <p><strong>Country:</strong> {user.country}</p>
               <p><strong>Score:</strong> {user.score}</p>
-              <p><strong>Day exchange:</strong> {user.day_exchange}</p>
             </div>
           </div>
         )}
@@ -76,8 +73,8 @@ export const Dasborde = () => {
             <Calendar
               markedDates={
                 postfavo
-                  .map(post => post.day_exchangue)
-                  .filter(date => !!date)
+                  .map(post => dayjs(post.day_exchange).format('YYYY-MM-DD'))
+                  .filter(Boolean)
               }
             />
           </div>
@@ -91,7 +88,7 @@ export const Dasborde = () => {
                     <p><strong>Destino:</strong> {post.destination}</p>
                     <p><strong>Descripción:</strong> {post.description}</p>
                     <p><strong>Divisas:</strong> {post.divisas_one} → {post.divisas_two}</p>
-                    <p><strong>Fecha de intercambio:</strong> {post.day_exchangue || "No especificada"}</p>
+                    <p><strong>Fecha de intercambio:</strong> {post.day_exchange || "No especificada"}</p>
                   </li>
                 ))}
               </ul>
