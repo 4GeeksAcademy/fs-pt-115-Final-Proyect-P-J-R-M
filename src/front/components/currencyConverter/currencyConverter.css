@@ -1,7 +1,7 @@
 
 .converter-container {
     max-width: 540px;
-    margin: 80px auto;
+    margin: 40px auto;
     padding: 40px;
     background: linear-gradient(145deg, #E2D4B7 0%, #CADBC8 100%); /* Fondo con transición */
     border-radius: 16px;
@@ -63,7 +63,7 @@
     outline: none;
 }
 
-/* Botón con estilo tecnológico */
+/* Botón */
 .converter-container button {
     width: 100%;
     padding: 14px;
@@ -87,7 +87,6 @@
     cursor: not-allowed;
 }
 
-/* Resultados con estilo fino */
 .converter-container p {
     margin-top: 22px;
     text-align: center;

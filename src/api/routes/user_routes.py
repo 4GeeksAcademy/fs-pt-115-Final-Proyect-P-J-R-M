@@ -1,4 +1,4 @@
-import app
+
 from flask import Blueprint, jsonify, request, render_template
 from flask_cors import CORS
 from api.models import User, db
@@ -9,6 +9,9 @@ import cloudinary
 import cloudinary.uploader
 import os
 from cloudinary import CloudinaryImage
+from datetime import timedelta
+
+
 
 user_bp = Blueprint("users", __name__, url_prefix="/users",
                     template_folder='../templates')
@@ -151,7 +154,7 @@ def upload_ing():
     file = request.files.get("file")
     user = db.session.get(User, int(user_id))
     if not file:
-        return jsonify({"error": "No se envio el archivo mamaguevo"}), 400
+        return jsonify({"error": "No se envio el archivo "}), 400
     upload_result = cloudinary.uploader.upload(file)
 
     # Obtenemos el public_id de la imagen subida desde upload_result
@@ -168,3 +171,37 @@ def upload_ing():
 
     db.session.commit()
     return jsonify({"msg": "ya esta en la nube", "imageUrl": upload_result["secure_url"]}), 200
+
+#ruta para restablecer contraseña
+@user_bp.route('/request-reset', methods=['POST', 'OPTIONS'])
+def request_reset():
+    if request.method == 'OPTIONS':
+        return jsonify({"msg": "Preflight OK"}), 200
+    email = request.json.get('email')
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+
+    token = create_access_token(identity=user.id, expires_delta=timedelta(minutes=30))
+    reset_url = f"https://handtohand.com/reset-password?token={token}"
+
+    html_reset = render_template('reset.html', username=user.username, reset_url=reset_url)
+    msg = Message(
+
+        subject='Restablecer Contraseña',
+        recipients=[email],
+        html=html_reset)
+
+    mail.send(msg)
+    return jsonify({"msg": "Correo enviado correctamente"})
+
+
+
+
+
+
+
+   
+
+

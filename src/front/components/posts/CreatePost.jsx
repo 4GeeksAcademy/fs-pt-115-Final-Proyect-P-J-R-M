@@ -28,6 +28,9 @@ export const CreatePost = ({ onSuccess }) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
+  
+  console.log(form);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -38,11 +38,10 @@ def create_post():
 
     if not data.get("destination") or not data.get("description") or not data.get("divisas_one") or not data.get("divisas_two"):
         return jsonify({"msg": "Missing data to be filled in"}), 400
-    
+
     user = User.query.get(use_id)
     username = user.username
     email = user.email
-
 
     new_post = Post(
         user_id=int(use_id),
@@ -51,7 +50,7 @@ def create_post():
         day_exchange=data["day_exchange"],
         divisas_one=data["divisas_one"],
         divisas_two=data["divisas_two"],
-        
+
     )
 
     db.session.add(new_post)

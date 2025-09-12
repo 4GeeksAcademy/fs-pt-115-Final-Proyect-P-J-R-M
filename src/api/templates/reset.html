@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
+    .container { background-color: #fff; padding: 30px; border-radius: 10px; max-width: 600px; margin: auto; }
+    h2 { color: #4CAF50; }
+    p { font-size: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>¡Bienvenido, {{ username }}!</h2>
+    <p>Recibimos una solicitud para restablecer tu contraseña.</p>
+    <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+    <a href="{reset_url}">Restablecer contraseña</a>
+    <p><strong>Este enlace expirará en 30 minutos.</strong></p>
+    <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+    <hr>
+    <p>Gracias,<br>El equipo de Hand to Hand</p>
+    <hr>
+    <p style="font-size: 14px; color: #888;">Este correo fue generado automáticamente. No respondas a este mensaje.</p>
+  </div>
+</body>
+</html>

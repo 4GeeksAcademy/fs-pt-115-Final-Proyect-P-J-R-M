@@ -12,6 +12,7 @@ export const NavBar = () => {
   const [open, setOpen] = useState(false);
 
   return (
+    
     <>
       <nav className="navbar" aria-label="Principal">
         <div className="navbar-logo">

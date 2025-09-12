@@ -2,6 +2,8 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
+from flask_socketio import SocketIO
+from api.sockets.handlers import register_socket_handlers
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
@@ -13,6 +15,13 @@ from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_jwt_extended import JWTManager
 import cloudinary
+from flask_cors import CORS
+from api.routes.user_routes import user_bp
+
+
+
+
+
 
 # from models import Person
 
@@ -21,9 +30,12 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+CORS(app, resources={r"/users/*": {"origins": "https://animated-spork-v64ggp4r65v2w6rg-3000.app.github.dev"}}, supports_credentials=True)
+app.register_blueprint(user_bp)
+
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.getenv('VARIABLE_NAME')  
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
 jwt = JWTManager(app)
 
 # database condiguration
@@ -64,6 +76,8 @@ def sitemap():
     return send_from_directory(static_file_dir, 'index.html')
 
 # any other endpoint will try to serve it like a static file
+
+
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
@@ -74,28 +88,39 @@ def serve_any_other_file(path):
 
 # Setup the Flask-JWT-Extended extension
 
-app.config['MAIL_SERVER'] = os.getenv ('MAIL_SERVER')
+
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = os.getenv ('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv ('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv ('MAIL_USERNAME')
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_USERNAME')
 
-mail.init_app (app)
+mail.init_app(app)
 
-#######cloudinary
-cloudinary.config( 
-    cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'), 
-    api_key = os.getenv('CLOUDINARY_API_KEY'), 
-    api_secret = os.getenv('CLOUDINARY_API_SECRET') ,
+# cloudinary
+cloudinary.config(
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.getenv('CLOUDINARY_API_KEY'),
+    api_secret=os.getenv('CLOUDINARY_API_SECRET'),
     secure=True
 )
 
+# Scoketio
+app.config['SECRET_KEY'] = os.getenv('SOCKET_SECRET_KEY')
+
+socketio = SocketIO(
+    app,
+    cors_allowed_origins="*",
+    path="/socket.io",
+    logger=True,
+    engineio_logger=False,
+)
+
+register_socket_handlers(socketio, app)
+
 # this only runs if `$ python src/main.py` is executed
-if __name__ == '__main__':
-    PORT = int(os.environ.get('PORT', 3001))
-    app.run(host='0.0.0.0', port=PORT, debug=True)
-
-
-
+# if __name__ == '__main__':
+#     PORT = int(os.environ.get('PORT', 3001))
+#     socketio.run(app, host='0.0.0.0', port=PORT, debug=True)

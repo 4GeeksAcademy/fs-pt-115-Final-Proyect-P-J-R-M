@@ -2,6 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getPosts, deletePost } from "../../services/postApi";
 import { getUsers } from "../../services/userApi";
+import { StartChatButton } from "../StartChatButton";
 
 
 export const PostList = ({refresh = 0}) => {
@@ -78,6 +79,7 @@ export const PostList = ({refresh = 0}) => {
                     <small>Intercambio previsto: {post.day_exchange}</small>
                   )}
                 </div>
+                
                 {user?.id === post.user_id && (
                   <button
                     style={{ marginLeft: "auto" }}
@@ -85,6 +87,7 @@ export const PostList = ({refresh = 0}) => {
                   >
                     Eliminar
                   </button>
+                 
                 )}
               </header>
 

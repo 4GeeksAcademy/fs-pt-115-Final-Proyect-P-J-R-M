@@ -22,6 +22,7 @@ export function UserMenuSidebar({ open, onClose }) {
             <li><button onClick={go("/profile")}>Perfil</button></li>
             <li><button onClick={go("/chats")}>Chats</button></li>
             <li><button onClick={go("/posts")}>Posts</button></li>
+            <li><button onClick={go("/dasborde")}>Dashboard</button></li>
           </ul>
           <button className="btn-logout ums-full" onClick={handleLogout}>Logout</button>
         </nav>

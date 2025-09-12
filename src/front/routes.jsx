@@ -14,6 +14,9 @@ import { SignUp } from "./pages/auth/singup/SignUp"
 import { LogIn } from "./pages/auth/login/LogIn"
 import { PostsPage } from "./pages/public/posts/PostPage";
 import { Profile } from "./pages/user/profile/Profile";
+import { ResetPasswordRequest } from "./components/ResetPasswordRequest";
+import ChatPage from "./pages/chat/ChatPage";
+import { Dasborde } from "./pages/user/Dasborde/Dasborde";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,7 +32,10 @@ export const router = createBrowserRouter(
       <Route element={<UserLayout />}>
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/profile" element={<Profile />}></Route>
+        <Route path="/chats" element={<ChatPage/>}></Route>
+        <Route path="/dasborde" element={<Dasborde/>}></Route>
       </Route>
+      <Route path="/request-reset" element={<ResetPasswordRequest />} />
     </Route>
   )
 );
