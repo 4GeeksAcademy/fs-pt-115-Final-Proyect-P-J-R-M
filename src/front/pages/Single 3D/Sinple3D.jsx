@@ -302,21 +302,6 @@ export const Single3D = () => {
                 </div>
             </div>
 
-            {/* Footer opcional */}
-            {/*
-      <div className="container-fluid fixed-bottom footer">
-        <div className="row">
-          <div className="col">
-            <h4>Experiment N.3</h4>
-            <small>
-              <a href="https://dribbble.com/victorvergara" target="_blank" rel="noopener noreferrer">
-                dribbble.com/victorvergara
-              </a>
-            </small>
-          </div>
-        </div>
-      </div>
-      */}
         </div>
     );
 };
