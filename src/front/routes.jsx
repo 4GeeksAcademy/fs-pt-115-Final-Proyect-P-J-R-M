@@ -17,13 +17,14 @@ import { Profile } from "./pages/user/profile/Profile";
 import { ResetPasswordRequest } from "./components/ResetPasswordRequest";
 import ChatPage from "./pages/chat/ChatPage";
 import { Dasborde } from "./pages/user/Dasborde/Dasborde";
+import { Single3D } from "./pages/Single 3D/Sinple3D";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<RootLayout />}>
       <Route path="/" element={<PublicLayout />}>
         <Route index element={<Home />} />
-        <Route path="*" element={"NotFound"} />
+        <Route path="*" element={<Single3D/>} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/signup" element={<SignUp />} />
