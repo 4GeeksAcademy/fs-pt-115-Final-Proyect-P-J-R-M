@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { CreatePost } from "../../../components/posts/CreatePost";
 import { PostList } from "../../../components/posts/PostList";
+import "./postpage.css";
 
 export const PostsPage = () => {
   const { token } = useAuth();
@@ -11,9 +12,11 @@ export const PostsPage = () => {
 
   return (
     <>
-      <CreatePost onSuccess={() => setRefresh(r => r + 1)} />
-      <h3>Posts existentes</h3>
-      <PostList refresh={refresh} /> 
+      <div className="posts-page">
+        <CreatePost onSuccess={() => setRefresh(r => r + 1)} />
+        <h1 className="tittle-post-page">Posts</h1>
+        <PostList refresh={refresh} />
+      </div>
     </>
   );
 };
