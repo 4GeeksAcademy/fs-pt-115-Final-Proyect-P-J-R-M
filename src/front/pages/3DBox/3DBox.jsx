@@ -287,7 +287,7 @@ export const Single3D = () => {
 
                                 {/* Botón opcional para activar una línea */}
 
-                                <Link to="/ruta-destino" onClick={() => cameraSet()} className="btn-cinnamon">
+                                <Link to="/" onClick={() => cameraSet()} className="btn-cinnamon">
                                     
                                 </Link>
 
