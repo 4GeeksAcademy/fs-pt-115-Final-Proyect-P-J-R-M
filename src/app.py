@@ -82,7 +82,7 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0  # avoid cache memory
     return response
 
-# Setup the Flask-JWT-Extended extension
+# Setup the Flask-Mail-Extended extension
 
 
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')

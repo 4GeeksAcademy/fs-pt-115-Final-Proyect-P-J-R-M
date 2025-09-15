@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
         setLoading(true)
 
         try {
-            const response = await fetch(`${urlApi}/api/users`, {
+            const response = await fetch(`${urlApi}/api/users/`,{
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser),
