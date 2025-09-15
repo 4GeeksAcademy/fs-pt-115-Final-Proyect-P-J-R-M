@@ -16,7 +16,7 @@
   text-align: center;
 }
 
-.sidebar-user img {
+.user-card img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -49,6 +49,3 @@
   min-width: 300px;
 }
 
-.converter-container {
-  flex: 1;
-}

@@ -60,14 +60,17 @@
 		"@mui/icons-material": "^7.3.2",
 		"@mui/material": "^7.3.2",
 		"@mui/x-charts": "^8.11.1",
-		"@mui/x-date-pickers": "^8.11.1",
+		"@mui/x-date-pickers": "^8.11.2",
 		"dayjs": "^1.11.18",
 		"lucide-react": "^0.544.0",
+		"gsap": "^3.13.0",
+
 		"prop-types": "^15.8.1",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-router-dom": "^6.18.0",
 		"socket.io-client": "^4.8.1",
-		"sweetalert2": "^11.23.0"
+		"sweetalert2": "^11.23.0",
+		"three": "^0.180.0"
 	}
 }

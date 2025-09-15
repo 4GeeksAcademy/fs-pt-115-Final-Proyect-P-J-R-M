@@ -1,138 +1,103 @@
 import { useEffect, useState } from "react";
 import { Calendar } from "../../../components/Calendar/Calendar";
-import { CurrencyConverter } from "../../../components/currencyConverter/CurrencyConverter";
 import { useAuth } from "../../../hooks/useAuth";
-import { getFavorites } from "../../../services/favoritesApi";
+import { getFavorites } from "../../../services/favoritesApi"
+import { getPosts } from "../../../services/postApi";
+import dayjs from 'dayjs';
+
 import "./dasborde.css";
 
 export const Dasborde = () => {
   const { user, loading, error } = useAuth();
-  const [favorites, setFavorites] = useState({ posts: [], chats: [] });
-  const [showPosts, setShowPosts] = useState(false);
-  const [showChats, setShowChats] = useState(false);
+  const [postfavo, setPostFavo] = useState([]);
 
   useEffect(() => {
-    const fetchFavorites = async () => {
+    const fetchData = async () => {
       try {
-        const favo = await getFavorites();
-        setFavorites({
-          posts: favo.favorite_posts || [],
-          chats: favo.favorite_chats || [],
+        const token = localStorage.getItem("token");
+        if (!token || !user) return;
+
+        const favorites = await getFavorites()
+        const posts = await getPosts(token)
+
+
+        // Favoritos
+        const favPosts = favorites.favorite_posts || []
+
+
+        // Posts creados por el usuario
+        const userPosts = posts.filter(post => post.user_id === user.id);
+
+        // Combinar y eliminar duplicados por ID
+        const combinedPostsMap = new Map();
+        [...favPosts, ...userPosts].forEach(post => {
+          combinedPostsMap.set(post.id, post);
         });
+        const combinedPosts = Array.from(combinedPostsMap.values());
+        setPostFavo(combinedPosts);
+
       } catch (err) {
-        console.error("Error al cargar favoritos", err);
+        console.error("Error al cargar datos:", err);
       }
     };
 
-    fetchFavorites();
-  }, []);
-//---------------------------------------------------------
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const allUsers = await getUsers();
-        const map = {};
-        allUsers.forEach((u) => {
-          map[u.id] = u.username;
-        });
-        setUsersMap(map);
-      } catch (err) {
-        console.error("Error al obtener usuarios:", err);
-      }
-    };
+    if (user) {
+      fetchData();
+    }
+  }, [user]);
 
-    fetchUsers();
-  }, []);
-//---------------------------------------------------------
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="dasborde-container">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        {/* Usuario */}
-        {user ? (
-          <div className="sidebar-user">
-            {user.image && (
-              <img src={user.image} alt="Foto de perfil" />
-            )}
-            <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Country:</strong> {user.country}</p>
-            <p><strong>Score:</strong> {user.score}</p>
-          </div>
-        ) : (
-          <p>No hay usuario cargado.</p>
-        )}
-
-        <hr />
-
-        {/* Posts */}
-        <div className="sidebar-section">
-          <button
-            className="toggle-button"
-            onClick={() => setShowPosts((prev) => !prev)}
-          >
-            {showPosts ? "Ocultar" : "Mostrar"} Posts
-          </button>
-          {showPosts && (
-            <ul>
-              {favorites.posts.length === 0 ? (
-                <li>No hay posts</li>
-              ) : (
-                favorites.posts.map((post) => (
-                  <li key={post.id}>{post.destination || `${post.description}`}</li>
-                ))
-              )}
-            </ul>
-          )}
-        </div>
-        <hr />
-
-        {/* Chats */}
-        <div className="sidebar-section">
-          <button
-            className="toggle-button"
-            onClick={() => setShowChats((prev) => !prev)}
-          >
-            {showChats ? "Ocultar" : "Mostrar"} Chats
-          </button>
-            {showChats && (
-            <ul>
-              {favorites.chats.length === 0 ? (
-                <li>No hay chats</li>
-              ) : (
-                favorites.chats.map((chat) => {
-                  // Obtener IDs de usuario
-                  const userOneId = typeof chat.user_one === "object" ? chat.user_one.id : chat.user_one;
-                  const userTwoId = typeof chat.user_two === "object" ? chat.user_two.id : chat.user_two;
-
-                  const otherUserId = userOneId === user.id ? userTwoId : userOneId;
-                  const username = usersMap[otherUserId];
-
-                  return (
-                    <li key={chat.id}>
-                      {username }
-                      {/* //añadir los datos del chat.post_id = map del post que coincida */}
-                    </li>
-                  );
-                })
-              )}
-            </ul>
-          )}
-        </div>
-      </aside>
-
-      {/* Contenido principal */}
       <main className="content">
+
+        {/*  Usuario */}
+        {user && (
+          <div className="user-card">
+            {user.image && (
+              <img src={user.image} alt="Foto de perfil" className="user-image" />
+            )}
+            <div className="user-info">
+              <p><strong>Username:</strong> {user.username}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Country:</strong> {user.country}</p>
+              <p><strong>Score:</strong> {user.score}</p>
+            </div>
+          </div>
+        )}
         <div className="content-inner">
+          {/* Calendario */}
           <div className="calendar-container">
-            <Calendar />
+            <Calendar
+              markedDates={
+                postfavo
+                  .map(post => dayjs(post.day_exchange).format('YYYY-MM-DD'))
+                  .filter(Boolean)
+              }
+            />
           </div>
-          <div>
-            <CurrencyConverter />
+          {/* Posts */}
+          <div className="favorites-section">
+            <h2>Posts</h2>
+            {postfavo && postfavo.length > 0 ? (
+              <ul className="favorites-list">
+                {postfavo.map((post) => (
+                  <li key={post.id} className="favorite-item">
+                    <p><strong>Destino:</strong> {post.destination}</p>
+                    <p><strong>Descripción:</strong> {post.description}</p>
+                    <p><strong>Divisas:</strong> {post.divisas_one} → {post.divisas_two}</p>
+                    <p><strong>Fecha de intercambio:</strong> {post.day_exchange || "No especificada"}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No hay posts o creados aún.</p>
+            )}
           </div>
+
+
         </div>
       </main>
     </div>
