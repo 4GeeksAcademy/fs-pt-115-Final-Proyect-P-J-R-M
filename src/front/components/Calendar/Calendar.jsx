@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { esES } from '@mui/x-date-pickers/locales';
 
-// 🎯 Custom day renderer
+// Custom day renderer
 const CustomDay = (props) => {
   const { day, markedDates = [], outsideCurrentMonth, ...other } = props;
   const formatted = day.format('YYYY-MM-DD');
@@ -30,7 +30,7 @@ const CustomDay = (props) => {
         },
       }}
     >
-      {/* ✅ Renderiza el número del día */}
+      {/* Renderiza el número del día */}
       {day.date()}
 
       {/* ⭐ Ícono si está marcado */}
@@ -54,7 +54,7 @@ const CustomDay = (props) => {
   );
 };
 
-// 📅 Calendar component
+// Calendar component
 export const Calendar = ({ markedDates = [] }) => {
   const normalizedMarkedDates = markedDates.map((date) =>
     dayjs(date).format('YYYY-MM-DD')
@@ -63,19 +63,37 @@ export const Calendar = ({ markedDates = [] }) => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterDayjs}
-      adapterLocale="es"
-      localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText}
-    >
-      <DateCalendar
-        value={selectedDate}
-        onChange={(newValue) => setSelectedDate(newValue)}
-        slots={{ day: CustomDay }}
-        slotProps={{
-          day: { markedDates: normalizedMarkedDates },
-        }}
-      />
-    </LocalizationProvider>
-  );
+  <LocalizationProvider
+    dateAdapter={AdapterDayjs}
+    adapterLocale="es"
+    localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText}
+  >
+    <DateCalendar
+      value={selectedDate}
+      onChange={(newValue) => setSelectedDate(newValue)}
+      slots={{ day: CustomDay }}
+      slotProps={{
+        day: {
+          markedDates: normalizedMarkedDates,
+        },
+      }}
+      sx={{
+        width: '100%',           
+        maxWidth: '500px',       
+        margin: '0 auto',        
+        '& .MuiPickersDay-root': {
+          fontSize: '1rem',
+          width: '42px',
+          height: '42px',
+        },
+        '& .MuiDayCalendar-weekDayLabel': {
+          fontSize: '0.9rem',
+        },
+        '& .MuiPickersCalendarHeader-root': {
+          fontSize: '1.1rem',
+        },
+      }}
+    />
+  </LocalizationProvider>
+);
 };

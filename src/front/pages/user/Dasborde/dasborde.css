@@ -1,51 +1,88 @@
 
 .dasborde-container {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  background-color: #e2d4b7; /* Fondo general */
+  background-color: #e2d4b7;
+  padding: 16px;
+  box-sizing: border-box;
 }
 
-.sidebar {
-  width: 280px;
-  background-color: #b0bbbf; /* Color del sidebar */
-  padding: 20px;
-  border-right: 1px solid #ccc;
+
+.user-card {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.sidebar-user {
-  text-align: center;
-}
-
-.user-card img {
+.user-image {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 10px;
 }
 
-.sidebar-section {
-  margin-bottom: 20px;
+.user-info p {
+  margin: 4px 0;
 }
 
-.toggle-button {
-  margin-bottom: 10px;
-}
-
-.content {
-  flex: 1;
-  padding: 20px;
-}
 
 .content-inner {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;  
+  gap: 24px;
 }
 
+
 .calendar-container {
-  flex: 1.2;
-  min-width: 300px;
+  width: 100%;
+  max-width: 600px;
+  padding: 1rem;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+
+.favorites-section {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.favorites-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.favorite-item {
+  background-color: #f4f4f4;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+
+@media (max-width: 600px) {
+  .content-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .user-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .calendar-container {
+    padding: 0.5rem;
+    max-width: 100%;
+  }
+  .favorites-section {
+    width: 100%;
+  }
 }
 
