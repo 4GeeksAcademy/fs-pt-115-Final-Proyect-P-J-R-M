@@ -12,7 +12,6 @@ from cloudinary import CloudinaryImage
 from datetime import timedelta
 
 
-
 user_bp = Blueprint("users", __name__, url_prefix="/users",
                     template_folder='../templates')
 
@@ -147,6 +146,7 @@ def login_user():
 
 # cloudinari endpoint
 
+
 @user_bp.route("/upload-img", methods=["POST"])
 @jwt_required()
 def upload_ing():
@@ -172,26 +172,32 @@ def upload_ing():
     db.session.commit()
     return jsonify({"msg": "ya esta en la nube", "imageUrl": upload_result["secure_url"]}), 200
 
-#ruta para restablecer contraseña
-@user_bp.route('/request-reset', methods=['POST', 'OPTIONS'])
+# ruta para restablecer contraseña
+
+
+@user_bp.route('/request-reset', methods=['POST'])
 def request_reset():
-    if request.method == 'OPTIONS':
-        return jsonify({"msg": "Preflight OK"}), 200
     email = request.json.get('email')
+    if not email or not isinstance(email, str):
+        return jsonify({"msg": "Email inválido"}), 400
+
     user = User.query.filter_by(email=email).first()
     if not user:
-        return jsonify({"msg": "User not found"}), 404
+        return jsonify({"msg": "Usuario no encontrado"}), 404
 
+    token = create_access_token(
+        identity=str(user.id), expires_delta=timedelta(minutes=30)
+    )
+    reset_url = f"https://fantastic-waddle-r46vww75j47jcx9g5-3000.app.github.dev/form-reset?token={token}"
 
-    token = create_access_token(identity=user.id, expires_delta=timedelta(minutes=30))
-    reset_url = f"https://handtohand.com/reset-password?token={token}"
-
+    
     html_reset = render_template('reset.html', username=user.username, reset_url=reset_url)
-    msg = Message(
 
+    msg = Message(
         subject='Restablecer Contraseña',
         recipients=[email],
-        html=html_reset)
+        html=html_reset
+    )
 
     mail.send(msg)
     return jsonify({"msg": "Correo enviado correctamente"})
@@ -199,9 +205,28 @@ def request_reset():
 
 
 
+# ruta para actualar contr. recibe el token en el header y actualiza la contr. al usuario
+@user_bp.route('/reset-password', methods=['PATCH'])
+@jwt_required()
+def reset_password():
+    try:
+        user_id = get_jwt_identity()
+        new_password = request.json.get('password')
 
+        if not new_password or not isinstance(new_password, str) or len(new_password.strip()) < 8:
+            return jsonify({"msg": "La contraseña debe tener al menos 8 caracteres"}), 400
 
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"msg": "Usuario no válido"}), 404
 
-   
+        user.set_password(new_password)
+        db.session.commit()
+
+        return jsonify({"msg": "Contraseña actualizada correctamente"}), 200
+
+    except Exception as e:
+       
+        return jsonify({"msg": "Error interno del servidor"}), 500
 
 
