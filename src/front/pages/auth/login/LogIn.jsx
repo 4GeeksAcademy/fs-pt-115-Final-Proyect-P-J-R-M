@@ -11,24 +11,10 @@ export const LogIn = () => {
 
   useEffect(() => {
     if (token) {
-      Swal.fire({
-        title: "Inicio exitoso",
-        icon: "success",
-        draggable: true,
-      });
+      Swal.fire({ title: "Inicio exitoso", icon: "success" });
       navigate("/posts");
     }
   }, [token, navigate]);
-
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Usuario o contraseña incorrecta...",
-      });
-    }
-  }, [error]);
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -37,7 +23,15 @@ export const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userData.email || !userData.password) return;
-    await login(userData);
+    const ok = await login(userData);
+
+    if (!ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Usuario o contraseña incorrecta...",
+      });
+    }
   };
 
   return (

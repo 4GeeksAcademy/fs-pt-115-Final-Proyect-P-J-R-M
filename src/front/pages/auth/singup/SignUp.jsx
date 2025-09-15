@@ -12,6 +12,7 @@ export function SignUp() {
     dni: "",
     email: "",
     password: "",
+    password2: "",
     image: "",
     country: "",
     score: 0,
@@ -36,6 +37,14 @@ export function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (userData.password !== userData.password2) {
+      Swal.fire({
+        icon: "error",
+        title: "Contraseñas no coinciden",
+        text: "Por favor, revisa los dos campos.",
+      });
+      return;
+    }
 
     if (!userData.username || !userData.dni || !userData.email || !userData.password) {
       alert("Todos los campos son requeridos");
