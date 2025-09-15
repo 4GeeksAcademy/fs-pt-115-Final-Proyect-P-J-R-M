@@ -96,8 +96,6 @@ export const Dasborde = () => {
               <p>No hay posts o creados aún.</p>
             )}
           </div>
-
-
         </div>
       </main>
     </div>

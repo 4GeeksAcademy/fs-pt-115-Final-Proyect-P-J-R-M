@@ -28,10 +28,12 @@
   color: gray;
   padding-top: 50px;
 }
-.single3d-container a, a:hover, a:visited {
+.single3d-container a,
+.single3d-container a:hover,
+.single3d-container a:visited {
   color: white;
   text-decoration: none;
-} 
+}
 .disable-selection {
      -moz-user-select: none; /* Firefox */
       -ms-user-select: none; /* Internet Explorer */
