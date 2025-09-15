@@ -17,8 +17,8 @@ import { Profile } from "./pages/user/profile/Profile";
 import { ResetPasswordRequest } from "./components/ResetPasswordRequest";
 import ChatPage from "./pages/chat/ChatPage";
 import { Dasborde } from "./pages/user/Dasborde/Dasborde";
-import { Single3D } from "./pages/Single 3D/Sinple3D";
 import { FormNewPassword } from "./components/FormNewPassword";
+import { AaaBox } from "./pages/3DBox/3DBox";
 
 
 export const router = createBrowserRouter(
@@ -26,7 +26,7 @@ export const router = createBrowserRouter(
     <Route element={<RootLayout />}>
       <Route path="/" element={<PublicLayout />}>
         <Route index element={<Home />} />
-        <Route path="*" element={<Single3D/>} />
+        <Route path="*" element={<AaaBox/>} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/signup" element={<SignUp />} />
@@ -40,7 +40,6 @@ export const router = createBrowserRouter(
         <Route path="/request-reset" element={<ResetPasswordRequest />} />
         <Route path="/form-reset" element={<FormNewPassword />} />
       </Route>
-
     </Route>
   )
 );

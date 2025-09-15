@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { TweenMax, Power1, Expo } from "gsap";
 import "./3dBox.css";
-import { Link } from 'react-router-dom'
 
-export const Single3D = () => {
+
+export const AaaBox = () => {
     const containerRef = useRef();
 
     useEffect(() => {
@@ -284,13 +284,6 @@ export const Single3D = () => {
                             <div className="col">
                                 <h1><strong>404</strong></h1>
                                 <p className="small">– An error has occurred. –</p>
-
-                                {/* Botón opcional para activar una línea */}
-
-                                <Link to="/" onClick={() => cameraSet()} className="btn-cinnamon">
-                                    
-                                </Link>
-
                             </div>
                         </div>
                     </div>
