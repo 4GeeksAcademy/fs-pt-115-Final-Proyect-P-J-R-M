@@ -1,16 +1,18 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Nuevo post creado</title>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #E2D4B7; padding: 20px; color: #333;">
-    <div style="background-color: #808b66; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 10px solid #808B66;">
+<style> 
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; } 
+    h2 { color: #888; } p { font-size: 16px; } </style>
+    
+    <div style="background-color: #E2D4B7; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 10px solid #4a6741;">
         
         
         <div style="text-align: center; margin-bottom: 20px;">
-            <img src="https://res.cloudinary.com/ddmzvbbef/image/upload/v1757434718/FINALLOGO_xearnq.png" alt="Hand to Hand Logo" style="max-width: 120px; border-radius: 8px;">
+            <img src="/src/front/assets/img/FINALLOGO.png" alt="Hand to Hand Logo" style="max-width: 120px; border-radius: 8px;">
         </div>
 
         <h2 style="color: #9C9583;">¡Hola {{ username }}!</h2>
@@ -23,7 +25,7 @@
             <li><strong>Fecha de creación:</strong> {{ data_created }}</li>
         </ul>
         <p style="margin-top: 20px;">Puedes ver tu post aquí:</p>
-        <a href="{{ post_url }}" style="display: inline-block; padding: 10px 15px; background-color: #808B66; color: #333; text-decoration: none; border-radius: 5px;">Ver mi post</a>
+        <a href="{{ post_url }}" style="display: inline-block; padding: 10px 15px; background-color: #4a6741; color:#E2D4B7; text-decoration: none; border-radius: 5px;"><strong>Ver mi post<strong/></a>
         <p style="margin-top: 30px; color:  #8A7F6F;">¡El equipo de Hand to Hand agradece el uso de nuestros servicios!</p>
     </div>
 </body>

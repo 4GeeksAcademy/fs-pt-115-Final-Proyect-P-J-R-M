@@ -12,12 +12,7 @@ import { LinePlot, LineHighlightPlot } from '@mui/x-charts/LineChart';
 import { getHistoricalRates } from '../../services/frankfurterApi';
 
 
-
-
-
 export const BankingGraphics = () => {
-
-
 
   const [series, setSeries] = useState([]);
   const [xAxisDates, setXAxisDates] = useState([]);

@@ -17,13 +17,16 @@ import { Profile } from "./pages/user/profile/Profile";
 import { ResetPasswordRequest } from "./components/ResetPasswordRequest";
 import ChatPage from "./pages/chat/ChatPage";
 import { Dasborde } from "./pages/user/Dasborde/Dasborde";
+import { Single3D } from "./pages/Single 3D/Sinple3D";
+import { FormNewPassword } from "./components/FormNewPassword";
+
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<RootLayout />}>
       <Route path="/" element={<PublicLayout />}>
         <Route index element={<Home />} />
-        <Route path="*" element={"NotFound"} />
+        <Route path="*" element={<Single3D/>} />
       </Route>
       <Route element={<AuthLayout />}>
         <Route path="/signup" element={<SignUp />} />
@@ -32,10 +35,12 @@ export const router = createBrowserRouter(
       <Route element={<UserLayout />}>
         <Route path="/posts" element={<PostsPage />} />
         <Route path="/profile" element={<Profile />}></Route>
-        <Route path="/chats" element={<ChatPage/>}></Route>
-        <Route path="/dasborde" element={<Dasborde/>}></Route>
+        <Route path="/chats" element={<ChatPage />}></Route>
+        <Route path="/dasborde" element={<Dasborde />}></Route>
+        <Route path="/request-reset" element={<ResetPasswordRequest />} />
+        <Route path="/form-reset" element={<FormNewPassword />} />
       </Route>
-      <Route path="/request-reset" element={<ResetPasswordRequest />} />
+
     </Route>
   )
 );
