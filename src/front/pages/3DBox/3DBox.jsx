@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { TweenMax, Power1, Expo } from "gsap";
-import "./single3d.css";
+import "./3dBox.css";
+import { Link } from 'react-router-dom'
 
 export const Single3D = () => {
     const containerRef = useRef();
@@ -281,20 +282,15 @@ export const Single3D = () => {
                     <div className="col-md-6">
                         <div className="row">
                             <div className="col">
-                                <h1><strong>Hand to Hand</strong></h1>
-                                <p className="small">– Money passing from hand to hand –</p>
+                                <h1><strong>404</strong></h1>
+                                <p className="small">– An error has occurred. –</p>
 
                                 {/* Botón opcional para activar una línea */}
-                                {/*
-                <a
-                  href="#"
-                  role="button"
-                  className="btn btn-danger"
-                  onClick={() => cameraSet()}
-                >
-                  + ADD LINE
-                </a>
-                */}
+
+                                <Link to="/ruta-destino" onClick={() => cameraSet()} className="btn-cinnamon">
+                                    
+                                </Link>
+
                             </div>
                         </div>
                     </div>
