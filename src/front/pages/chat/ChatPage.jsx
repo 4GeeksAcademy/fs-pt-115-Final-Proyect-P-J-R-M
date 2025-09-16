@@ -374,18 +374,6 @@ export default function ChatSocketClient() {
 							? `${post.description} · ${post.divisas_one} → ${post.divisas_two}`
 							: `Post #${c.post_id}`;
 
-						const msgs = messagesByChat[c.id] || [];
-						const last = msgs[msgs.length - 1];
-						const lastPrefix =
-							last?.user_id === userId
-								? "Tú: "
-								: usersById[last?.user_id]?.username
-									? `${usersById[last.user_id].username}: `
-									: "";
-						const lastMsgText = last ? `${lastPrefix}${last.content}` : "Sin mensajes";
-						const preview =
-							lastMsgText.length > 32 ? lastMsgText.slice(0, 32) + "…" : lastMsgText;
-
 						return (
 							<li key={c.id}>
 								<button
@@ -425,7 +413,6 @@ export default function ChatSocketClient() {
 										<div>
 											<div style={{ fontWeight: 600 }}>{title}</div>
 											<div style={{ fontSize: 12, color: "#6b7280" }}>{subtitle}</div>
-											<div style={{ fontSize: 12, color: "#9ca3af" }}>{preview}</div>
 										</div>
 									</div>
 								</button>
