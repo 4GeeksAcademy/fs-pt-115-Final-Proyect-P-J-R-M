@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import "./signup.css"
+import "./signup.css";
+
 export function SignUp() {
-  const [error, setError] = useState(null)
-  const { signUp } = useAuth()
-  const navigate = useNavigate()
+  const { signUp, loading, error } = useAuth();
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState({
     username: "",
     dni: "",
@@ -18,21 +19,10 @@ export function SignUp() {
     score: 0,
   });
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updateData = prev => ({ ...prev, [name]: value })
-    setUserData(updateData);
-    if (updateData.password2 &&
-      updateData.password !==
-      updateData.password2) {
-      setError("Contraseña no coincide")
-      return
-    } else {
-      setError(null);
-    }
-  }
-
+    setUserData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,31 +36,33 @@ export function SignUp() {
       return;
     }
 
-    if (!userData.username || !userData.dni || !userData.email || !userData.password) {
-      alert("Todos los campos son requeridos");
-      return;
-    }
-
-    signUp({
+    const ok = await signUp({
       username: userData.username,
       email: userData.email,
       password: userData.password,
       dni: userData.dni,
       image: userData.image || "",
       score: userData.score || 0,
-      country: userData.country || ""
+      country: userData.country || "",
     });
 
-    Swal.fire({
-      icon: "success",
-      title: "¡Usuario registrado!",
-      text: "Tu cuenta se creó correctamente",
-      timer: 2000,
-      showConfirmButton: false,
-    });
 
-    navigate("/login")
-
+    if (ok) {
+      Swal.fire({
+        icon: "success",
+        title: "¡Usuario registrado!",
+        text: "Tu cuenta se creó correctamente",
+        timer: 1800,
+        showConfirmButton: false,
+      });
+      navigate("/login");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "No se pudo registrar",
+        text: error
+      });
+    }
   };
 
   return (
@@ -123,15 +115,12 @@ export function SignUp() {
           type="password"
           name="password2"
           placeholder="Confirmar contraseña"
-          value={userData.password2 || ""}
+          value={userData.password2}
           onChange={handleChange}
           required
         />
-
-        {error && <p className="login-error">{error}</p>}
-
-        <button className="login-button" type="submit">
-          Crear cuenta
+        <button className="login-button" type="submit" disabled={loading}>
+          {loading ? "Creando..." : "Crear cuenta"}
         </button>
       </form>
     </div>

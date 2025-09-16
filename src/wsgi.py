@@ -6,14 +6,14 @@
 # if __name__ == "__main__":
 #     application.run()
 
-import os
 import eventlet
 eventlet.monkey_patch()
 
+import os
 from app import app, socketio
+
+
 
 if __name__ == "__main__":
     PORT = int(os.environ.get("PORT", 3001))
     socketio.run(app, host="0.0.0.0", port=PORT)
-
-
