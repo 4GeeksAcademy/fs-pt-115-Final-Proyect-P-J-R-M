@@ -1,14 +1,14 @@
 .profile-container {
   --form-width: 340px;
-  --aspect-ratio: 1.4;
-  --bg-color: #E2D4B7;
-  --primary-color: #9C583;
-  --input-bg: #A1A499;
-  --button-bg: #B0BBBF;
-  --hover-bg: #CADBC8;
-  --text-color: #333;
+    --aspect-ratio: 1.4;
+      --bg-color: #E2D4B7;
+        --primary-color: #9C583;
+          --input-bg: #A1A499;
+            --button-bg: #B0BBBF;
+              --hover-bg: #CADBC8;
+                --text-color: #333;
 
-  display: flex;
+                  display: flex;
   justify-content: center;
   align-items: center;
 
