@@ -1,56 +1,88 @@
 
 .dasborde-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(77, 98, 66, 0.2);
   min-height: 100vh;
-  background-color: #e2d4b7;
-  padding: 16px;
+  padding: 32px;
   box-sizing: border-box;
 }
 
+.content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1200px;
+}
 
 .user-card {
-  background-color: #fff;
+  background-color: rgba(77, 98, 66, 0.2);
   padding: 16px;
   border-radius: 8px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.user-image-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
 }
 
 .user-image {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.user-info p {
-  margin: 4px 0;
+.edit-icon {
+  position: absolute;
+  right: -10px;
+  top: 95%;
+  transform: translateY(-50%);
+  background-color: rgba(77, 98, 66, 0.2);
+  border: 2px solid rgba(77, 98, 66, 0.2);
+  border-radius: 50%;
+  padding: 6px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
 }
 
+.edit-icon:hover {
+  background-color: rgba(77, 98, 66, 0.4);
+}
+
+.user-info p {
+  margin: 2px 0;
+}
 
 .content-inner {
-  display: grid;
-  grid-template-columns: 1fr 2fr;  
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
-
-.calendar-container {
-  width: 100%;
-  max-width: 600px;
-  padding: 1rem;
-  box-sizing: border-box;
-  margin: 0 auto;
-}
-
-
+.calendar-container,
 .favorites-section {
-  background-color: #fff;
+  background-color: rgba(77, 98, 66, 0.2);
   padding: 16px;
   border-radius: 8px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.favorites-section {
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .favorites-list {
@@ -60,29 +92,72 @@
 }
 
 .favorite-item {
-  background-color: #f4f4f4;
+  background-color: rgba(77, 98, 66, 0.2);
   padding: 12px;
   border-radius: 6px;
   margin-bottom: 10px;
+  box-shadow:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.4);
 }
 
 
+
 @media (max-width: 600px) {
-  .content-inner {
-    grid-template-columns: 1fr;
+  .dasborde-container {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
   .user-card {
     flex-direction: column;
+    align-items: center;
     text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .edit-icon {
+    right: -8px;
+    top: 100%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    padding: 5px;
+    border: 2px solid #ccc;
+  }
+
+  .user-info p {
+    font-size: 14px;
+  }
+
+  .content-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
   .calendar-container {
-    padding: 0.5rem;
-    max-width: 100%;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
   }
+
   .favorites-section {
     width: 100%;
+    padding: 16px;
+    border-radius: 8px;
+    margin: 0;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .favorite-item {
+    font-size: 14px;
+    padding: 10px;
   }
 }
-
