@@ -4,7 +4,6 @@ import { useAuth } from "../../hooks/useAuth";
 import { getUsers } from "../../services/userApi";
 import { getPostById } from "../../services/postApi";
 
-
 const WP_COLORS = {
 	headerBg: "#075E54",
 	headerText: "#E9F5F3",
@@ -20,7 +19,7 @@ const WP_COLORS = {
 
 export default function ChatSocketClient() {
 	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
-	
+
 	// Auth simple
 	const { token, user } = useAuth();
 	const userId = Number(user?.id);
@@ -55,9 +54,22 @@ export default function ChatSocketClient() {
 	const [typingByChat, setTypingByChat] = useState({});
 
 	// UI / refs
-	const [activeChatId, setActiveChatId] = useState(null);
+	// AÑADIDO: inicializar desde localStorage para persistir el chat activo
+	const [activeChatId, setActiveChatId] = useState(() => {
+		const raw = localStorage.getItem("activeChatId");
+		const n = Number(raw);
+		return Number.isFinite(n) && n > 0 ? n : null;
+	});
+
+	// AÑADIDO: guardar en localStorage cada vez que cambie
+	useEffect(() => {
+		if (activeChatId) localStorage.setItem("activeChatId", String(activeChatId));
+	}, [activeChatId]);
+
 	const activeChatIdRef = useRef(null);
-	useEffect(() => { activeChatIdRef.current = activeChatId; }, [activeChatId]);
+	useEffect(() => {
+		activeChatIdRef.current = activeChatId;
+	}, [activeChatId]);
 
 	const [text, setText] = useState("");
 	const typingRef = useRef(false);
@@ -89,7 +101,6 @@ export default function ChatSocketClient() {
 		}
 	}
 
-
 	// Helpers chat
 	const ensureChatState = (chatId) => {
 		setMessagesByChat((prev) => (prev[chatId] ? prev : { ...prev, [chatId]: [] }));
@@ -117,6 +128,8 @@ export default function ChatSocketClient() {
 		requestAnimationFrame(() => {
 			if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
 		});
+		// AÑADIDO: asegurar persistencia inmediata tras enviar (por si se creó el chat hace nada)
+		if (activeChatId) localStorage.setItem("activeChatId", String(activeChatId));
 	};
 
 	const startTyping = () => {
@@ -140,8 +153,12 @@ export default function ChatSocketClient() {
 			// IMPORTANTE: pasamos el token tal cual desde useAuth()
 			socket.emit("identify", { token });
 		}
-		function onDisconnect() { setConnected(false); }
-		function onError(e) { pushError(e?.msg || e || "Error desconocido"); }
+		function onDisconnect() {
+			setConnected(false);
+		}
+		function onError(e) {
+			pushError(e?.msg || e || "Error desconocido");
+		}
 
 		function onIdentified() {
 			fetchUsers();
@@ -162,20 +179,36 @@ export default function ChatSocketClient() {
 				if (!postsById[c.post_id]) fetchPost(c.post_id);
 			});
 
-			// Selección inicial si no hay activo
+			// AÑADIDO: respetar el chat activo persistido si existe en la lista
+			const ids = new Set(list.map((c) => c.id));
 			let target = activeChatIdRef.current;
-			if (!target) {
-				target = wantChatId || (list?.[0]?.id ?? null);
-				if (target) {
-					setActiveChatId(target);
-					loadMessages(target);
+
+			if (target && ids.has(target)) {
+				// Si ya hay chat activo válido, asegurar que tiene mensajes y está unido
+				if (!joinedChatsRef.current.has(target)) {
+					joinChat(target);
+					joinedChatsRef.current.add(target);
 				}
+				if (!(messagesByChat[target]?.length)) loadMessages(target);
+				return; // NO cambiamos de chat
+			}
+
+			// Si venimos por deep link (chatId) o no existe el guardado, elegimos
+			target = wantChatId || (list?.[0]?.id ?? null);
+			if (target) {
+				setActiveChatId(target);
+				if (!joinedChatsRef.current.has(target)) {
+					joinChat(target);
+					joinedChatsRef.current.add(target);
+				}
+				loadMessages(target);
 			}
 		}
 
 		function onChatCreated(chat) {
 			setChats((prev) => [chat, ...prev]);
 			setActiveChatId(chat.id);
+			localStorage.setItem("activeChatId", String(chat.id)); // AÑADIDO
 			joinChat(chat.id);
 			joinedChatsRef.current.add(chat.id);
 			fetchPost(chat.post_id);
@@ -184,13 +217,14 @@ export default function ChatSocketClient() {
 
 		function onChatExists(chat) {
 			setActiveChatId(chat.id);
+			localStorage.setItem("activeChatId", String(chat.id)); // AÑADIDO
 			joinChat(chat.id);
 			joinedChatsRef.current.add(chat.id);
 			fetchPost(chat.post_id);
 			loadMessages(chat.id);
 		}
 
-		// ⬇⬇⬇ ÚNICO CAMBIO: autoscroll solo si el mensaje es mío ⬇⬇⬇
+		// ⬇⬇⬇ autoscroll solo si el mensaje es mío ⬇⬇⬇
 		function onNewMessage(m) {
 			setMessagesByChat((prev) => {
 				const list = prev[m.chat_id] || [];
@@ -203,7 +237,6 @@ export default function ChatSocketClient() {
 				});
 			}
 		}
-		// ⬆⬆⬆ ÚNICO CAMBIO ⬆⬆⬆
 
 		function onMessages({ chat_id, items, next_before_id }) {
 			setMessagesByChat((prev) => {
@@ -225,7 +258,8 @@ export default function ChatSocketClient() {
 		function onTyping({ chat_id, user_id: uid, is_typing }) {
 			setTypingByChat((prev) => {
 				const set = new Set(prev[chat_id] || []);
-				if (is_typing) set.add(uid); else set.delete(uid);
+				if (is_typing) set.add(uid);
+				else set.delete(uid);
 				return { ...prev, [chat_id]: set };
 			});
 		}
@@ -248,12 +282,12 @@ export default function ChatSocketClient() {
 			if (typingTimeout.current) clearTimeout(typingTimeout.current);
 			joinedChatsRef.current = new Set();
 		};
-	}, [socket, token, wantChatId, wantPostId, postsById, userId]);
+	}, [socket, token, wantChatId, wantPostId, postsById, userId, messagesByChat]);
 
 	// refresco periódico de chats
 	useEffect(() => {
 		if (!connected) return;
-		const id = setInterval(() => loadChats(), 100);
+		const id = setInterval(() => loadChats(), 1000);
 		return () => clearInterval(id);
 	}, [connected]);
 
@@ -355,7 +389,10 @@ export default function ChatSocketClient() {
 						return (
 							<li key={c.id}>
 								<button
-									onClick={() => setActiveChatId(c.id)}
+									onClick={() => {
+										setActiveChatId(c.id);
+										localStorage.setItem("activeChatId", String(c.id)); // AÑADIDO
+									}}
 									style={{
 										width: "100%",
 										textAlign: "left",
