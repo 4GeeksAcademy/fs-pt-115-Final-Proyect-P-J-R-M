@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createPost } from "../../services/postApi";
 import { useAuth } from "../../hooks/useAuth";
+import "./createpost.css";
 
 const INITIAL = {
   destination: "",
@@ -28,20 +29,14 @@ export const CreatePost = ({ onSuccess }) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  
-  console.log(form);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
-
     if (!form.destination.trim() || !form.description.trim()) return;
     if (form.divisas_one === form.divisas_two) return;
     if (!token) return;
-
-    if (form.exchangeDate && form.exchangeDate < todayYMD()) return; 
-     
+    if (form.exchangeDate && form.exchangeDate < todayYMD()) return;
 
     const payload = {
       destination: form.destination,
@@ -57,78 +52,87 @@ export const CreatePost = ({ onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Crear post</h2>
+    <form onSubmit={handleSubmit} className="create-post">
+      <h2 className="create-post__title">Crear post</h2>
+      <div className="row row-2">
+        <label className="field">
+          <span className="label">Divisa origen</span>
+          <select
+            name="divisas_one"
+            value={form.divisas_one}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </label>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        <label className="field">
+          <span className="label">Divisa destino</span>
+          <select
+            name="divisas_two"
+            value={form.divisas_two}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </label>
+      </div>
 
-      <label>
-        Divisa origen
-        <select
-          name="divisas_one"
-          value={form.divisas_one}
-          onChange={handleChange}
-          disabled={loading}
-        >
-          {CURRENCIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </label>
+      <div className="row row-2">
+        <label className="field">
+          <span className="label">Destino</span>
+          <input
+            type="text"
+            name="destination"
+            value={form.destination}
+            onChange={handleChange}
+            placeholder="Ciudad o zona"
+            disabled={loading}
+            className="control"
+          />
+        </label>
 
-      <label>
-        Divisa destino
-        <select
-          name="divisas_two"
-          value={form.divisas_two}
-          onChange={handleChange}
-          disabled={loading}
-        >
-          {CURRENCIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </label>
+        <label className="field">
+          <span className="label">Cantidad prevista</span>
+          <input
+            type="text"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          />
+        </label>
+      </div>
 
-      <label>
-        Destino
-        <input
-          type="text"
-          name="destination"
-          value={form.destination}
-          onChange={handleChange}
-          placeholder="Ciudad o zona"
-          disabled={loading}
-        />
-      </label>
+      <div className="row row-2 end">
+        <label className="field">
+          <span className="label">Fecha prevista de intercambio</span>
+          <input
+            type="date"
+            name="exchangeDate"
+            min={todayYMD()}
+            value={form.exchangeDate}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          />
+        </label>
 
-      <label>
-        Descripción
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          rows={3}
-          placeholder="Detalles del cambio"
-          disabled={loading}
-        />
-      </label>
-
-      <label>
-        Fecha prevista de intercambio (opcional)
-        <input
-          type="date"
-          name="exchangeDate"
-          min={todayYMD()}
-          value={form.exchangeDate}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </label>
-
-      <button type="submit" disabled={loading}>
-        {loading ? "Creando..." : "Crear"}
-      </button>
+        <div className="actions">
+          <button type="submit" disabled={loading} className="signup-button">
+            {loading ? "Creando..." : "Crear"}
+          </button>
+        </div>
+      </div>
     </form>
   );
 };
