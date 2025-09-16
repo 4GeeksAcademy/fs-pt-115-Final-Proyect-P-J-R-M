@@ -62,6 +62,7 @@
 		"@mui/x-charts": "^8.11.1",
 		"@mui/x-date-pickers": "^8.11.2",
 		"dayjs": "^1.11.18",
+		"lucide-react": "^0.544.0",
 		"gsap": "^3.13.0",
 		"i18n-iso-countries": "^7.14.0",
 		"prop-types": "^15.8.1",

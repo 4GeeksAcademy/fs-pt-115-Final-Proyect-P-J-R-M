@@ -36,7 +36,6 @@ export function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     if (!userData.username || !userData.dni || !userData.email || !userData.password) {
       alert("Todos los campos son requeridos");
       return;
