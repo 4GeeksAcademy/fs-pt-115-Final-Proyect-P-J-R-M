@@ -1,0 +1,18 @@
+@import "../../components/chat/theme.css";
+
+/* Fondo general con margen para respirar */
+.chat-shell {
+  background: rgba(73, 67, 67, 0.733);
+  min-height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.chat-layout {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  height: 80vh;
+  max-width: 300rem;
+  margin: 0 auto;
+  gap: 12px;
+}

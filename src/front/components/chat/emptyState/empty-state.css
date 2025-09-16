@@ -1,0 +1,24 @@
+.empty-state {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--muted);
+  padding: 24px;
+  background: var(--surface);
+}
+
+.empty-state__icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.empty-state__title {
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.empty-state__subtitle {
+  font-size: 14px;
+}
