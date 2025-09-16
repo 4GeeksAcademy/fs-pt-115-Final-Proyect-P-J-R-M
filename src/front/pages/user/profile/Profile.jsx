@@ -1,20 +1,28 @@
-import { useAuth } from "../../../hooks/useAuth"
+import { useAuth } from "../../../hooks/useAuth";
 import { useState } from "react";
-import { uploadImge } from "../../../services/userApi"
-import "./profile.css"
+import { uploadImge, patchUser } from "../../../services/userApi";
+import "./profile.css";
+// import { getUser } from "../../../services/userApi"
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+countries.registerLocale(enLocale);
+
+const countryNames = countries.getNames("en", { select: "official" });
+const countryList = Object.entries(countryNames);
+
 export const Profile = () => {
-
     const { user, loading, error, refreshUser } = useAuth()
-    console.log(user);
+    const [file, setFile] = useState(null)
+    const [uploading, setUploading] = useState(false)
+    const [saving, setSaving] = useState(false)
 
-    const [file, setFile] = useState(null);
-    const [uploading, setUploading] = useState(false);
+    const [username, setUsername] = useState(user?.username || "")
+    const [country, setCountry] = useState(user?.country || "")
 
-    console.log("Loading:", loading);
-    console.log("User:", user);
-    console.log("Error:", error);
+    const [usernameExists, setUsernameExists] = useState(false)
+    const [password, setPassword] = useState("")
 
-    const handleClick = async () => {
+    const handleImageUpload = async () => {
         if (!file || !file.type.startsWith("image/")) {
             alert("Por favor selecciona una imagen válida.");
             return;
@@ -31,49 +39,109 @@ export const Profile = () => {
         }
     };
 
+    const handleSave = async () => {
+        setSaving(true);
+        try {
+            await patchUser({
+                username,
+                country,
+            });
+            await refreshUser();
+        } catch (error) {
+            console.error("Error updating user:", error);
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    // const checkUsernameExists = async (newUsername) => {
+    //     if (!newUsername || newUsername === user.username) {
+    //         setUsernameExists(false);
+    //         return;
+    //     }
+
+    //     try {
+    //         const users = await getUsers();
+    //         const exists = users.some(
+    //             (use) => use.username.toLowerCase() === newUsername.toLowerCase()
+    //         );
+    //         setUsernameExists(exists);
+    //     } catch (error) {
+    //         console.error("Error el usuario existe:", error)
+    //         setUsernameExists(false);
+    //     }
+    // }
     if (loading || !user) {
         return (
-            <div className="loader-auth text-center py-5">
-                <p>Cargando mamahuevo....</p>
+            <div className="profile-container">
+                <div className="loader-auth">Cargando ....</div>
             </div>
         );
     }
 
     return (
-        <main className="container-fluid bg-main min-vh-100 py-5">
-            <section className="row justify-content-start">
-                <div className="col-12 col-md-12 col-lg-4 p-4 bg-light rounded shadow">
+        <main className="profile-container" style={{ minHeight: "100vh" }}>
+            <section className="profile-box">
+                <div>
+                    <strong>Username:</strong>
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder={user.username}
+                    />
+                </div>
 
-                    <div className="mb-4 text-center">
-                        <h1>{user.username}</h1>
-                    </div>
-                    <div className="mb-3">
-                        <input
-                            type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
-                        <button onClick={handleClick} disabled={uploading} className="btn btn-upload" >
+                <div>
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    {uploading ? (
+                        <div className="loader-image">Cargando imagen...</div>
+                    ) : user.image ? (
+                        <img src={user.image} alt="User profile" />
+                    ) : (
+                        <div
+                            style={{
+                                fontSize: "100px",
+                                textAlign: "center",
+                                marginBottom: "1rem",
+                            }}
+                        >
+                            🤖
+                        </div>
+                    )}
+                    <button onClick={handleImageUpload} disabled={uploading} className="btn">
+                        {uploading ? "Guardando..." : "Guardar img"}
+                    </button>
+                </div>
 
-                            {uploading ? "Guardando..." : "Guardar"}
-                        </button>
-                        {uploading ? (
-                            <div className="loader-image"></div>  
-                        ) : user.image ? (
-                            <img src={user.image} alt="User profile" />
-                        ) : (
-                            <div
-                                style={{
-                                    fontSize: "100px",
-                                    textAlign: "center",
-                                    marginBottom: "1rem",
-                                }}
-                            >
-                                🤖
-                            </div>
-                        )}
-                    </div>
+                <div>
+                    <strong>Email:</strong> {user.email}
+                </div>
 
-                    <div className="text-secondary mb-1"><strong>Email:</strong> {user.email}</div>
-                    <div className="text-secondary mb-1"><strong>País:</strong> {user.country}</div>
-                    <div className="text-secondary mb-1"><strong>⭐:</strong> {user.score}</div>
+                <div>
+                    <strong>Country:</strong>
+                    <select value={country} onChange={(e) => setCountry(e.target.value)}>
+                        <option value="">Select a country</option>
+                        {countryList.map(([code, name]) => (
+                            <option key={code} value={name}>
+                                {name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <strong>⭐:</strong> {user.score}
+                </div>
+
+                <div>
+                    <button onClick={handleSave} disabled={saving} className="btn">
+                        {saving ? "Guardando..." : <i className="fa-solid fa-floppy-disk"></i>}
+                    </button>
                 </div>
             </section>
         </main>

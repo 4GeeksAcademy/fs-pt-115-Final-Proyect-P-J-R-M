@@ -56,9 +56,14 @@ export const Dasborde = () => {
         {/*  Usuario */}
         {user && (
           <div className="user-card">
-            {user.image && (
-              <img src={user.image} alt="Foto de perfil" className="user-image" />
-            )}
+            <div className="user-image-container">
+              {user.image && (
+                <img src={user.image} alt="Foto de perfil" className="user-image" />
+              )}
+              <a href="/profile" className="edit-icon" title="Editar perfil">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </a>
+            </div>
             <div className="user-info">
               <p><strong>Username:</strong> {user.username}</p>
               <p><strong>Email:</strong> {user.email}</p>
@@ -86,8 +91,7 @@ export const Dasborde = () => {
                 {postfavo.map((post) => (
                   <li key={post.id} className="favorite-item">
                     <p><strong>Destino:</strong> {post.destination}</p>
-                    <p><strong>Descripción:</strong> {post.description}</p>
-                    <p><strong>Divisas:</strong> {post.divisas_one} → {post.divisas_two}</p>
+                    <p><strong>Intercambio:</strong> {post.description} {post.divisas_one} → {post.divisas_two}</p>
                     <p><strong>Fecha de intercambio:</strong> {post.day_exchange || "No especificada"}</p>
                   </li>
                 ))}

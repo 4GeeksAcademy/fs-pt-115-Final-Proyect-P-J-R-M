@@ -1,3 +1,135 @@
+.profile-container {
+  --form-width: 340px;
+  --aspect-ratio: 1.4;
+  --bg-color: #E2D4B7;
+  --primary-color: #9C583;
+  --input-bg: #A1A499;
+  --button-bg: #B0BBBF;
+  --hover-bg: #CADBC8;
+  --text-color: #333;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--bg-color);
+  border-radius: 24px;
+  padding: 24px 16px;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
+  position: relative;
+}
+
+.profile-container::before {
+  content: "";
+  position: absolute;
+  inset: -50px;
+  z-index: -1;
+  background: conic-gradient(from 45deg, transparent 75%, var(--hover-bg), transparent 100%);
+  animation: profile-spin 6s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes profile-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.profile-box {
+  background: var(--bg-color);
+  border-radius: 20px;
+  padding: 24px;
+  width: 100%;
+  max-width: var(--form-width);
+  box-sizing: border-box;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    inset 0 30px 40px -10px rgba(255, 255, 255, 0.1),
+    inset 4px 0 10px -6px rgba(255, 255, 255, 0.1),
+    inset 0 0 10px -4px rgba(255, 255, 255, 0.1);
+}
+
+.profile-box input[type="text"],
+.profile-box select,
+.profile-box input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 12px;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.profile-box input[type="text"]:focus,
+.profile-box select:focus {
+  outline: 2px solid var(--primary-color);
+  background: #fff;
+}
+
+.profile-box img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.profile-box .btn {
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 12px;
+  cursor: pointer;
+  background: var(--button-bg);
+  color: #fff;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-box .btn:hover {
+  background: var(--hover-bg);
+  color: #000;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-box .loader-image,
+.profile-box .loader-auth {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.profile-box strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+
+@media (max-width: 600px) {
+  .profile-container {
+    width: 100vw;
+    max-width: 100vw;
+    padding: 16px 12px;
+    border-radius: 16px;
+  }
+
+  .profile-box {
+    padding: 16px;
+    max-width: 100%;
+  }
+}
+
+/* ---------------------------------- */
+/* loading efecy */
 .loader-image {
   width: 64px;
   height: 64px;
