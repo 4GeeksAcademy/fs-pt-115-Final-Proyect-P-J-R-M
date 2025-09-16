@@ -60,7 +60,7 @@ export function SignUp() {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validaciones locales
+
     if (!userData.username || !userData.dni || !userData.email || !userData.password) {
       Swal.fire({
         icon: "warning",
