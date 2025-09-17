@@ -11,8 +11,10 @@ export const NavBar = () => {
   const { token } = useAuth();
   const [open, setOpen] = useState(false);
 
+  const isLogged = token && token !== "undefined" && token !== "null";
+
   return (
-    
+
     <>
       <nav className="navbar" aria-label="Principal">
         <div className="navbar-logo">
@@ -23,9 +25,8 @@ export const NavBar = () => {
         </div>
 
         <div className="navbar-buttons">
-          {token ? (
+          {isLogged ? (
             <>
-              <Link to="/profile" className="btn btn-signup">Profile</Link>
               <ButtonAvatar onClick={() => setOpen(true)} />
             </>
           ) : (
@@ -38,7 +39,7 @@ export const NavBar = () => {
         </div>
       </nav>
 
-      {token && (
+      {isLogged && (
         <UserMenuSidebar
           open={open}
           onClose={() => setOpen(false)} />
