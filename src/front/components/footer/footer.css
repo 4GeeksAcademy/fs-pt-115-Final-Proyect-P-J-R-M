@@ -1,0 +1,24 @@
+footer {
+  background: var(--color-footer-bg);
+  padding: 3rem 2rem 1rem;
+  color: var(--color-footer-text);
+}
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  margin-bottom: 2rem;
+}
+.footer-links a {
+  color: var(--color-footer-text);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-links a:hover {
+  color: var(--color-gold);
+}
