@@ -1,21 +1,3 @@
-:root {
-  --color-text: #2c3e50;
-  --color-muted: #5d6d7e;
-  --color-gold: #d4af37;
-  --color-gold-2: #ffd700;
-  --color-bg-1: #f8f9fa;
-  --color-bg-2: #e8e9ea;
-  --color-surface: #ffffff;
-  --color-footer-bg: #1a252f;
-  --color-footer-text: #b0bec5;
-  --shadow-1: 0 4px 15px rgba(212, 175, 55, 0.3);
-  --shadow-2: 0 8px 25px rgba(212, 175, 55, 0.4);
-  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
-  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
-  --radius: 12px;
-  --radius-btn: 6px;
-}
-
 /* Hero Section with subtle gradient */
 .hero {
   min-height: 100vh;
@@ -47,83 +29,6 @@
       transparent 50%
     );
   pointer-events: none;
-}
-
-/* Navigation */
-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  padding: 1.2rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-  z-index: 1000;
-  transition: all 0.3s ease;
-}
-
-.nav-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.logo {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--color-gold);
-  text-decoration: none;
-  font-family: "Georgia", serif;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-}
-
-.nav-links a {
-  color: var(--color-text);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
-  position: relative;
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--color-gold);
-  transition: width 0.3s ease;
-}
-
-.nav-links a:hover {
-  color: var(--color-gold);
-}
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-.cta-nav {
-  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-2));
-  border: none;
-  padding: 0.8rem 2rem;
-  border-radius: var(--radius-btn);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-1);
-}
-.cta-nav:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-2);
 }
 
 /* Hero Section */
