@@ -86,11 +86,16 @@
 
 .post-item > header {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto; /* avatar | info | acciones */
   gap: 0.75rem;
   align-items: center;
-  padding-bottom: 0.75rem;
-  border-bottom: 0.0625rem solid rgba(44, 62, 80, 0.08);
+}
+
+.post-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end; /* todo a la derecha */
+  align-items: center;
 }
 
 .post-avatar {
@@ -171,12 +176,12 @@
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-.post-arra:hover {
-  border-color: var(--color-gold);
-  background: #fffef8;
-  box-shadow: 0 0 0 0.1875rem rgba(212, 175, 55, 0.18);
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end; /* siempre pegados a la derecha */
 }
-
 .post-monto {
   border: 0.0938rem solid var(--color-gold);
 }
@@ -212,8 +217,9 @@
 }
 
 .post-delete:hover {
-  border-color: var(--color-gold);
-  background: #fffef8;
+  border-color: var(--color-gold);/* rojo suave (puedes ajustar tono) */
+  background: #fff5f5;   /* un blanco con leve toque rosado */
+  color: #c0392b;        /* rojo oscuro para el texto */
 }
 
 @media (max-width: 35rem) {

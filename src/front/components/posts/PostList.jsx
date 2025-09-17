@@ -82,17 +82,14 @@ export const PostList = ({ refresh = 0 }) => {
                     </small>
                   )}
                 </div>
-                {user?.id === post.user_id && (
-                  <button
-                    className="post-delete"
-                    onClick={() => handleDelete(post.id)}
-                  >
-                    Eliminar
-                  </button>
-                )}
-                <StartChatButton userTwo={post.user_id} postId={post.id} />
-
-
+                <div className="post-actions">
+                  {user?.id === post.user_id && (
+                    <button className="post-delete" onClick={() => handleDelete(post.id)}>
+                      Eliminar
+                    </button>
+                  )}
+                  <StartChatButton userTwo={post.user_id} postId={post.id} />
+                </div>
               </header>
 
               <div className="post-body">
