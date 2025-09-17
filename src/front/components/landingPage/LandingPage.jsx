@@ -65,7 +65,7 @@ export default function App() {
   return (
     <>
       {/* Navigation */}
-      <nav>
+      {/* <nav>
         <div className="nav-container">
           <a href="#" className="logo">Hand to Hand</a>
           <ul className="nav-links">
@@ -76,7 +76,7 @@ export default function App() {
           </ul>
           <button className="cta-nav">Comenzar intercambio</button>
         </div>
-      </nav>
+      </nav> */}
 
       {/* Hero Section */}
       <section className="hero" id="inicio">
@@ -139,7 +139,7 @@ export default function App() {
 
         <div className="commission-comparison">
           <div className="comparison-row">
-            <span>Bancos tradicionales:</span>
+            <span>Bancos clásicos:</span>
             <span>3-5% de comisión</span>
           </div>
           <div className="comparison-row">
