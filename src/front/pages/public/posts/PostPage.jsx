@@ -15,6 +15,7 @@ export const PostsPage = () => {
       <div className="posts-page">
         <CreatePost onSuccess={() => setRefresh(r => r + 1)} />
         <h1 className="tittle-post-page">Posts</h1>
+        
         <PostList refresh={refresh} />
       </div>
     </>
