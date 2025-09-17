@@ -3,6 +3,12 @@ import { createPost } from "../../services/postApi";
 import { getCurrencies } from "../../services/frankfurterApi";
 import { useAuth } from "../../hooks/useAuth";
 import "./createpost.css";
+import countries from "i18n-iso-countries";
+import enLocale from "i18n-iso-countries/langs/en.json";
+countries.registerLocale(enLocale);
+
+const countryNames = countries.getNames("en", { select: "official" });
+const countryList = Object.entries(countryNames);
 
 const INITIAL = {
   destination: "",
@@ -73,7 +79,7 @@ export const CreatePost = ({ onSuccess }) => {
     <form onSubmit={handleSubmit} className="create-post">
       <h2 className="create-post__title">Crear post</h2>
 
-      <div className="row row-2">
+      <div className="form-grid">
         <label className="field">
           <span className="label">Divisa origen</span>
           <select
@@ -99,37 +105,39 @@ export const CreatePost = ({ onSuccess }) => {
             {currentSelect()}
           </select>
         </label>
-      </div>
 
-      <div className="row row-2">
         <label className="field">
           <span className="label">Destino</span>
-          <input
-            type="text"
+          <select
             name="destination"
             value={form.destination}
             onChange={handleChange}
-            placeholder="Ciudad o zona"
             disabled={loading}
             className="control"
-          />
+          >
+            <option value="">Select a country</option>
+            {countryList.map(([code, name]) => (
+              <option key={code} value={name}>{name}</option>
+            ))}
+          </select>
         </label>
 
         <label className="field">
           <span className="label">Cantidad prevista</span>
           <input
-            type="text"
+            type="number"
             name="description"
             value={form.description}
             onChange={handleChange}
             disabled={loading}
             className="control"
+            min="0"
+            step="any"
+            placeholder="500"
           />
         </label>
-      </div>
 
-      <div className="row row-2 end">
-        <label className="field">
+        <label className="field full">
           <span className="label">Fecha prevista de intercambio</span>
           <input
             type="date"
@@ -143,7 +151,7 @@ export const CreatePost = ({ onSuccess }) => {
         </label>
 
         <div className="actions">
-          <button type="submit" disabled={loading} className="signup-button">
+          <button type="submit" disabled={loading} className="btn-create">
             {loading ? "Creando..." : "Crear"}
           </button>
         </div>

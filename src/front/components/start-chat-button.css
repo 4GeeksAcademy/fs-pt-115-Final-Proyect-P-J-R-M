@@ -1,0 +1,32 @@
+.start-chat-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--radius-btn);
+  border: 1px solid var(--color-gold);
+
+  background: linear-gradient(180deg, var(--color-gold-2), var(--color-gold));
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.start-chat-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-1);
+}
+
+.start-chat-btn:active {
+  transform: scale(0.96);
+  box-shadow: none;
+}
+
+.start-chat-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.35);
+}

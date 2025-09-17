@@ -1,11 +1,26 @@
 .posts-page {
-  background: var(--mint);
+  background: var(--color-bg-1);
   min-height: 100vh;
-  padding: 1rem;
+  padding: 2rem 1rem;
+  display: grid;
+  gap: 2rem;
+  justify-content: center;
 }
 
 .tittle-post-page {
-  margin-left:175px;
-  color:#4d6242;
-  
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  border-bottom: 3px solid var(--color-gold);
+  padding-bottom: 0.5rem;
+  margin: 0 auto;
+  max-width: 900px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .tittle-post-page {
+    font-size: 1.5rem;
+  }
 }
