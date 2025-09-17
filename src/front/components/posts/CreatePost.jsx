@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPost } from "../../services/postApi";
+import { getCurrencies } from "../../services/frankfurterApi";
 import { useAuth } from "../../hooks/useAuth";
+import "./createpost.css";
 
 const INITIAL = {
   destination: "",
@@ -9,8 +11,6 @@ const INITIAL = {
   divisas_two: "USD",
   exchangeDate: "",
 };
-
-const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "MXN", "ARS"];
 
 function todayYMD() {
   const d = new Date();
@@ -22,27 +22,29 @@ function todayYMD() {
 
 export const CreatePost = ({ onSuccess }) => {
   const [form, setForm] = useState(INITIAL);
-  const { token, error, loading } = useAuth();
+  const { token, loading } = useAuth();
+  const [currencies, setCurrencies] = useState({});
+
+  useEffect(() => {
+    const loadCurrencies = async () => {
+      try {
+        const data = await getCurrencies()
+        setCurrencies(data)
+      } catch (err) {
+        setCurrencies("Error al cargar monedas")
+      }
+    }
+    loadCurrencies()
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
-  
-  console.log(form);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return;
-
-    if (!form.destination.trim() || !form.description.trim()) return;
-    if (form.divisas_one === form.divisas_two) return;
     if (!token) return;
-
-    if (form.exchangeDate && form.exchangeDate < todayYMD()) return; 
-     
-
     const payload = {
       destination: form.destination,
       description: form.description,
@@ -50,85 +52,102 @@ export const CreatePost = ({ onSuccess }) => {
       divisas_two: form.divisas_two,
       day_exchange: form.exchangeDate || null,
     };
-
     await createPost(payload, token);
     setForm(INITIAL);
     onSuccess?.();
   };
 
+  const currentSelect = () => {
+    const options = [];
+    for (let code in currencies) {
+      options.push(
+        <option key={code} value={code}>
+          {code} — {currencies[code]}
+        </option>
+      );
+    }
+    return options;
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Crear post</h2>
+    <form onSubmit={handleSubmit} className="create-post">
+      <h2 className="create-post__title">Crear post</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      <div className="row row-2">
+        <label className="field">
+          <span className="label">Divisa origen</span>
+          <select
+            name="divisas_one"
+            value={form.divisas_one}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            {currentSelect()}
+          </select>
+        </label>
 
-      <label>
-        Divisa origen
-        <select
-          name="divisas_one"
-          value={form.divisas_one}
-          onChange={handleChange}
-          disabled={loading}
-        >
-          {CURRENCIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </label>
+        <label className="field">
+          <span className="label">Divisa destino</span>
+          <select
+            name="divisas_two"
+            value={form.divisas_two}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            {currentSelect()}
+          </select>
+        </label>
+      </div>
 
-      <label>
-        Divisa destino
-        <select
-          name="divisas_two"
-          value={form.divisas_two}
-          onChange={handleChange}
-          disabled={loading}
-        >
-          {CURRENCIES.map((c) => (
-            <option key={c} value={c}>{c}</option>
-          ))}
-        </select>
-      </label>
+      <div className="row row-2">
+        <label className="field">
+          <span className="label">Destino</span>
+          <input
+            type="text"
+            name="destination"
+            value={form.destination}
+            onChange={handleChange}
+            placeholder="Ciudad o zona"
+            disabled={loading}
+            className="control"
+          />
+        </label>
 
-      <label>
-        Destino
-        <input
-          type="text"
-          name="destination"
-          value={form.destination}
-          onChange={handleChange}
-          placeholder="Ciudad o zona"
-          disabled={loading}
-        />
-      </label>
+        <label className="field">
+          <span className="label">Cantidad prevista</span>
+          <input
+            type="text"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          />
+        </label>
+      </div>
 
-      <label>
-        Descripción
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          rows={3}
-          placeholder="Detalles del cambio"
-          disabled={loading}
-        />
-      </label>
+      <div className="row row-2 end">
+        <label className="field">
+          <span className="label">Fecha prevista de intercambio</span>
+          <input
+            type="date"
+            name="exchangeDate"
+            min={todayYMD()}
+            value={form.exchangeDate}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          />
+        </label>
 
-      <label>
-        Fecha prevista de intercambio (opcional)
-        <input
-          type="date"
-          name="exchangeDate"
-          min={todayYMD()}
-          value={form.exchangeDate}
-          onChange={handleChange}
-          disabled={loading}
-        />
-      </label>
-
-      <button type="submit" disabled={loading}>
-        {loading ? "Creando..." : "Crear"}
-      </button>
+        <div className="actions">
+          <button type="submit" disabled={loading} className="signup-button">
+            {loading ? "Creando..." : "Crear"}
+          </button>
+        </div>
+      </div>
     </form>
   );
 };

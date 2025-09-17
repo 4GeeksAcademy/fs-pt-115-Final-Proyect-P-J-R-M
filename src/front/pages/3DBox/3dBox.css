@@ -1,0 +1,74 @@
+.single3d-container body {
+  color: white;
+  margin: 0;
+  text-align: center;
+  background-color: black;
+  cursor: crosshair;
+}
+.single3d-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.single3d-container p {
+  color: rgba(255, 255, 255, 0.5);
+}
+.header {
+  top: 42%;
+}
+.header-content {
+  padding: 50px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+.footer {
+  bottom: 3%;
+}
+.description {
+  color: gray;
+  padding-top: 50px;
+}
+.single3d-container a,
+.single3d-container a:hover,
+.single3d-container a:visited {
+  color: white;
+  text-decoration: none;
+}
+.disable-selection {
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer */
+  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+}
+.single3d-container h1::after {
+  content: "Error ";
+  font-size: 12px;
+  position: absolute;
+  top: 3px;
+  padding-left: 5px;
+  font-weight: 400;
+}
+.single3d-container h2::after {
+  content: "2";
+  font-size: 12px;
+  position: absolute;
+  top: 14px;
+  padding-left: 5px;
+}
+
+.btn-cinnamon {
+  display: inline-block;
+  background-color: #d2691e;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cinnamon:hover {
+  background-color: #b65c1a;
+}

@@ -1,0 +1,11 @@
+.posts-page {
+  background: var(--mint);
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.tittle-post-page {
+  margin-left:175px;
+  color:#4d6242;
+  
+}

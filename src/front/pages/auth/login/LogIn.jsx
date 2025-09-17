@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import "./login.css"
 
 export const LogIn = () => {
@@ -11,24 +12,10 @@ export const LogIn = () => {
 
   useEffect(() => {
     if (token) {
-      Swal.fire({
-        title: "Inicio exitoso",
-        icon: "success",
-        draggable: true,
-      });
+      Swal.fire({ title: "Inicio exitoso", icon: "success" });
       navigate("/posts");
     }
   }, [token, navigate]);
-
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Usuario o contraseña incorrecta...",
-      });
-    }
-  }, [error]);
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
@@ -37,7 +24,19 @@ export const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!userData.email || !userData.password) return;
-    await login(userData);
+    const ok = await login(userData);
+
+    if (!ok) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        html: `
+      <p>Usuario o contraseña incorrecta...</p>
+      <a href="/request-reset" style="color: #007BFF; text-decoration: none;">
+        ¿Olvidaste tu contraseña?
+      </a>`,
+      });
+    }
   };
 
   return (
@@ -67,6 +66,11 @@ export const LogIn = () => {
         <button className="login-button" type="submit" disabled={loading}>
           {loading ? "Cargando..." : "Login"}
         </button>
+        <div style={{ marginTop: "20px" }}>
+          <Link to="/signup" style={{ color: "#007BFF", textDecoration: "none" }}>
+            ¿Aún no estás registrado?
+          </Link>
+        </div>
       </form>
     </div>
   );
