@@ -37,7 +37,7 @@
   z-index: 10;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10rem 2rem 4rem;
+  /* padding: 10rem 2rem 4rem; */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5rem;
@@ -51,7 +51,6 @@
   margin-bottom: 1.5rem;
   color: var(--color-text);
   line-height: 1.2;
-  font-family: "Georgia", serif;
 }
 
 .hero-text .highlight {
@@ -204,7 +203,6 @@
   font-weight: 700;
   margin-bottom: 1rem;
   color: var(--color-text);
-  font-family: "Georgia", serif;
 }
 
 .section-subtitle {
@@ -264,7 +262,7 @@
 
 /* No Commission Highlight */
 .no-commission {
-  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-2));
+  background: #1a252f;
   padding: 6rem 2rem;
   text-align: center;
   position: relative;
@@ -288,7 +286,6 @@
   font-weight: 700;
   margin-bottom: 1rem;
   color: white;
-  font-family: "Georgia", serif;
 }
 .no-commission p {
   font-size: 1.4rem;
@@ -394,7 +391,6 @@
   font-weight: 700;
   margin-bottom: 1rem;
   color: white;
-  font-family: "Georgia", serif;
   position: relative;
 }
 .cta-section p {
@@ -408,7 +404,6 @@
   padding: 1.2rem 3rem;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .hero-content {
     grid-template-columns: 1fr;
