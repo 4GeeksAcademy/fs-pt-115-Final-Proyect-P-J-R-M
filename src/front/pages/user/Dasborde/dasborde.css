@@ -1,56 +1,104 @@
-
 .dasborde-container {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  background-color: #f2f5f0;
   min-height: 100vh;
-  background-color: #e2d4b7;
-  padding: 16px;
+  padding: 40px 20px;
   box-sizing: border-box;
 }
 
+.content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1200px;
+}
 
+/* === User Card === */
 .user-card {
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 8px;
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease;
+}
+
+.user-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.user-image-container {
+  position: relative;
+  width: 110px;
+  height: 110px;
 }
 
 .user-image {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #4d6242;
+}
+
+.edit-icon {
+  position: absolute;
+  right: -10px;
+  top: 100%;
+  transform: translateY(-50%);
+  background-color: #4d6242;
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit-icon:hover {
+  background-color: #3b5035;
+}
+
+.user-info {
+  text-align: center;
 }
 
 .user-info p {
   margin: 4px 0;
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
 }
 
-
+/* === Content Sections === */
 .content-inner {
-  display: grid;
-  grid-template-columns: 1fr 2fr;  
+  display: flex;
+  flex-direction: column;
   gap: 24px;
 }
 
-
-.calendar-container {
-  width: 100%;
-  max-width: 600px;
-  padding: 1rem;
+.calendar-container,
+.favorites-section {
+  background-color: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
-  margin: 0 auto;
 }
 
+.calendar-container {
+  min-height: 200px;
+}
 
 .favorites-section {
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 8px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .favorites-list {
@@ -60,29 +108,59 @@
 }
 
 .favorite-item {
-  background-color: #f4f4f4;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 10px;
+  background-color: #e5eee0;
+  padding: 14px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  color: #2e2e2e;
+  transition: background-color 0.3s ease;
 }
 
+.favorite-item:hover {
+  background-color: #c8dbc1;
+}
 
-@media (max-width: 600px) {
-  .content-inner {
-    grid-template-columns: 1fr;
+/* === Responsive === */
+@media (max-width: 768px) {
+  .content {
+    display: flex;
+    flex-direction: column;
   }
 
   .user-card {
-    flex-direction: column;
-    text-align: center;
+    padding: 20px;
   }
 
-  .calendar-container {
-    padding: 0.5rem;
-    max-width: 100%;
+  .edit-icon {
+    top: 100%;
+    right: -8px;
+    padding: 6px;
   }
+
+  .calendar-container,
   .favorites-section {
-    width: 100%;
+    padding: 20px;
+  }
+
+  .favorite-item {
+    font-size: 14px;
+    padding: 12px;
   }
 }
 
+@media (max-width: 480px) {
+  .user-image-container {
+    width: 90px;
+    height: 90px;
+  }
+
+  .user-info p {
+    font-size: 14px;
+  }
+
+  .favorite-item {
+    font-size: 13px;
+  }
+}
