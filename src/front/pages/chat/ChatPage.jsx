@@ -497,7 +497,7 @@ export default function ChatSocketClient() {
 	useEffect(() => {
 		if (!didHydrateUnread) return;
 		const total = Object.values(unreadByChat).reduce((a, b) => a + b, 0);
-		const base = "Chat";
+		const base = "Hand to Hand";
 		document.title = total > 0 ? `(${total}) ${base}` : base;
 	}, [didHydrateUnread, unreadByChat]);
 
