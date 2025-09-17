@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import "./login.css"
 
 export const LogIn = () => {
@@ -29,7 +30,11 @@ export const LogIn = () => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Usuario o contraseña incorrecta...",
+        html: `
+      <p>Usuario o contraseña incorrecta...</p>
+      <a href="/request-reset" style="color: #007BFF; text-decoration: none;">
+        ¿Olvidaste tu contraseña?
+      </a>`,
       });
     }
   };
@@ -61,6 +66,11 @@ export const LogIn = () => {
         <button className="login-button" type="submit" disabled={loading}>
           {loading ? "Cargando..." : "Login"}
         </button>
+        <div style={{ marginTop: "20px" }}>
+          <Link to="/signup" style={{ color: "#007BFF", textDecoration: "none" }}>
+            ¿Aún no estás registrado?
+          </Link>
+        </div>
       </form>
     </div>
   );

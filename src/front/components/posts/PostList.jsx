@@ -70,7 +70,7 @@ export const PostList = ({ refresh = 0 }) => {
             <li key={post.id} className="post-item">
               <header className="post-header">
                 <img
-                  src={author?.image || "/avatar-placeholder.png"}
+                  src={author?.image || "../../rigo-baby.jpg"}
                   alt="avatar"
                   className="post-avatar"
                 />
@@ -95,7 +95,7 @@ export const PostList = ({ refresh = 0 }) => {
 
               </header>
 
-              <p className="post-body">
+              <div className="post-body">
                 <h4 className="post-destination">{post.destination}</h4>{" "}
                 <div className="post-currencies">
                   <span className="post-monto">{post.description} {post.divisas_one} →</span>
@@ -104,7 +104,7 @@ export const PostList = ({ refresh = 0 }) => {
                   </span>
                   <span className="post-arra">{post.divisas_two}</span>
                 </div>
-              </p>
+              </div>
             </li>
           );
         })}
