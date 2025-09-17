@@ -3,19 +3,10 @@ import { io } from "socket.io-client";
 import { useAuth } from "../../hooks/useAuth";
 import { getUsers } from "../../services/userApi";
 import { getPostById } from "../../services/postApi";
-
-const WP_COLORS = {
-	headerBg: "#075E54",
-	headerText: "#E9F5F3",
-	appBg: "#ECE5DD",
-	chatListBg: "#FFFFFF",
-	chatActive: "#DCF8C6",
-	bubbleMine: "#DCF8C6",
-	bubbleOther: "#FFFFFF",
-	border: "#D1D5DB",
-	accent: "#25D366",
-	accentDark: "#128C7E",
-};
+import "./chat-page.css";
+import "../../components/chat/theme.css";
+import Sidebar from "../../components/chat/sidebar/Sidebar";
+import ChatPanel from "../../components/chat/chatpanel/ChatPanel";
 
 export default function ChatSocketClient() {
 	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
@@ -23,6 +14,10 @@ export default function ChatSocketClient() {
 	// Auth simple
 	const { token, user } = useAuth();
 	const userId = Number(user?.id);
+
+	// Claves por usuario para persistir
+	const UNREAD_KEY = useMemo(() => (userId ? `unreadByChat:${userId}` : null), [userId]);
+	const SCROLL_KEY = useMemo(() => (userId ? `scrollByChat:${userId}` : null), [userId]);
 
 	// Deep link
 	const params = useMemo(() => new URLSearchParams(window.location.search), []);
@@ -53,15 +48,110 @@ export default function ChatSocketClient() {
 	const [nextBeforeByChat, setNextBeforeByChat] = useState({});
 	const [typingByChat, setTypingByChat] = useState({});
 
+	// --- Notificaciones / No leídos (persistencia) ---
+	const [unreadByChat, setUnreadByChat] = useState({});
+	const [didHydrateUnread, setDidHydrateUnread] = useState(false);
+	const [chatsReady, setChatsReady] = useState(false);
+
+	// Hidratar no leídos
+	useEffect(() => {
+		if (!UNREAD_KEY) return;
+		try {
+			const raw = localStorage.getItem(UNREAD_KEY);
+			if (raw) {
+				const parsed = JSON.parse(raw);
+				if (parsed && typeof parsed === "object") {
+					const cleaned = {};
+					for (const [k, v] of Object.entries(parsed)) {
+						const n = Number(v);
+						if (Number.isFinite(n) && n > 0) cleaned[k] = n;
+					}
+					setUnreadByChat(cleaned);
+				}
+			}
+		} catch { }
+		setDidHydrateUnread(true);
+	}, [UNREAD_KEY]);
+
+	// Guardar no leídos
+	useEffect(() => {
+		if (!didHydrateUnread || !UNREAD_KEY) return;
+		try {
+			localStorage.setItem(UNREAD_KEY, JSON.stringify(unreadByChat));
+		} catch { }
+	}, [didHydrateUnread, UNREAD_KEY, unreadByChat]);
+
+	// Podar contadores de chats inexistentes
+	useEffect(() => {
+		if (!didHydrateUnread || !chatsReady) return;
+		const valid = new Set(chats.map((c) => String(c.id)));
+		setUnreadByChat((prev) => {
+			let changed = false;
+			const next = {};
+			for (const [k, v] of Object.entries(prev)) {
+				if (valid.has(String(k))) next[k] = v;
+				else changed = true;
+			}
+			return changed ? next : prev;
+		});
+	}, [didHydrateUnread, chatsReady, chats]);
+
+	// Foco de ventana + notificaciones
+	const [isWindowFocused, setIsWindowFocused] = useState(!document.hidden);
+	useEffect(() => {
+		const onVisibility = () => setIsWindowFocused(!document.hidden);
+		document.addEventListener("visibilitychange", onVisibility);
+		return () => document.removeEventListener("visibilitychange", onVisibility);
+	}, []);
+
+	useEffect(() => {
+		if (!connected) return;
+		if ("Notification" in window && Notification.permission === "default") {
+			Notification.requestPermission().catch(() => { });
+		}
+	}, [connected]);
+
+	function showBrowserNotification({ title, body, icon, onClick }) {
+		if (!("Notification" in window)) return;
+		if (Notification.permission !== "granted") return;
+		try {
+			const n = new Notification(title, { body, icon, badge: icon, silent: true });
+			if (onClick) n.onclick = onClick;
+		} catch { }
+	}
+
+	// Ping corto con WebAudio
+	const playPing = useRef(() => { });
+	useEffect(() => {
+		const AudioCtx = window.AudioContext || window.webkitAudioContext;
+		let ctx = null;
+		if (AudioCtx) ctx = new AudioCtx();
+		playPing.current = () => {
+			try {
+				if (!ctx) return;
+				const o = ctx.createOscillator();
+				const g = ctx.createGain();
+				o.type = "sine";
+				o.frequency.value = 880;
+				g.gain.value = 0.0001;
+				o.connect(g);
+				g.connect(ctx.destination);
+				o.start();
+				const now = ctx.currentTime;
+				g.gain.exponentialRampToValueAtTime(0.2, now + 0.01);
+				g.gain.exponentialRampToValueAtTime(0.0001, now + 0.16);
+				o.stop(now + 0.18);
+			} catch { }
+		};
+	}, []);
+
 	// UI / refs
-	// AÑADIDO: inicializar desde localStorage para persistir el chat activo
 	const [activeChatId, setActiveChatId] = useState(() => {
 		const raw = localStorage.getItem("activeChatId");
 		const n = Number(raw);
 		return Number.isFinite(n) && n > 0 ? n : null;
 	});
 
-	// AÑADIDO: guardar en localStorage cada vez que cambie
 	useEffect(() => {
 		if (activeChatId) localStorage.setItem("activeChatId", String(activeChatId));
 	}, [activeChatId]);
@@ -71,6 +161,11 @@ export default function ChatSocketClient() {
 		activeChatIdRef.current = activeChatId;
 	}, [activeChatId]);
 
+	const usersByIdRef = useRef({});
+	useEffect(() => {
+		usersByIdRef.current = usersById;
+	}, [usersById]);
+
 	const [text, setText] = useState("");
 	const typingRef = useRef(false);
 	const typingTimeout = useRef(null);
@@ -79,10 +174,48 @@ export default function ChatSocketClient() {
 	const listRef = useRef(null);
 	const joinedChatsRef = useRef(new Set());
 
+	// Hidratar scroll por chat
+	useEffect(() => {
+		if (!SCROLL_KEY) return;
+		try {
+			const raw = localStorage.getItem(SCROLL_KEY);
+			if (raw) {
+				const parsed = JSON.parse(raw);
+				if (parsed && typeof parsed === "object") {
+					scrollByChat.current = parsed;
+				}
+			}
+		} catch { }
+	}, [SCROLL_KEY]);
+
+	// Helper persistir scroll
+	const persistScroll = useRef(() => { });
+	useEffect(() => {
+		persistScroll.current = () => {
+			if (!SCROLL_KEY) return;
+			try {
+				localStorage.setItem(SCROLL_KEY, JSON.stringify(scrollByChat.current));
+			} catch { }
+		};
+	}, [SCROLL_KEY]);
+
+	// Guardar scroll al hacer scroll del contenedor
+	useEffect(() => {
+		const el = listRef.current;
+		if (!el) return;
+		const onScroll = () => {
+			if (!activeChatId) return;
+			scrollByChat.current[activeChatId] = el.scrollTop;
+			persistScroll.current?.();
+		};
+		el.addEventListener("scroll", onScroll, { passive: true });
+		return () => el.removeEventListener("scroll", onScroll);
+	}, [activeChatId]);
+
 	// Fetch helpers
 	async function fetchUsers() {
 		try {
-			const list = await getUsers(); // usa token de localStorage
+			const list = await getUsers();
 			const map = {};
 			for (const u of list) map[u.id] = u;
 			setUsersById(map);
@@ -94,7 +227,7 @@ export default function ChatSocketClient() {
 	async function fetchPost(postId) {
 		if (!postId) return;
 		try {
-			const data = await getPostById(postId, token); // tu service requiere token
+			const data = await getPostById(postId, token);
 			setPostsById((prev) => ({ ...prev, [postId]: data }));
 		} catch (error) {
 			console.error("getPostById error:", error);
@@ -126,9 +259,15 @@ export default function ChatSocketClient() {
 		setText("");
 		stopTyping();
 		requestAnimationFrame(() => {
-			if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
+			if (listRef.current) {
+				listRef.current.scrollTop = listRef.current.scrollHeight;
+				// Persistir scroll al fondo tras enviar
+				if (activeChatId) {
+					scrollByChat.current[activeChatId] = listRef.current.scrollTop;
+					persistScroll.current();
+				}
+			}
 		});
-		// AÑADIDO: asegurar persistencia inmediata tras enviar (por si se creó el chat hace nada)
 		if (activeChatId) localStorage.setItem("activeChatId", String(activeChatId));
 	};
 
@@ -150,7 +289,6 @@ export default function ChatSocketClient() {
 	useEffect(() => {
 		function onConnect() {
 			setConnected(true);
-			// IMPORTANTE: pasamos el token tal cual desde useAuth()
 			socket.emit("identify", { token });
 		}
 		function onDisconnect() {
@@ -169,6 +307,7 @@ export default function ChatSocketClient() {
 		function onChats(payload) {
 			const list = Array.isArray(payload) ? payload : [];
 			setChats(list);
+			setChatsReady(true);
 
 			// Únete a todos y precarga posts
 			list.forEach((c) => {
@@ -179,21 +318,18 @@ export default function ChatSocketClient() {
 				if (!postsById[c.post_id]) fetchPost(c.post_id);
 			});
 
-			// AÑADIDO: respetar el chat activo persistido si existe en la lista
 			const ids = new Set(list.map((c) => c.id));
 			let target = activeChatIdRef.current;
 
 			if (target && ids.has(target)) {
-				// Si ya hay chat activo válido, asegurar que tiene mensajes y está unido
 				if (!joinedChatsRef.current.has(target)) {
 					joinChat(target);
 					joinedChatsRef.current.add(target);
 				}
 				if (!(messagesByChat[target]?.length)) loadMessages(target);
-				return; // NO cambiamos de chat
+				return;
 			}
 
-			// Si venimos por deep link (chatId) o no existe el guardado, elegimos
 			target = wantChatId || (list?.[0]?.id ?? null);
 			if (target) {
 				setActiveChatId(target);
@@ -208,7 +344,7 @@ export default function ChatSocketClient() {
 		function onChatCreated(chat) {
 			setChats((prev) => [chat, ...prev]);
 			setActiveChatId(chat.id);
-			localStorage.setItem("activeChatId", String(chat.id)); // AÑADIDO
+			localStorage.setItem("activeChatId", String(chat.id));
 			joinChat(chat.id);
 			joinedChatsRef.current.add(chat.id);
 			fetchPost(chat.post_id);
@@ -217,23 +353,49 @@ export default function ChatSocketClient() {
 
 		function onChatExists(chat) {
 			setActiveChatId(chat.id);
-			localStorage.setItem("activeChatId", String(chat.id)); // AÑADIDO
+			localStorage.setItem("activeChatId", String(chat.id));
 			joinChat(chat.id);
 			joinedChatsRef.current.add(chat.id);
 			fetchPost(chat.post_id);
 			loadMessages(chat.id);
 		}
 
-		// ⬇⬇⬇ autoscroll solo si el mensaje es mío ⬇⬇⬇
+		// Mensajes + notificaciones
 		function onNewMessage(m) {
 			setMessagesByChat((prev) => {
 				const list = prev[m.chat_id] || [];
 				return { ...prev, [m.chat_id]: [...list, m] };
 			});
 
-			if (m.chat_id === activeChatIdRef.current && Number(m.user_id) === userId) {
+			const isMine = Number(m.user_id) === userId;
+			const isActiveChat = m.chat_id === activeChatIdRef.current;
+
+			if (isActiveChat && isMine) {
 				requestAnimationFrame(() => {
-					if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
+					if (listRef.current) {
+						listRef.current.scrollTop = listRef.current.scrollHeight;
+						// Persistir scroll al fondo al recibir mensaje propio
+						scrollByChat.current[m.chat_id] = listRef.current.scrollTop;
+						persistScroll.current();
+					}
+				});
+			}
+
+			if (!isMine && (!isActiveChat || !isWindowFocused)) {
+				setUnreadByChat((prev) => ({ ...prev, [m.chat_id]: (prev[m.chat_id] || 0) + 1 }));
+
+				const author = usersByIdRef.current[m.user_id];
+				const title = author?.username || "Nuevo mensaje";
+				const body = (m.content || "").slice(0, 120) || "Mensaje nuevo";
+				playPing.current?.();
+				showBrowserNotification({
+					title,
+					body,
+					icon: author?.image || undefined,
+					onClick: () => {
+						window.focus();
+						setActiveChatId(m.chat_id);
+					},
 				});
 			}
 		}
@@ -250,7 +412,12 @@ export default function ChatSocketClient() {
 
 			if (chat_id === activeChatIdRef.current) {
 				requestAnimationFrame(() => {
-					if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight;
+					if (listRef.current) {
+						listRef.current.scrollTop = listRef.current.scrollHeight;
+						// Persistir scroll al fondo tras cargar mensajes del chat activo
+						scrollByChat.current[chat_id] = listRef.current.scrollTop;
+						persistScroll.current();
+					}
 				});
 			}
 		}
@@ -277,12 +444,14 @@ export default function ChatSocketClient() {
 
 		socket.connect();
 		return () => {
+			// Guardar scrolls antes de desmontar
+			persistScroll.current?.();
 			socket.disconnect();
 			socket.removeAllListeners();
 			if (typingTimeout.current) clearTimeout(typingTimeout.current);
 			joinedChatsRef.current = new Set();
 		};
-	}, [socket, token, wantChatId, wantPostId, postsById, userId, messagesByChat]);
+	}, [socket, token, wantChatId, wantPostId, postsById, userId, messagesByChat, isWindowFocused]);
 
 	// refresco periódico de chats
 	useEffect(() => {
@@ -305,18 +474,32 @@ export default function ChatSocketClient() {
 			if (saved !== undefined) listRef.current.scrollTop = saved;
 			else listRef.current.scrollTop = listRef.current.scrollHeight;
 		});
+
+		// limpiar no leídos al entrar en el chat
+		setUnreadByChat((prev) => {
+			if (!prev[activeChatId]) return prev;
+			const { [activeChatId]: _omit, ...rest } = prev;
+			return rest;
+		});
 	}, [activeChatId]);
 
-	// guardar scroll por chat
+	// si recuperas foco, limpia no leídos del chat abierto
 	useEffect(() => {
-		const el = listRef.current;
-		if (!el) return;
-		const handler = () => {
-			if (activeChatId) scrollByChat.current[activeChatId] = el.scrollTop;
-		};
-		el.addEventListener("scroll", handler);
-		return () => el.removeEventListener("scroll", handler);
-	}, [activeChatId]);
+		if (!isWindowFocused || !activeChatId) return;
+		setUnreadByChat((prev) => {
+			if (!prev[activeChatId]) return prev;
+			const { [activeChatId]: _omit, ...rest } = prev;
+			return rest;
+		});
+	}, [isWindowFocused, activeChatId]);
+
+	// badge en el título de la pestaña
+	useEffect(() => {
+		if (!didHydrateUnread) return;
+		const total = Object.values(unreadByChat).reduce((a, b) => a + b, 0);
+		const base = "Chat";
+		document.title = total > 0 ? `(${total}) ${base}` : base;
+	}, [didHydrateUnread, unreadByChat]);
 
 	const handleLoadOlder = () => {
 		if (!activeChatId) return;
@@ -328,320 +511,52 @@ export default function ChatSocketClient() {
 		(uid) => Number(uid) !== userId
 	);
 
+	const messages = messagesByChat[activeChatId || -1] || [];
+
 	return (
-		<div
-			style={{
-				display: "grid",
-				gridTemplateColumns: "340px 1fr",
-				height: "80vh",
-				gap: 12,
-				padding: 12,
-				background: WP_COLORS.appBg,
-				fontFamily: "system-ui, Arial",
-			}}
-		>
-			{/* Sidebar */}
-			<aside
-				style={{
-					border: `1px solid ${WP_COLORS.border}`,
-					borderRadius: 14,
-					overflow: "hidden",
-					background: WP_COLORS.chatListBg,
-					display: "grid",
-					gridTemplateRows: "auto 1fr auto",
-				}}
-			>
-				<div
-					style={{
-						background: WP_COLORS.headerBg,
-						color: WP_COLORS.headerText,
-						padding: 12,
-						fontWeight: 700,
+		<div className="chat-shell">
+			<div className="chat-layout">
+				{/* Sidebar (lista de chats a la izquierda) */}
+				<Sidebar
+					chats={chats}
+					usersById={usersById}
+					postsById={postsById}
+					userId={userId}
+					activeChatId={activeChatId}
+					unreadByChat={unreadByChat}
+					onSelectChat={(id) => {
+						setActiveChatId(id);
+						localStorage.setItem("activeChatId", String(id));
 					}}
-				>
-					Chats
-				</div>
+				/>
 
-				<ul style={{ listStyle: "none", padding: 8, margin: 0, overflow: "auto" }}>
-					{chats.map((c) => {
-						const otherId = c.user_one === userId ? c.user_two : c.user_one;
-						const other = usersById[otherId];
-						const title = other?.username || `Usuario ${otherId}`;
-						const img = other?.image;
-
-						const post = postsById[c.post_id];
-						const subtitle = post
-							? `${post.description} · ${post.divisas_one} → ${post.divisas_two}`
-							: `Post #${c.post_id}`;
-
-						return (
-							<li key={c.id}>
-								<button
-									onClick={() => {
-										setActiveChatId(c.id);
-										localStorage.setItem("activeChatId", String(c.id)); // AÑADIDO
-									}}
-									style={{
-										width: "100%",
-										textAlign: "left",
-										padding: "10px 12px",
-										marginBottom: 6,
-										borderRadius: 12,
-										border: `1px solid ${WP_COLORS.border}`,
-										background: c.id === activeChatId ? WP_COLORS.chatActive : "white",
-										cursor: "pointer",
-										display: "flex",
-										justifyContent: "space-between",
-										alignItems: "center",
-									}}
-								>
-									<div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-										{img ? (
-											<img
-												src={img}
-												alt={title}
-												style={{
-													width: 34,
-													height: 34,
-													borderRadius: "50%",
-													objectFit: "cover",
-												}}
-											/>
-										) : (
-											<Avatar seed={title} />
-										)}
-										<div>
-											<div style={{ fontWeight: 600 }}>{title}</div>
-											<div style={{ fontSize: 12, color: "#6b7280" }}>{subtitle}</div>
-										</div>
-									</div>
-								</button>
-							</li>
-						);
-					})}
-				</ul>
-			</aside>
-
-			{/* Panel principal */}
-			<section
-				style={{
-					border: `1px solid ${WP_COLORS.border}`,
-					borderRadius: 14,
-					display: "grid",
-					gridTemplateRows: "auto 1fr auto",
-					overflow: "hidden",
-					background: "#F8F8F8",
-				}}
-			>
-				{/* Header */}
-				<div
-					style={{
-						background: WP_COLORS.headerBg,
-						color: WP_COLORS.headerText,
-						padding: 12,
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
-						gap: 12,
+				{/* Panel principal (encabezado verde + mensajes + input) */}
+				<ChatPanel
+					headerProps={{
+						chat: chats.find((ch) => ch.id === activeChatId),
+						userId,
+						usersById,
+						postsById,
+						typingOthers,
+						onLoadOlder: handleLoadOlder,
+						canLoadOlder: !!activeChatId,
 					}}
-				>
-					{(() => {
-						const chat = chats.find((ch) => ch.id === activeChatId);
-						if (!chat) return <div>Selecciona un chat</div>;
-						const otherId = chat.user_one === userId ? chat.user_two : chat.user_one;
-						const other = usersById[otherId];
-						const title = other?.username || `Usuario ${otherId}`;
-						const img = other?.image;
-						const post = postsById[chat.post_id];
-						const sub = post
-							? `${post.description} ${post.divisas_one} → ${post.divisas_two}`
-							: "";
-						const dest = post?.destination ? `📍 ${post.destination}` : "";
-						return (
-							<div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-								{img ? (
-									<img
-										src={img}
-										alt={title}
-										style={{ width: 34, height: 34, borderRadius: "50%", objectFit: "cover" }}
-									/>
-								) : (
-									<Avatar seed={title} />
-								)}
-								<div>
-									<div style={{ fontWeight: 700 }}>{title}</div>
-									{/* typing debajo del username */}
-									{typingOthers.length > 0 ? (
-										<div style={{ fontSize: 12, opacity: 0.9 }}>
-											{typingOthers.length === 1
-												? `${usersById[typingOthers[0]]?.username || "Usuario"} está escribiendo…`
-												: `Varios están escribiendo…`}
-										</div>
-									) : (
-										<div style={{ fontSize: 12, opacity: 0.9 }}>{sub}</div>
-									)}
-									{dest && <div style={{ fontSize: 11, opacity: 0.8 }}>{dest}</div>}
-								</div>
-							</div>
-						);
-					})()}
-
-					{activeChatId && (
-						<button
-							onClick={handleLoadOlder}
-							style={{
-								background: "transparent",
-								color: WP_COLORS.headerText,
-								border: `1px solid ${WP_COLORS.headerText}`,
-								borderRadius: 8,
-								padding: "6px 10px",
-								cursor: "pointer",
-							}}
-						>
-							Cargar anteriores
-						</button>
-					)}
-				</div>
-
-				{/* Mensajes */}
-				<div
-					ref={listRef}
-					style={{
-						padding: 12,
-						overflow: "auto",
-						background: `linear-gradient(180deg, ${WP_COLORS.appBg}, #FFFFFF)`,
+					listRef={listRef}
+					messages={messages}
+					usersById={usersById}
+					activeChatId={activeChatId}
+					isMine={(m) => Number(m.user_id) === userId}
+					inputProps={{
+						value: text,
+						disabled: !activeChatId,
+						placeholder: activeChatId ? "Escribe un mensaje" : "Selecciona un chat",
+						onChange: setText,
+						onSend: sendMessage,
+						onStartTyping: startTyping,
+						onStopTyping: stopTyping,
 					}}
-				>
-					{(messagesByChat[activeChatId || -1] || []).map((m) => {
-						const author = usersById[m.user_id];
-						return (
-							<MessageBubble
-								key={m.id}
-								mine={Number(m.user_id) === userId}
-								content={m.content}
-								id={m.id}
-								authorName={author?.username}
-								authorImg={author?.image}
-							/>
-						);
-					})}
-				</div>
-
-				{/* Input */}
-				<div
-					style={{
-						display: "flex",
-						gap: 8,
-						padding: 10,
-						background: "#F0F0F0",
-						alignItems: "center",
-					}}
-				>
-					<input
-						value={text}
-						onChange={(e) => {
-							setText(e.target.value);
-							if (e.target.value) startTyping();
-							else stopTyping();
-						}}
-						onKeyDown={(e) => {
-							if (e.key === "Enter" && !e.shiftKey) {
-								e.preventDefault();
-								sendMessage();
-							}
-						}}
-						placeholder={activeChatId ? "Escribe un mensaje" : "Selecciona un chat"}
-						disabled={!activeChatId}
-						style={{
-							flex: 1,
-							borderRadius: 20,
-							border: `1px solid ${WP_COLORS.border}`,
-							padding: "10px 14px",
-							background: "white",
-						}}
-					/>
-					<button
-						onClick={sendMessage}
-						disabled={!activeChatId || !text.trim()}
-						style={{
-							background: WP_COLORS.accent,
-							color: "white",
-							border: "none",
-							borderRadius: 20,
-							padding: "10px 14px",
-							cursor: "pointer",
-						}}
-					>
-						Enviar
-					</button>
-				</div>
-			</section>
-		</div>
-	);
-}
-
-function MessageBubble({ mine, content, id, ephemeral, authorName, authorImg }) {
-	return (
-		<div
-			style={{
-				display: "flex",
-				justifyContent: mine ? "flex-end" : "flex-start",
-				marginBottom: 8,
-				opacity: ephemeral ? 0.7 : 1,
-				gap: 8,
-			}}
-			title={typeof id === "number" ? `msg #${id}` : undefined}
-		>
-			{!mine &&
-				(authorImg ? (
-					<img
-						src={authorImg}
-						alt={authorName || "Usuario"}
-						style={{ width: 28, height: 28, borderRadius: "9999px", objectFit: "cover" }}
-					/>
-				) : (
-					<Avatar seed={authorName || "Usuario"} />
-				))}
-
-			<div
-				style={{
-					maxWidth: 560,
-					padding: "8px 10px",
-					borderRadius: 10,
-					border: `1px solid ${WP_COLORS.border}`,
-					background: mine ? WP_COLORS.bubbleMine : WP_COLORS.bubbleOther,
-					whiteSpace: "pre-wrap",
-					wordBreak: "break-word",
-					boxShadow: "0 1px 0 rgba(0,0,0,0.03)",
-				}}
-			>
-				{!mine && authorName && (
-					<div style={{ fontSize: 11, fontWeight: 700, marginBottom: 2, opacity: 0.75 }}>
-						{authorName}
-					</div>
-				)}
-				{content}
+				/>
 			</div>
-		</div>
-	);
-}
-
-function Avatar({ seed }) {
-	return (
-		<div
-			style={{
-				width: 28,
-				height: 28,
-				borderRadius: "9999px",
-				background: "#E5E7EB",
-				display: "grid",
-				placeItems: "center",
-				fontSize: 11,
-				fontWeight: 700,
-			}}
-			title={seed}
-		>
-			{String(seed).slice(0, 2).toUpperCase()}
 		</div>
 	);
 }

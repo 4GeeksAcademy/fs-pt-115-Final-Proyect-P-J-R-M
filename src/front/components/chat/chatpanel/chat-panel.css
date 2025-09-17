@@ -1,0 +1,8 @@
+.chat-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header / mensajes / input */
+  overflow: hidden;
+  background: var(--surface);
+}

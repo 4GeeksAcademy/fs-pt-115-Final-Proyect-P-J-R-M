@@ -1,0 +1,36 @@
+.msg-input {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: #f0f0f0;
+  align-items: center;
+  border-top: 1px solid var(--border);
+}
+
+.msg-input__field {
+  flex: 1;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  background: #ffffff;
+  outline: none;
+}
+
+.msg-input__field:focus {
+  border-color: var(--ash-gray);
+  box-shadow: 0 0 0 3px rgba(176, 187, 191, 0.25);
+}
+
+.msg-input__btn {
+  background: var(--battleship-gray);
+  color: var(--accent-contrast);
+  border: none;
+  border-radius: 20px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.msg-input__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
