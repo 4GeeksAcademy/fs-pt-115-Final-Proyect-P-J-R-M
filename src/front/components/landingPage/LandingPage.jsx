@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "./landing-page.css"
+import { VideoPerrete } from "../VideoPerrete/VideoPerrete";
 
 export default function App() {
   useEffect(() => {
@@ -64,20 +65,6 @@ export default function App() {
 
   return (
     <>
-      {/* Navigation */}
-      {/* <nav>
-        <div className="nav-container">
-          <a href="#" className="logo">Hand to Hand</a>
-          <ul className="nav-links">
-            <li><a href="#inicio">Inicio</a></li>
-            <li><a href="#servicios">Servicios</a></li>
-            <li><a href="#herramientas">Herramientas</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-          </ul>
-          <button className="cta-nav">Comenzar intercambio</button>
-        </div>
-      </nav> */}
-
       {/* Hero Section */}
       <section className="hero" id="inicio">
         <div className="hero-content">
@@ -95,11 +82,7 @@ export default function App() {
               <span className="badge">Tipos de cambio reales</span>
               <span className="badge">Transacciones seguras</span>
             </div>
-
-            <div className="cta-buttons">
-              <button className="btn-primary">Cambiar dinero ahora</button>
-              <button className="btn-secondary">Ver tipos de cambio</button>
-            </div>
+            <VideoPerrete />
           </div>
 
           <div className="hero-visual">
@@ -151,7 +134,7 @@ export default function App() {
             <span>1-2% de comisión</span>
           </div>
           <div className="comparison-row">
-            <span>Hand to Hand:</span>
+            <span style={{ marginRight: "4px" }}>Hand to Hand:</span>
             <span>0% de comisión</span>
           </div>
         </div>
