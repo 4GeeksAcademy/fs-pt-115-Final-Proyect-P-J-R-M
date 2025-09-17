@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPost } from "../../services/postApi";
+import { getCurrencies } from "../../services/frankfurterApi";
 import { useAuth } from "../../hooks/useAuth";
 import "./createpost.css";
 
@@ -11,8 +12,6 @@ const INITIAL = {
   exchangeDate: "",
 };
 
-const CURRENCIES = ["EUR", "USD", "GBP", "JPY", "MXN", "ARS"];
-
 function todayYMD() {
   const d = new Date();
   const y = d.getFullYear();
@@ -23,7 +22,20 @@ function todayYMD() {
 
 export const CreatePost = ({ onSuccess }) => {
   const [form, setForm] = useState(INITIAL);
-  const { token, error, loading } = useAuth();
+  const { token, loading } = useAuth();
+  const [currencies, setCurrencies] = useState({});
+
+  useEffect(() => {
+    const loadCurrencies = async () => {
+      try {
+        const data = await getCurrencies()
+        setCurrencies(data)
+      } catch (err) {
+        setCurrencies("Error al cargar monedas")
+      }
+    }
+    loadCurrencies()
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,12 +44,7 @@ export const CreatePost = ({ onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (loading) return;
-    if (!form.destination.trim() || !form.description.trim()) return;
-    if (form.divisas_one === form.divisas_two) return;
     if (!token) return;
-    if (form.exchangeDate && form.exchangeDate < todayYMD()) return;
-
     const payload = {
       destination: form.destination,
       description: form.description,
@@ -45,15 +52,27 @@ export const CreatePost = ({ onSuccess }) => {
       divisas_two: form.divisas_two,
       day_exchange: form.exchangeDate || null,
     };
-
     await createPost(payload, token);
     setForm(INITIAL);
     onSuccess?.();
   };
 
+  const currentSelect = () => {
+    const options = [];
+    for (let code in currencies) {
+      options.push(
+        <option key={code} value={code}>
+          {code} — {currencies[code]}
+        </option>
+      );
+    }
+    return options;
+  };
+
   return (
     <form onSubmit={handleSubmit} className="create-post">
       <h2 className="create-post__title">Crear post</h2>
+
       <div className="row row-2">
         <label className="field">
           <span className="label">Divisa origen</span>
@@ -64,9 +83,7 @@ export const CreatePost = ({ onSuccess }) => {
             disabled={loading}
             className="control"
           >
-            {CURRENCIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
+            {currentSelect()}
           </select>
         </label>
 
@@ -79,9 +96,7 @@ export const CreatePost = ({ onSuccess }) => {
             disabled={loading}
             className="control"
           >
-            {CURRENCIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
+            {currentSelect()}
           </select>
         </label>
       </div>

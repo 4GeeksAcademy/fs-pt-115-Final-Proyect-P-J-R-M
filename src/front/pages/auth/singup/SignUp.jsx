@@ -3,6 +3,8 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./signup.css"
+import { Link } from "react-router-dom";
+
 export function SignUp() {
   const [passwordError, setPasswordError] = useState(null) // Solo para errores de contraseña local
   const { signUp, error, loading } = useAuth() // Usar estados del hook
@@ -26,7 +28,7 @@ export function SignUp() {
         title: "Error al registrarse",
         text: "El usuario ya existe",
         confirmButtonText: "Entendido",
-        confirmButtonColor: "#d33"
+        confirmButtonColor: "#d33",
       });
     }
   }, [error]);
@@ -156,6 +158,11 @@ export function SignUp() {
         >
           {loading ? "Creando cuenta..." : "Crear cuenta"}
         </button>
+        <div style={{ marginTop: "20px" }}>
+          <Link to="/login" style={{ color: "#007BFF", textDecoration: "none" }}>
+            ¿Ya estás registrado?
+          </Link>
+        </div>
       </form>
     </div>
   );

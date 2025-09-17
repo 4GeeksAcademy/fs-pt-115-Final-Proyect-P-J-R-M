@@ -14,7 +14,7 @@ export function ButtonAvatar({ onClick}) {
       onClick={onClick}
     >
       {user?.image ? (
-        <img src={user.image} className="btn-avatar__img" alt="avatar" />
+        <img src={user.image || "../../rigo-baby.jpg"} className="btn-avatar__img" alt="avatar" />
       ) : (
         <span className="btn-avatar__fallback">{initial}</span>
       )}
