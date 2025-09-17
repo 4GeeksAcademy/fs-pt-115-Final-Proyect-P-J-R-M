@@ -3,7 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { PickersDay } from '@mui/x-date-pickers/PickersDay';
-import StarIcon from '@mui/icons-material/Star';
+import HandshakeIcon from '@mui/icons-material/Handshake';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { esES } from '@mui/x-date-pickers/locales';
@@ -33,20 +33,20 @@ const CustomDay = (props) => {
       {/* Renderiza el número del día */}
       {day.date()}
 
-      {/* ⭐ Ícono si está marcado */}
+      {/*  Ícono si está marcado */}
       {isMarked && (
-        <StarIcon
+        <HandshakeIcon
           fontSize="small"
           sx={{
             position: 'absolute',
-            top: 2,
-            right: 2,
-            color: '#ffeb3b',
-            backgroundColor: 'rgba(0,0,0,0.6)',
-            borderRadius: '50%',
-            padding: '2px',
-            width: 16,
-            height: 16,
+            top: 20,
+            right: -8,
+            color: '#340f53ff',
+            // backgroundColor: 'rgba(0,0,0,0.6)',
+            // borderRadius: '50%',
+            // padding: '2px',
+            width: 30,
+            height: 25,
           }}
         />
       )}
@@ -63,37 +63,37 @@ export const Calendar = ({ markedDates = [] }) => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
 
   return (
-  <LocalizationProvider
-    dateAdapter={AdapterDayjs}
-    adapterLocale="es"
-    localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText}
-  >
-    <DateCalendar
-      value={selectedDate}
-      onChange={(newValue) => setSelectedDate(newValue)}
-      slots={{ day: CustomDay }}
-      slotProps={{
-        day: {
-          markedDates: normalizedMarkedDates,
-        },
-      }}
-      sx={{
-        width: '100%',           
-        maxWidth: '500px',       
-        margin: '0 auto',        
-        '& .MuiPickersDay-root': {
-          fontSize: '1rem',
-          width: '42px',
-          height: '42px',
-        },
-        '& .MuiDayCalendar-weekDayLabel': {
-          fontSize: '0.9rem',
-        },
-        '& .MuiPickersCalendarHeader-root': {
-          fontSize: '1.1rem',
-        },
-      }}
-    />
-  </LocalizationProvider>
-);
+    <LocalizationProvider
+      dateAdapter={AdapterDayjs}
+      adapterLocale="es"
+      localeText={esES.components.MuiLocalizationProvider.defaultProps.localeText}
+    >
+      <DateCalendar
+        value={selectedDate}
+        onChange={(newValue) => setSelectedDate(newValue)}
+        slots={{ day: CustomDay }}
+        slotProps={{
+          day: {
+            markedDates: normalizedMarkedDates,
+          },
+        }}
+        sx={{
+          width: '100%',
+          maxWidth: '500px',
+          margin: '0 auto',
+          '& .MuiPickersDay-root': {
+            fontSize: '1rem',
+            width: '42px',
+            height: '42px',
+          },
+          '& .MuiDayCalendar-weekDayLabel': {
+            fontSize: '0.9rem',
+          },
+          '& .MuiPickersCalendarHeader-root': {
+            fontSize: '1.1rem',
+          },
+        }}
+      />
+    </LocalizationProvider>
+  );
 };
