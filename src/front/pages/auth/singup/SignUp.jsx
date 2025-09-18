@@ -20,19 +20,7 @@ export function SignUp() {
     country: "",
     score: 0,
   });
-  // Efecto para manejar errores del useAuth
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error al registrarse",
-        text: "El usuario ya existe",
-        confirmButtonText: "Entendido",
-        confirmButtonColor: "#d33",
-      });
-    }
-  }, [error]);
-  // Efecto para manejar el éxito del signup
+
   useEffect(() => {
     if (signupSuccess && !loading && !error) {
       Swal.fire({
@@ -47,6 +35,7 @@ export function SignUp() {
       });
     }
   }, [signupSuccess, loading, error, navigate]);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData(prev => {
