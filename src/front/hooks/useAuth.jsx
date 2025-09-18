@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 const urlApi = import.meta.env.VITE_BACKEND_URL;
+import Swal from "sweetalert2";
 
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
@@ -11,9 +12,9 @@ export const AuthProvider = ({ children }) => {
 
     const signUp = async (newUser) => {
         setLoading(true)
-
+        setError(null)
         try {
-            const response = await fetch(`${urlApi}/api/users/`,{
+            const response = await fetch(`${urlApi}/api/users/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(newUser),
@@ -27,6 +28,13 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
 
             setError(error.message)
+            Swal.fire({
+                icon: "error",
+                title: "Error al registrarse",
+                text: "El usuario ya existe",
+                confirmButtonText: "Entendido",
+                confirmButtonColor: "#d33",
+            });
 
         } finally {
             setLoading(false)
@@ -35,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (user) => {
         setLoading(true)
-        console.log(user);
+        setError(null)
 
         try {
             const response = await fetch(`${urlApi}/api/users/login`, {
@@ -84,7 +92,7 @@ export const AuthProvider = ({ children }) => {
                 const responseError = await response.json()
                 throw new Error(responseError.detail || "Error desconocido")
             }
-            
+
             const data = await response.json();
             setUser(data)
 

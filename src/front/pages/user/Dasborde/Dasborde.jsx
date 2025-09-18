@@ -61,7 +61,7 @@ export const Dasborde = () => {
                 <img src={user.image} alt="Foto de perfil" className="user-image" />
               )}
               <a href="/profile" className="edit-icon" title="Editar perfil">
-                <i class="fa-regular fa-pen-to-square"></i>
+                <i className="fa-regular fa-pen-to-square"></i>
               </a>
             </div>
             <div className="user-info">
