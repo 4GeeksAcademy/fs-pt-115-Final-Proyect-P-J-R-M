@@ -27,3 +27,58 @@ body {
   color: var(--color-text);
   overflow-x: hidden;
 }
+
+:root{
+  --swal-border: 1px solid rgba(44,62,80,.12);
+  --swal-gold: var(--color-gold);
+  --swal-surface: var(--color-surface);
+  --swal-text: var(--color-text);
+  --swal-muted: var(--color-muted);
+}
+
+
+.swal2-popup {
+  background: var(--swal-surface) !important;
+  color: var(--swal-text) !important;
+  border: var(--swal-border);
+  border-top: 4px solid var(--swal-gold);
+  border-radius: var(--radius, 12px);
+  box-shadow: var(--shadow-card, 0 4px 20px rgba(0,0,0,.08));
+}
+
+
+.swal2-title {
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: var(--swal-text) !important;
+  margin-top: .25rem !important;
+}
+.swal2-html-container {
+  color: var(--swal-muted) !important;
+}
+
+.swal2-icon {
+  border: 2px solid var(--swal-gold) !important;
+  box-shadow: 0 0 0 2px rgba(212,175,55,.12);
+  border-radius: 999px !important;
+}
+
+.swal2-actions .swal2-confirm,
+.swal2-actions .swal2-deny,
+.swal2-actions .swal2-cancel {
+  border-radius: var(--radius-btn, 6px) !important;
+  padding: .5rem .9rem !important;
+  font-weight: 600 !important;
+}
+
+.swal2-actions .swal2-confirm {
+  background: linear-gradient(90deg,var(--color-gold),var(--color-gold-2)) !important;
+  color: #fff !important;
+  border: none !important;
+}
+.swal2-actions .swal2-cancel {
+  background: #e9ecef !important;
+  color: var(--swal-text) !important;
+  border: none !important;
+}
+
