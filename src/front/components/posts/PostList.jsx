@@ -78,7 +78,7 @@ export const PostList = ({ refresh = 0 }) => {
                   <h4 className="post-author">{author?.username}</h4>
                   {post.day_exchange && (
                     <small className="post-exchange">
-                      Intercambio previsto: {post.day_exchange}
+                      Fecha prevista: {post.day_exchange}
                     </small>
                   )}
                 </div>

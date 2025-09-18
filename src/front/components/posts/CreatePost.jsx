@@ -77,7 +77,7 @@ export const CreatePost = ({ onSuccess }) => {
 
   return (
     <form onSubmit={handleSubmit} className="create-post">
-      <h2 className="create-post__title">Crear post</h2>
+      <h2 className="create-post__title">Nuevo intercambio</h2>
 
       <div className="form-grid">
         <label className="field">
