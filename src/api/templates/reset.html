@@ -1,104 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <title>Restablecer contraseña</title>
-    <style>
-      body {
-        font-family: "Poltawski Nowy", serif;
-        background-color: #ffffff;
-        padding: 20px;
-      }
-      .container-wrapper {
-        background: linear-gradient(135deg, #d4af37, #999999);
-        padding: 4px;
-        border-radius: 0.5rem;
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      font-family: 'Poltawski Nowy', serif;
+    "
+  >
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="
         max-width: 600px;
         margin: auto;
-      }
-      .container {
-        background-color: #f0f0f0;
-        padding: 30px;
-        border-radius: 0.3125rem;
-        color: #2c2c2c;
-      }
-      h2 {
-        color: #d4af37;
-        font-size: 24px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-      p {
-        font-size: 16px;
-        line-height: 1.6;
-        padding: 0.5em 0;
-      }
-      .highlight {
-        color: #d4af37;
-        font-weight: bold;
-      }
-      .footer {
-        font-size: 14px;
-        color: #666;
-        margin-top: 30px;
-        text-align: center;
-        border-top: 1px solid #ccc;
-        padding-top: 10px;
-      }
-      .logo {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-      .logo img {
-        max-width: 120px;
-        border-radius: 8px;
-      }
-      .btn {
-        display: inline-block;
-        font-family: "Poltawski Nowy", serif;
-        font-size: 1rem;
-        font-weight: 600;
-        line-height: 1.2;
-        padding: 0.65rem 1.1rem;
-        color: #fff;
-        text-align: center;
-        text-decoration: none;
-        white-space: nowrap;
-        border: none;
-        border-radius: 0.5rem;
-        background: linear-gradient(135deg, #d4af37, #999999);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-        margin-top: 10px;
-      }
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container-wrapper">
-      <div class="container">
-        <div class="logo">
-          <img
-            src="/src/front/assets/img/FINALLOGO.png"
-            alt="Hand to Hand Logo"
-          />
-        </div>
-        <h2>¡Bienvenido, {{ username }}!</h2>
-        <p>Recibimos una solicitud para restablecer tu contraseña.</p>
-        <p>Haz clic en el siguiente botón para continuar:</p>
-        <a href="{{ reset_url }}" class="btn">Restablecer contraseña</a>
-        <p>
-          <strong class="highlight">Este enlace expirará en 30 minutos.</strong>
-        </p>
-        <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
-        <p class="highlight">Gracias,<br />El equipo de Hand to Hand</p>
-        <p class="footer">
-          Este correo fue generado automáticamente. No respondas a este mensaje.
-        </p>
-      </div>
-    </div>
+        background: linear-gradient(135deg, #ffd700, #f8f9fa);
+        border-radius: 12px;
+        padding: 4px;
+      "
+    >
+      <tr>
+        <td
+          style="
+            background-color: #f0f0f0;
+            border-radius: 12px;
+            padding: 30px;
+            color: #2c3e50;
+          "
+        >
+          <div style="text-align: center; margin-bottom: 20px">
+            <img
+              src="https://res.cloudinary.com/ddmzvbbef/image/upload/v1757434718/FINALLOGO_xearnq.png"
+              alt="Hand to Hand Logo"
+              style="max-width: 120px; border-radius: 8px"
+            />
+          </div>
+          <h2
+            style="
+              color: #d4af37;
+              font-size: 24px;
+              margin-bottom: 20px;
+              text-align: center;
+            "
+          >
+            ¡Bienvenido, {{ username }}!
+          </h2>
+          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 10px">
+            Recibimos una solicitud para restablecer tu contraseña.
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 20px">
+            Haz clic en el siguiente botón para continuar:
+          </p>
+
+          <table
+            role="presentation"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            style="margin: 10px auto"
+          >
+            <tr>
+              <td
+                align="center"
+                style="
+                  border-radius: 6px;
+                  background: linear-gradient(135deg, #d4af37, #ffd700);
+                  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+                "
+              >
+                <a
+                  href="{{ reset_url }}"
+                  target="_blank"
+                  style="
+                    display: inline-block;
+                    padding: 0.65rem 1.1rem;
+                    font-family: 'Poltawski Nowy', serif;
+                    font-size: 16px;
+                    font-weight: 600;
+                    line-height: 1.2;
+                    color: #ffffff;
+                    text-decoration: none;
+                    white-space: nowrap;
+                    border-radius: 6px;
+                  "
+                >
+                  Restablecer contraseña
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <p style="font-size: 16px; line-height: 1.6; margin: 20px 0">
+            <strong style="color: #d4af37"
+              >Este enlace expirará en 30 minutos.</strong
+            >
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; margin: 0 0 10px">
+            Si no solicitaste este cambio, puedes ignorar este mensaje.
+          </p>
+          <p
+            style="
+              font-size: 16px;
+              line-height: 1.6;
+              color: #d4af37;
+              font-weight: bold;
+              margin: 20px 0 10px;
+            "
+          >
+            Gracias,<br />El equipo de Hand to Hand
+          </p>
+          <p
+            style="
+              font-size: 14px;
+              color: #b0bec5;
+              margin-top: 30px;
+              text-align: center;
+              border-top: 1px solid #ccc;
+              padding-top: 10px;
+            "
+          >
+            Este correo fue generado automáticamente. No respondas a este
+            mensaje.
+          </p>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>

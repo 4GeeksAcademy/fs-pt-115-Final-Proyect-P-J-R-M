@@ -31,6 +31,7 @@ export const router = createBrowserRouter(
       <Route element={<AuthLayout />}>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<LogIn />} />
+        <Route path="/form-reset" element={<FormNewPassword />} />
       </Route>
       <Route element={<UserLayout />}>
         <Route path="/posts" element={<PostsPage />} />
@@ -38,7 +39,6 @@ export const router = createBrowserRouter(
         <Route path="/chats" element={<ChatPage />}></Route>
         <Route path="/dasborde" element={<Dasborde />}></Route>
         <Route path="/request-reset" element={<ResetPasswordRequest />} />
-        <Route path="/form-reset" element={<FormNewPassword />} />
       </Route>
     </Route>
   )
