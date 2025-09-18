@@ -1,10 +1,29 @@
+:root {
+  --color-text: #2c3e50;
+  --color-muted: #5d6d7e;
+  --color-gold: #d4af37;
+  --color-gold-2: #ffd700;
+  --color-bg-1: #f8f9fa;
+  --color-bg-2: #e8e9ea;
+  --color-surface: #ffffff;
+  --color-footer-bg: #1a252f;
+  --color-footer-text: #b0bec5;
+  --shadow-1: 0 4px 15px rgba(212, 175, 55, 0.3);
+  --shadow-2: 0 8px 25px rgba(212, 175, 55, 0.4);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --radius: 12px;
+  --radius-btn: 6px;
+}
+
 .dasborde-container {
   display: flex;
   justify-content: center;
-  background-color: #f2f5f0;
+  background-color: var(--color-bg-1);
   min-height: 100vh;
   padding: 40px 20px;
   box-sizing: border-box;
+  color: var(--color-text);
 }
 
 .content {
@@ -17,19 +36,21 @@
 
 /* === User Card === */
 .user-card {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   padding: 24px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-card);
   transition: box-shadow 0.3s ease;
+  max-width: 320px;
+  overflow-y: auto;
 }
 
 .user-card:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .user-image-container {
@@ -43,7 +64,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #4d6242;
+  border: 3px solid var(--color-gold);
 }
 
 .edit-icon {
@@ -51,7 +72,7 @@
   right: -10px;
   top: 100%;
   transform: translateY(-50%);
-  background-color: #4d6242;
+  background-color: var(--color-gold);
   border: none;
   color: #fff;
   border-radius: 50%;
@@ -62,7 +83,7 @@
 }
 
 .edit-icon:hover {
-  background-color: #3b5035;
+  background-color: #b38f10;
 }
 
 .user-info {
@@ -72,8 +93,97 @@
 .user-info p {
   margin: 4px 0;
   font-size: 15px;
-  color: #333;
+  color: var(--color-text);
   font-weight: 500;
+}
+
+/* === Edit Form === */
+.user-edit-form {
+  width: 100%;
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.image-upload-row,
+.input-button-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-edit-form label {
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.user-edit-form input,
+.user-edit-form select {
+  padding: 8px 12px;
+  border-radius: var(--radius-btn);
+  border: 1px solid #ccc;
+  font-size: 14px;
+  color: var(--color-text);
+  transition: border-color 0.3s ease;
+  flex: 1;
+}
+
+.user-edit-form input:focus,
+.user-edit-form select:focus {
+  outline: none;
+  border-color: var(--color-gold-2);
+  box-shadow: 0 0 5px var(--color-gold-2);
+}
+
+.user-edit-form button {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: var(--radius-btn);
+  border: none;
+  background-color: var(--color-gold);
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.user-edit-form button:hover {
+  background-color: #b38f10;
+}
+
+/* Icon-style buttons */
+.icon-button {
+  background-color: var(--color-gold);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-btn);
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.icon-button:hover {
+  background-color: #b38f10;
+}
+
+/* Compact select for country */
+.compact-select {
+  max-width: 220px;
+}
+
+/* Hidden file input */
+.user-edit-form input[type="file"] {
+  display: none;
 }
 
 /* === Content Sections === */
@@ -85,10 +195,10 @@
 
 .calendar-container,
 .favorites-section {
-  background-color: #ffffff;
+  background-color: var(--color-surface);
   padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   box-sizing: border-box;
 }
 
@@ -108,18 +218,18 @@
 }
 
 .favorite-item {
-  background-color: #e5eee0;
+  background-color: var(--color-bg-2);
   padding: 14px;
-  border-radius: 8px;
+  border-radius: var(--radius-btn);
   margin-bottom: 12px;
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
   font-size: 15px;
-  color: #2e2e2e;
+  color: var(--color-text);
   transition: background-color 0.3s ease;
 }
 
 .favorite-item:hover {
-  background-color: #c8dbc1;
+  background-color: var(--color-bg-1);
 }
 
 /* === Responsive === */
@@ -131,6 +241,7 @@
 
   .user-card {
     padding: 20px;
+    max-width: 100%;
   }
 
   .edit-icon {
@@ -148,6 +259,16 @@
     font-size: 14px;
     padding: 12px;
   }
+
+  .user-edit-form {
+    margin-top: 12px;
+  }
+
+  .image-upload-row,
+  .input-button-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 @media (max-width: 480px) {
@@ -162,5 +283,9 @@
 
   .favorite-item {
     font-size: 13px;
+  }
+
+  .compact-select {
+    width: 100%;
   }
 }
