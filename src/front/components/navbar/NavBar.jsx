@@ -28,7 +28,7 @@ export const NavBar = () => {
             ) : (
               <>
                 <Link to="/login" className="link-login">Login</Link>
-                <Link to="/signup" className="btn btn-signup cta-nav">Sign Up</Link>
+                <Link to="/signup" className="btn cta-nav">Sign Up</Link>
               </>
             )}
           </div>
