@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import "./login.css"
+import "../../../index.css";
 
 export const LogIn = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -67,8 +68,12 @@ export const LogIn = () => {
           {loading ? "Cargando..." : "Login"}
         </button>
         <div style={{ marginTop: "20px" }}>
-          <Link to="/signup" style={{ color: "#007BFF", textDecoration: "none" }}>
+          <Link to="/signup" className="login-link">
             ¿Aún no estás registrado?
+          </Link>
+          <br></br>
+          <Link to="/request-reset" className="login-link">
+            ¿Olvidaste tu contraseña?
           </Link>
         </div>
       </form>

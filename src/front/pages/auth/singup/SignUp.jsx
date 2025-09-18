@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "./signup.css"
 import { Link } from "react-router-dom";
+import "../../../index.css";
 
 export function SignUp() {
   const [passwordError, setPasswordError] = useState(null) // Solo para errores de contraseña local
@@ -86,11 +87,11 @@ export function SignUp() {
     setSignupSuccess(true);
   };
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h1 className="login-title">Crear cuenta</h1>
+    <div className="signup-container">
+      <form className="signup-form" onSubmit={handleSubmit}>
+        <h1 className="signup-title">Crear cuenta</h1>
         <input
-          className="login-input"
+          className="signup-input"
           type="text"
           name="username"
           placeholder="Nombre de usuario"
@@ -100,7 +101,7 @@ export function SignUp() {
           required
         />
         <input
-          className="login-input"
+          className="signup-input"
           type="text"
           name="dni"
           placeholder="DNI o pasaporte"
@@ -110,7 +111,7 @@ export function SignUp() {
           required
         />
         <input
-          className="login-input"
+          className="signup-input"
           type="email"
           name="email"
           placeholder="Email"
@@ -120,7 +121,7 @@ export function SignUp() {
           required
         />
         <input
-          className="login-input"
+          className="signup-input"
           type="password"
           name="password"
           placeholder="Contraseña"
@@ -130,7 +131,7 @@ export function SignUp() {
           required
         />
         <input
-          className="login-input"
+          className="signup-input"
           type="password"
           name="password2"
           placeholder="Confirmar contraseña"
@@ -139,16 +140,16 @@ export function SignUp() {
           disabled={loading}
           required
         />
-        {passwordError && <p className="login-error">{passwordError}</p>}
+        {passwordError && <p className="signup-error">{passwordError}</p>}
         <button
-          className="login-button"
+          className="signup-button"
           type="submit"
           disabled={loading}
         >
           {loading ? "Creando cuenta..." : "Crear cuenta"}
         </button>
         <div style={{ marginTop: "20px" }}>
-          <Link to="/login" style={{ color: "#007BFF", textDecoration: "none" }}>
+          <Link to="/login" className="signup-link">
             ¿Ya estás registrado?
           </Link>
         </div>
@@ -156,12 +157,6 @@ export function SignUp() {
     </div>
   );
 }
-
-
-
-
-
-
 
 
 
