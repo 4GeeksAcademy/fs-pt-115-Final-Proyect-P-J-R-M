@@ -69,6 +69,7 @@ def post_user():
     msg = Message(
 
         subject='Bienvenido',
+        sender=('Hand to Hand', 'handtohand87@gmail.com'),
         recipients=[email],
         html=html_welcome)
 
@@ -195,6 +196,7 @@ def request_reset():
 
     msg = Message(
         subject='Restablecer Contraseña',
+        sender=('Hand to Hand', 'handtohand87@gmail.com'),
         recipients=[email],
         html=html_reset
     )
