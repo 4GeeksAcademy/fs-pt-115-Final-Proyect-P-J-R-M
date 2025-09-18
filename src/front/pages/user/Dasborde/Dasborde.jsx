@@ -141,9 +141,14 @@ export const Dasborde = () => {
         {user && (
           <div className="user-card">
             <div className="user-image-container">
-              {user.image && (
-                <img src={user.image} alt="Foto de perfil" className="user-image" />
+              {uploading || loading ? (
+                <div className="loader-image"></div>
+              ) : (
+                user.image && (
+                  <img src={user.image} alt="Foto de perfil" className="user-image" />
+                )
               )}
+
               <a href="/profile" className="edit-icon" title="Editar perfil">
                 <i className="fa-regular fa-pen-to-square"></i>
               </a>
@@ -244,7 +249,6 @@ export const Dasborde = () => {
                     </button>
                   </div>
                 </div>
-
               </div>
             )}
           </div>
