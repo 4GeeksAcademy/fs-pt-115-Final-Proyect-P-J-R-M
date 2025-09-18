@@ -1,29 +1,104 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <style> body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; } 
-  h2 { color: #888; } p { font-size: 16px; } </style>
-    
-    <div style="background-color: #E2D4B7; padding: 20px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 10px solid #4a6741;">
-        
-        
-        <div style="text-align: center; margin-bottom: 20px;">
-            <img src="/src/front/assets/img/FINALLOGO.png" alt="Hand to Hand Logo" style="max-width: 120px; border-radius: 8px;">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Restablecer contraseña</title>
+    <style>
+      body {
+        font-family: "Poltawski Nowy", serif;
+        background-color: #ffffff;
+        padding: 20px;
+      }
+      .container-wrapper {
+        background: linear-gradient(135deg, #d4af37, #999999);
+        padding: 4px;
+        border-radius: 0.5rem;
+        max-width: 600px;
+        margin: auto;
+      }
+      .container {
+        background-color: #f0f0f0;
+        padding: 30px;
+        border-radius: 0.3125rem;
+        color: #2c2c2c;
+      }
+      h2 {
+        color: #d4af37;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        padding: 0.5em 0;
+      }
+      .highlight {
+        color: #d4af37;
+        font-weight: bold;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+      .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo img {
+        max-width: 120px;
+        border-radius: 8px;
+      }
+      .btn {
+        display: inline-block;
+        font-family: "Poltawski Nowy", serif;
+        font-size: 1rem;
+        font-weight: 600;
+        line-height: 1.2;
+        padding: 0.65rem 1.1rem;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+        border: none;
+        border-radius: 0.5rem;
+        background: linear-gradient(135deg, #d4af37, #999999);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        margin-top: 10px;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-wrapper">
+      <div class="container">
+        <div class="logo">
+          <img
+            src="/src/front/assets/img/FINALLOGO.png"
+            alt="Hand to Hand Logo"
+          />
         </div>
-</head>
-<body>
-  <div class="container">
-    <h2>¡Bienvenido, {{ username }}!</h2>
-    <p>Recibimos una solicitud para restablecer tu contraseña.</p>
-    <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-    <a href={{reset_url}}>Restablecer contraseña</a>
-    <p><strong>Este enlace expirará en 30 minutos.</strong></p>
-    <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
-    <hr>
-    <p>Gracias,<br>El equipo de Hand to Hand</p>
-    <hr>
-    <p style="font-size: 14px; color: #888;">Este correo fue generado automáticamente. No respondas a este mensaje.</p>
-  </div>
-</body>
+        <h2>¡Bienvenido, {{ username }}!</h2>
+        <p>Recibimos una solicitud para restablecer tu contraseña.</p>
+        <p>Haz clic en el siguiente botón para continuar:</p>
+        <a href="{{ reset_url }}" class="btn">Restablecer contraseña</a>
+        <p>
+          <strong class="highlight">Este enlace expirará en 30 minutos.</strong>
+        </p>
+        <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+        <p class="highlight">Gracias,<br />El equipo de Hand to Hand</p>
+        <p class="footer">
+          Este correo fue generado automáticamente. No respondas a este mensaje.
+        </p>
+      </div>
+    </div>
+  </body>
 </html>

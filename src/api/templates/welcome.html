@@ -1,22 +1,93 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-    .container { background-color: #E2D4B7; padding: 30px; border-radius: 10px; max-width: 600px; margin: auto; }
-    h2 { color: #888; }
-    p { font-size: 16px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h2>¡Bienvenido, {{ username }}!</h2>
-    <p>Tu cuenta ha sido creada con éxito en <strong>Hand to Hand</strong>.</p>
-    <p>Gracias por unirte. Estamos felices de tenerte con nosotros.</p>
-    <p>Este es solo el comienzo. ¡Bienvenido!</p>
-    <hr>
-    <p style="font-size: 14px; color: #888;">Este correo fue generado automáticamente. No respondas a este mensaje.</p>
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        font-family: "Poltawski Nowy", serif;
+        background-color: #ffffff;
+        padding: 20px;
+      }
+      .container-wrapper {
+        background: linear-gradient(135deg, #d4af37, #999999);
+        padding: 4px;
+        border-radius: 0.5rem;
+        max-width: 600px;
+        margin: auto;
+      }
+
+      .container {
+        background-color: #f0f0f0;
+        padding: 30px;
+        border-radius: 0.3125rem;
+        color: #2c2c2c;
+      }
+      h2 {
+        color: #d4af37;
+        font-size: 24px;
+        margin-bottom: 20px;
+        padding: 0.8em 1em 0;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.6;
+        padding: 1em 1.6em 0.3em;
+      }
+      .highlight {
+        color: #d4af37;
+        font-weight: bold;
+      }
+      .footer {
+        font-size: 14px;
+        color: #666;
+        margin-top: 30px;
+        text-align: center;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+      .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo img {
+        max-width: 120px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-wrapper">
+      <div class="container">
+        <div class="logo">
+          <img
+            src="https://res.cloudinary.com/ddmzvbbef/image/upload/v1757434718/FINALLOGO_xearnq.png"
+            alt="Hand to Hand Logo"
+          />
+        </div>
+        <h2>¡Hola, {{ username }}!</h2>
+        <p>
+          Tu cuenta en <strong class="highlight">Hand to Hand</strong> ya está
+          activa. Desde ahora formas parte de una comunidad que cree en el valor
+          de
+          <span class="highlight"
+            >cambiar sin comisiones, con seguridad y transparencia</span
+          >.
+        </p>
+        <p>
+          Nos alegra que estés aquí. En Hand to Hand no solo intercambiamos
+          divisas: <strong class="highlight">construimos confianza.</strong>
+        </p>
+        <p>
+          Prepárate para descubrir herramientas profesionales, tipos de cambio
+          reales y transacciones instantáneas. Este es solo el comienzo.
+        </p>
+        <p style="font-size: 18px; color: #d4af37">
+          🧡 Bienvenido a Hand to Hand.
+        </p>
+        <div class="footer">
+          Este correo fue generado automáticamente. Si tienes dudas, contáctanos
+          desde la plataforma. No respondas a este mensaje.
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
