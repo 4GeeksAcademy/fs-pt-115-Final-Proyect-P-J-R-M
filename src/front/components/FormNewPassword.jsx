@@ -62,33 +62,91 @@ export const FormNewPassword = () => {
         }
     };
 
-    return (
-        <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem' }}>
-            <h2>Restablecer Contraseña</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Nueva contraseña:</label>
-                    <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Confirmar contraseña:</label>
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Actualizando...' : 'Actualizar contraseña'}
-                </button>
-            </form>
-            {message && <p style={{ marginTop: '2rem' }}>{message}</p>}
-        </div>
-    );
-};
+   
+
+  return (
+    <div
+      style={{
+        background: '#e8e9ea',
+        minHeight: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontFamily: '"Poltawski Nowy", serif',
+      }}
+    >
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          backgroundColor: '#f0f0f0',
+          padding: '2rem',
+          borderRadius: '12px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+          maxWidth: '400px',
+          width: '100%',
+        }}
+      >
+        <h2 style={{ color: '#d4af37', textAlign: 'center', marginBottom: '1.5rem' }}>
+          Restablecer Contraseña
+        </h2>
+
+        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Nueva contraseña:</label>
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          required
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '6px',
+            border: '1px solid #ccc',
+            marginBottom: '1rem',
+            fontFamily: '"Poltawski Nowy", serif',
+          }}
+        />
+
+        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Confirmar contraseña:</label>
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '6px',
+            border: '1px solid #ccc',
+            marginBottom: '1.5rem',
+            fontFamily: '"Poltawski Nowy", serif',
+          }}
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '6px',
+            border: 'none',
+            background: 'linear-gradient(135deg, #d4af37, #f0f0f0)',
+            color: '#fff',
+            fontWeight: '600',
+            fontSize: '1rem',
+            fontFamily: '"Poltawski Nowy", serif',
+            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+            cursor: 'pointer',
+            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+          }}
+        >
+          {loading ? 'Actualizando...' : 'Actualizar contraseña'}
+        </button>
+
+        {message && (
+          <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#2c3e50' }}>{message}</p>
+        )}
+      </form>
+    </div>
+  );
+ };
