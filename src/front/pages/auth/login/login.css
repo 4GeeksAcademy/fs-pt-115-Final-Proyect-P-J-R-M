@@ -1,55 +1,86 @@
 .login-container {
+  min-height: calc(100vh - var(--nav-h) - var(--footer-h));
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  min-height: 100vh;
-  background-color: var(--mint);
-  padding-top: 200px; 
+  padding: 180px;
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-1) 0%,
+    var(--color-bg-2) 50%,
+    var(--color-bg-1) 100%
+  );
 }
 
 .login-form {
-  background-color: #fff;
+  background-color: var(--color-surface);
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  border: 1px solid rgba(44,62,80,0.12);
+  border-top: 4px solid var(--color-gold); 
 }
 
 .login-title {
-  color: var(--text);
+  color: var(--color-text);
   text-align: center;
   margin-bottom: 1.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
 .login-input {
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid rgba(44,62,80,0.25);
+  border-radius: var(--radius-btn);
   font-size: 1rem;
+  background: var(--color-surface);
+  transition: border-color .2s ease, box-shadow .2s ease;
 }
 
 .login-input:focus {
-  border-color: var(--green-dark);
+  border-color: var(--color-gold);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(77, 98, 66, 0.2);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.25);
 }
 
 .login-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: var(--green-dark);
+  background: linear-gradient(
+    90deg,
+    var(--color-gold) 0%,
+    var(--color-gold-2) 50%,
+    var(--color-gold) 100%
+  );
+  background-size: 200% 100%;
   color: #fff;
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 700;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-btn);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-position .5s ease, transform .2s ease, box-shadow .2s ease;
 }
 
 .login-button:hover {
-  background-color: var(--sage);
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+}
+
+.login-link {
+  color: var(--color-muted);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.login-link:hover {
+  color: var(--color-gold);
+  text-decoration: underline;
 }
