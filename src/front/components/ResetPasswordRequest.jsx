@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import "../pages/auth/login/login.css";
+import "../index.css";
+
 
 export function ResetPasswordRequest() {
   const [email, setEmail] = useState('');
@@ -30,70 +34,30 @@ export function ResetPasswordRequest() {
   };
 
   return (
-    <div
-      style={{
-        background: '#e8e9ea',
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontFamily: '"Poltawski Nowy", serif',
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          backgroundColor: '#f0f0f0',
-          padding: '2rem',
-          borderRadius: '12px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-          maxWidth: '400px',
-          width: '100%',
-        }}
-      >
-        <h2 style={{ color: '#d4af37', textAlign: 'center', marginBottom: '1.5rem' }}>
-          Restablecer contraseña
-        </h2>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h1 className="login-title">Restablecer contraseña</h1>
 
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Correo electrónico:</label>
+        <label htmlFor="email" className="sr-only">Correo electrónico:</label>
         <input
+          id="email"
+          className="login-input"
           type="email"
+          name="email"
           placeholder="Ingresa tu correo"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '6px',
-            border: '1px solid #ccc',
-            marginBottom: '1.5rem',
-            fontFamily: '"Poltawski Nowy", serif',
-          }}
         />
 
-        <button
-          type="submit"
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '6px',
-            border: 'none',
-            background: 'linear-gradient(135deg, #d4af37, #f0f0f0)',
-            color: '#fff',
-            fontWeight: '600',
-            fontSize: '1rem',
-            fontFamily: '"Poltawski Nowy", serif',
-            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-            cursor: 'pointer',
-            transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-          }}
-        >
+        <button className="login-button" type="submit">
           Enviar
         </button>
 
         {message && (
-          <p style={{ marginTop: '1.5rem', textAlign: 'center', color: '#2c3e50' }}>{message}</p>
+          <p style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--color-text)' }}>
+            {message}
+          </p>
         )}
 
         {showResendOption && (
@@ -102,12 +66,18 @@ export function ResetPasswordRequest() {
               marginTop: '1rem',
               fontSize: '0.9rem',
               textAlign: 'center',
-              color: '#7f8c8d',
+              color: 'var(--color-muted)',
             }}
           >
             ¿No has recibido tu correo? Revisa tu carpeta de spam o vuelve a intentarlo más tarde.
           </p>
         )}
+
+        <div style={{ marginTop: '20px' }}>
+          <Link to="/login" className="login-link">
+            ¿Ya tienes cuenta? Inicia sesión
+          </Link>
+        </div>
       </form>
     </div>
   );
