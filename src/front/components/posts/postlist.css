@@ -12,6 +12,7 @@
   .posts-layout { grid-template-columns: 1fr; }
 }
 
+
 .posts-sidebar {
   background: var(--color-surface);
   border: 0.0625rem solid rgba(44, 62, 80, 0.12);

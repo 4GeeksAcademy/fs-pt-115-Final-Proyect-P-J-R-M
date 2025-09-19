@@ -32,10 +32,7 @@ export const LogIn = () => {
         icon: "error",
         title: "Oops...",
         html: `
-      <p>Usuario o contraseña incorrecta...</p>
-      <a href="/request-reset" style="color: #007BFF; text-decoration: none;">
-        ¿Olvidaste tu contraseña?
-      </a>`,
+      <p>Usuario o contraseña incorrecta...</p>`,
       });
     }
   };
