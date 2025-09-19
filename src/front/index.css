@@ -14,6 +14,15 @@
   --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
   --radius: 12px;
   --radius-btn: 6px;
+  --nav-h: 72px;
+}
+
+:root{
+  --swal-border: 1px solid rgba(44,62,80,.12);
+  --swal-gold: var(--color-gold);
+  --swal-surface: var(--color-surface);
+  --swal-text: var(--color-text);
+  --swal-muted: var(--color-muted);
 }
 
 body {
@@ -28,13 +37,6 @@ body {
   overflow-x: hidden;
 }
 
-:root{
-  --swal-border: 1px solid rgba(44,62,80,.12);
-  --swal-gold: var(--color-gold);
-  --swal-surface: var(--color-surface);
-  --swal-text: var(--color-text);
-  --swal-muted: var(--color-muted);
-}
 
 
 .swal2-popup {
