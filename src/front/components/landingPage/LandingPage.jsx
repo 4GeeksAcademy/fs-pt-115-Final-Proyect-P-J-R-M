@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import "./landing-page.css"
 import { VideoPerrete } from "../VideoPerrete/VideoPerrete";
+import ScoreManager from "../ScoreManager";
+
+
 
 export default function App() {
 	useEffect(() => {
@@ -239,6 +242,22 @@ export default function App() {
 					<button className="btn-primary">Abrir cuenta gratuita</button>
 				</div>
 			</section>
+
+			{/* Score Section */}
+			<section className="score-section" style={{
+				background: 'var(--color-bg-1)',
+				padding: '2rem',
+				borderRadius: 'var(--radius)',
+				boxShadow: 'var(--shadow-card)',
+				marginTop: '2rem',
+				textAlign: 'center'
+			}}>
+				<h2 style={{ color: 'var(--color-gold)', marginBottom: '1rem' }}>
+					¿Qué opinan los usuarios?
+				</h2>
+				<ScoreManager userId={1} />
+			</section>
+
 		</>
 	);
 }
