@@ -86,14 +86,18 @@ export const Dasborde = () => {
     }
   };
 
-  const handleImageUpload = async () => {
-    if (!file || !file.type.startsWith("image/")) {
+  // Cambiado para aceptar archivo directo y subirlo al seleccionar
+  const handleImageUpload = async (fileToUpload) => {
+    const imageFile = fileToUpload || file;
+
+    if (!imageFile || !imageFile.type.startsWith("image/")) {
       alert("Por favor selecciona una imagen válida.");
       return;
     }
+
     setUploading(true);
     try {
-      await uploadImge(file);
+      await uploadImge(imageFile);
       await refreshUser();
       setFile(null);
     } catch (error) {
@@ -148,16 +152,12 @@ export const Dasborde = () => {
                   <img src={user.image} alt="Foto de perfil" className="user-image" />
                 )
               )}
-
-              <a href="/profile" className="edit-icon" title="Editar perfil">
-                <i className="fa-regular fa-pen-to-square"></i>
-              </a>
             </div>
             <div className="user-info">
-              <p><strong>Username:</strong> {user.username}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Country:</strong> {user.country}</p>
-              <p><strong>Score:</strong> {user.score}</p>
+              <p> {user.username}</p>
+              <p> {user.email}</p>
+              <p> {user.country || "Planeta tierra"}</p>
+              <p> {user.score}</p>
             </div>
 
             <button
@@ -186,17 +186,14 @@ export const Dasborde = () => {
                       type="file"
                       ref={fileInputRef}
                       accept="image/*"
-                      onChange={(e) => setFile(e.target.files[0])}
+                      onChange={async (e) => {
+                        const selectedFile = e.target.files[0];
+                        if (!selectedFile) return;
+                        setFile(selectedFile);
+                        await handleImageUpload(selectedFile);
+                      }}
                       style={{ display: "none" }}
                     />
-                    <button
-                      onClick={handleImageUpload}
-                      disabled={uploading}
-                      className="btn icon-save-btn"
-                      title="Guardar imagen"
-                    >
-                      <i className="fa-solid fa-floppy-disk"></i>
-                    </button>
                   </div>
                 </div>
 
@@ -257,23 +254,20 @@ export const Dasborde = () => {
         <div className="content-inner">
           <div className="calendar-container">
             <Calendar
-              markedDates={
-                postfavo
-                  .map(post => dayjs(post.day_exchange).format('YYYY-MM-DD'))
-                  .filter(Boolean)
-              }
+              markedDates={postfavo
+                .map(post => dayjs(post.day_exchange, 'DD/MM/YYYY').format('YYYY-MM-DD'))
+                .filter(Boolean)}
             />
           </div>
-
           <div className="favorites-section">
             <h2>Posts</h2>
             {postfavo && postfavo.length > 0 ? (
               <ul className="favorites-list">
                 {postfavo.map((post) => (
-                  <li key={post.id} className="favorite-item">
-                    <p><strong>Destino:</strong> {post.destination}</p>
-                    <p><strong>Intercambio:</strong> {post.description} {post.divisas_one} → {post.divisas_two}</p>
-                    <p><strong>Fecha de intercambio:</strong> {post.day_exchange || "No especificada"}</p>
+                  <li key={post.id} className="post-item">
+                    <p className="post-destination"><strong></strong> {post.destination}</p>
+                    <p className="post-monto"> {post.description} {post.divisas_one} → {post.divisas_two}</p>
+                    <p className="post-exchange" ><strong>Fecha de intercambio:</strong> {post.day_exchange || "No especificada"}</p>
                   </li>
                 ))}
               </ul>
