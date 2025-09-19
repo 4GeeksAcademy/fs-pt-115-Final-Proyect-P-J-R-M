@@ -86,7 +86,7 @@ export const Dasborde = () => {
     }
   };
 
-  // Cambiado para aceptar archivo directo y subirlo al seleccionar
+
   const handleImageUpload = async (fileToUpload) => {
     const imageFile = fileToUpload || file;
 
@@ -176,7 +176,7 @@ export const Dasborde = () => {
                   <div className="image-upload-row">
                     <button
                       type="button"
-                      className="icon-button"
+                      className="btn icon-save-btn"
                       onClick={() => fileInputRef.current?.click()}
                       title="Seleccionar imagen"
                     >
