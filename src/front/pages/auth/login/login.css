@@ -1,9 +1,8 @@
 .login-container {
-  min-height: calc(100vh - var(--nav-h) - var(--footer-h));
+  min-height: 85vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 180px;
   background: linear-gradient(
     135deg,
     var(--color-bg-1) 0%,
@@ -17,10 +16,8 @@
   padding: 2rem;
   border-radius: var(--radius);
   box-shadow: var(--shadow-card);
-  width: 100%;
-  max-width: 420px;
-  border: 1px solid rgba(44,62,80,0.12);
-  border-top: 4px solid var(--color-gold); 
+  border: 1px solid rgba(44, 62, 80, 0.12);
+  border-top: 4px solid var(--color-gold);
 }
 
 .login-title {
@@ -35,17 +32,17 @@
   width: 100%;
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
-  border: 1px solid rgba(44,62,80,0.25);
+  border: 1px solid rgba(44, 62, 80, 0.25);
   border-radius: var(--radius-btn);
   font-size: 1rem;
   background: var(--color-surface);
-  transition: border-color .2s ease, box-shadow .2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .login-input:focus {
   border-color: var(--color-gold);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(212,175,55,0.25);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25);
 }
 
 .login-button {
@@ -64,13 +61,14 @@
   border: none;
   border-radius: var(--radius-btn);
   cursor: pointer;
-  transition: background-position .5s ease, transform .2s ease, box-shadow .2s ease;
+  transition: background-position 0.5s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .login-button:hover {
   background-position: 100% 0;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(212,175,55,0.3);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .login-link {
@@ -83,4 +81,10 @@
 .login-link:hover {
   color: var(--color-gold);
   text-decoration: underline;
+}
+
+@media (min-width: 320px) {
+  .login-container {
+    padding: 180px 1rem 180px 1rem;
+  }
 }

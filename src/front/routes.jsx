@@ -25,18 +25,19 @@ export const router = createBrowserRouter(
 		<Route element={<RootLayout />}>
 			<Route path="/" element={<PublicLayout />}>
 				<Route index element={<Home />} />
-				<Route path="*" element={<AaaBox />} />
+
 				<Route path="/posts" element={<PostsPage />} />
 			</Route>
 			<Route element={<AuthLayout />}>
 				<Route path="/signup" element={<SignUp />} />
 				<Route path="/login" element={<LogIn />} />
+				<Route path="/form-reset" element={<FormNewPassword />} />
+				<Route path="/request-reset" element={<ResetPasswordRequest />} />
 			</Route>
 			<Route element={<UserLayout />}>
 				<Route path="/chats" element={<ChatPage />}></Route>
 				<Route path="/dasborde" element={<Dasborde />}></Route>
-				<Route path="/form-reset" element={<FormNewPassword />} />
-				<Route path="/request-reset" element={<ResetPasswordRequest />} />
+				<Route path="*" element={<AaaBox />} />
 
 			</Route>
 		</Route>

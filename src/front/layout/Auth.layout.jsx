@@ -1,18 +1,17 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import { Footer } from "../components/footer/Footer";
+import ScrollToTop from "../components/ScrollToTop";
 
 export const AuthLayout = () => {
-    const navigate = useNavigate()
-    const { token } = useAuth()
-
-    // useEffect(() => {
-    //     if (!token) {
-    //         navigate("/login")
-    //     }
-    // }, [token, navigate]);
 
     return (
-        <Outlet />
+        <ScrollToTop>
+            <div className="d-flex flex-column min-vh-100">
+                <main className="flex-grow-1">
+                    <Outlet />
+                </main>
+                <Footer />
+            </div>
+        </ScrollToTop>
     )
 }
