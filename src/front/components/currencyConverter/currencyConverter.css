@@ -1,5 +1,5 @@
 .converter-container {
-  max-width: 540px;
+  width: auto;
   margin: 40px auto;
   padding: 32px;
   background: var(--color-surface);
@@ -156,9 +156,8 @@
     transform: translateY(0);
   }
 }
-@media (max-width: 560px) {
+@media (max-width: 768px) {
   .converter-container {
-    margin: 24px 12px;
-    padding: 24px;
+    width: 100%;
   }
 }
