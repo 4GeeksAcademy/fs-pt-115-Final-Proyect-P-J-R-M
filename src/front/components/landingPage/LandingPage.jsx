@@ -4,6 +4,7 @@ import { VideoPerrete } from "../VideoPerrete/VideoPerrete";
 import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
 import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
+import { BadgeDollarSign, Handshake, ShieldCheck, HandCoins } from "lucide-react";
 
 export default function LandingPage() {
 	useEffect(() => {
@@ -81,22 +82,22 @@ export default function LandingPage() {
 						<div className="hero-visual">
 							<div className="value-cards">
 								<div className="value-card">
-									<div className="value-icon">💸</div>
+									<div className="value-icon"><BadgeDollarSign size={35} color="#2c3e50" strokeWidth={1.25} /></div>
 									<h3>0% Comisiones</h3>
 									<p>Sin tarifas ocultas. Solo pagas el tipo de cambio real del mercado.</p>
 								</div>
 								<div className="value-card">
-									<div className="value-icon">⚡</div>
+									<div className="value-icon"><Handshake size={35} color="#2c3e50" strokeWidth={1.25} /></div>
 									<h3>Instantáneo</h3>
 									<p>Cambios procesados en segundos. Tu dinero disponible de inmediato.</p>
 								</div>
 								<div className="value-card">
-									<div className="value-icon">🔒</div>
+									<div className="value-icon"><ShieldCheck size={35} color="#2c3e50" strokeWidth={1.25} /></div>
 									<h3>100% Seguro</h3>
 									<p>Regulados por autoridades financieras. Tus fondos están protegidos.</p>
 								</div>
 								<div className="value-card">
-									<div className="value-icon">🌍</div>
+									<div className="value-icon"><HandCoins size={36} color="#2c3e50" strokeWidth={1.25} /></div>
 									<h3>150+ Monedas</h3>
 									<p>Desde EUR y USD hasta monedas exóticas. Cobertura mundial completa.</p>
 								</div>

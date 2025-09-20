@@ -9,6 +9,7 @@
 .hero {
   min-height: auto;
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .hero::before {
@@ -36,7 +37,6 @@
   gap: 2rem;
   align-items: start;
   min-height: auto;
-  padding: 6rem 1rem 3rem;
 }
 
 .hero-text h1 {
@@ -94,6 +94,7 @@
   grid-template-columns: 1fr;
   gap: 1rem;
 }
+
 .value-card {
   background: #fff;
   padding: 1.25rem;
@@ -104,6 +105,7 @@
   position: relative;
   overflow: hidden;
 }
+
 .value-card::before {
   content: "";
   position: absolute;
@@ -113,10 +115,12 @@
   height: 3px;
   background: linear-gradient(90deg, var(--color-gold), var(--color-gold-2));
 }
+
 .value-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-card-hover);
 }
+
 .value-icon {
   width: 44px;
   height: 44px;
@@ -129,12 +133,14 @@
   margin-bottom: 0.8rem;
   color: #fff;
 }
+
 .value-card h3 {
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 0.6rem;
   color: var(--color-text);
 }
+
 .value-card p {
   color: var(--color-muted);
   font-size: 0.95rem;
@@ -145,6 +151,7 @@
   background: #fff;
   padding: 3.5rem 1rem;
 }
+
 .section-title {
   text-align: center;
   font-size: 1.9rem;
@@ -152,6 +159,7 @@
   margin-bottom: 1rem;
   color: var(--color-text);
 }
+
 .section-subtitle {
   text-align: center;
   font-size: 1rem;
@@ -162,11 +170,13 @@
   margin-right: auto;
   padding: 0 0.25rem;
 }
+
 .features-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.25rem;
 }
+
 .feature-card {
   background: var(--color-bg-1);
   padding: 1.75rem;
@@ -176,11 +186,13 @@
   border: 1px solid rgba(212, 175, 55, 0.1);
   position: relative;
 }
+
 .feature-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   background: #fff;
 }
+
 .feature-icon {
   width: 72px;
   height: 72px;
@@ -193,12 +205,14 @@
   margin: 0 auto 1.5rem;
   color: #fff;
 }
+
 .feature-card h3 {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
   color: var(--color-text);
 }
+
 .feature-card p {
   color: var(--color-muted);
   line-height: 1.6;
@@ -211,6 +225,7 @@
   position: relative;
   overflow: hidden;
 }
+
 .no-commission::before {
   content: "";
   position: absolute;
@@ -221,12 +236,14 @@
     transparent 50%
   );
 }
+
 .no-commission h2 {
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
   color: #fff;
 }
+
 .no-commission p {
   font-size: 1rem;
   margin-bottom: 1.25rem;
@@ -235,6 +252,7 @@
   margin-left: auto;
   margin-right: auto;
 }
+
 .commission-comparison {
   width: 100%;
   background: rgba(255, 255, 255, 0.15);
@@ -244,6 +262,7 @@
   display: inline-block;
   margin-top: 1rem;
 }
+
 .comparison-row {
   display: flex;
   justify-content: space-between;
@@ -252,6 +271,7 @@
   font-size: 1rem;
   color: #fff;
 }
+
 .comparison-row:last-child {
   margin-bottom: 0;
   font-weight: 700;
@@ -261,15 +281,17 @@
 }
 
 .tools {
-  background: var(--color-bg-1);
   padding: 3.5rem 1rem;
 }
+
 .tools-grid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
   align-items: stretch;
+  margin-top: 3rem;
 }
+
 .tool-placeholder {
   background: #fff;
   border: 2px solid var(--color-gold);
@@ -361,7 +383,7 @@
 /* >= 640px */
 @media (min-width: 640px) {
   .hero-content {
-    padding: 7rem 1.25rem 3rem;
+    padding-top: 2rem;
   }
   .trust-badges {
     flex-direction: row;
@@ -410,11 +432,10 @@
     padding: 0 2rem;
   }
   .hero-content {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: center;
-    min-height: 100vh;
-    padding-top: 0;
+    padding-top: 2rem;
   }
   .hero-text h1 {
     font-size: 3rem;
@@ -430,7 +451,7 @@
     padding: 5rem 2rem;
   }
   .tools-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
   .no-commission {
     padding: 5rem 2rem;
@@ -445,6 +466,11 @@
 
 /* >= 1280px */
 @media (min-width: 1280px) {
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding-top: 2rem;
+  }
   .container {
     padding: 0 2rem;
   }
@@ -462,13 +488,13 @@
   }
 }
 
-/* <= 360px (optimiza para pantallas de 320px–360px) */
-@media (max-width: 360px) {
+/* 320 <= 425px */
+@media (max-width: 425px) {
   .container {
     padding: 0 0.75rem;
   }
   .hero-content {
-    padding: 5.5rem 0.75rem 2.25rem;
+    padding-top: 2rem;
     gap: 1.5rem;
   }
   .hero-text h1 {
@@ -500,7 +526,7 @@
   }
 }
 
-/* <= 320px (micro-ajustes para el mínimo absoluto) */
+/* <= 320px */
 @media (max-width: 320px) {
   .hero-text h1 {
     font-size: 1.75rem;
