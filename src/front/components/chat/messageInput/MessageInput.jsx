@@ -1,6 +1,7 @@
 import React from "react";
 import "../theme.css";
 import "./message-input.css";
+import Emojis from "../Emojis/Emojis";
 
 export default function MessageInput({
     value,
@@ -11,8 +12,13 @@ export default function MessageInput({
     onStartTyping,
     onStopTyping,
 }) {
+    const getEmojis = (emoji) => {
+        onChange(prev => prev + emoji)
+    }
+
     return (
         <div className="msg-input">
+            <Emojis getEmojis={getEmojis} />
             <input
                 className="msg-input__field"
                 value={value}
