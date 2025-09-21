@@ -382,21 +382,25 @@ html.dark .tool-placeholder {
   color: var(--color-gold);
   border-color: var(--color-border);
 }
+
 html.dark .value-card p,
 html.dark .feature-card p,
 html.dark .tool-placeholder p,
 html.dark .section-subtitle {
   color: var(--color-muted);
 }
+
 html.dark .cta-section {
   background: var(--color-bg-2);
 }
+
 html.dark .value-card h3,
 html.dark .feature-card h3,
 html.dark .tool-placeholder h3,
 html.dark .section-title {
   color: var(--color-text);
 }
+
 html.dark .value-card,
 html.dark .feature-card,
 html.dark .tool-placeholder {

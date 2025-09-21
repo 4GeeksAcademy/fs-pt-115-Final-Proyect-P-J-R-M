@@ -21,6 +21,14 @@
   --nav-border: rgba(212, 175, 55, 0.2);
   --link: var(--color-text);
   --link-hover: var(--color-gold);
+
+  --input-bg: var(--color-surface);
+  --input-text: var(--color-text);
+  --input-muted: var(--color-muted);
+  --input-border: #d0d7e2;
+  --input-placeholder: #94a3b8;
+  --input-ring: rgba(212, 175, 55, 0.28);
+  --input-radius: var(--radius-btn);
 }
 
 :root {
@@ -48,6 +56,13 @@ html.dark {
   --nav-border: #1f2a3b;
   --link: #dbe7f3;
   --link-hover: var(--color-gold);
+
+  --input-bg: #0f1724;
+  --input-text: #e6eef6;
+  --input-muted: #9aa6b2;
+  --input-border: #243247;
+  --input-placeholder: #95a2b3;
+  --input-ring: rgba(212, 175, 55, 0.35);
 }
 
 html,
@@ -117,4 +132,74 @@ body {
   background: #e9ecef !important;
   color: var(--swal-text) !important;
   border: none !important;
+}
+
+/* inputs */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  background: var(--input-bg);
+  color: var(--input-text);
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  padding: 0.7rem 0.9rem;
+  line-height: 1.25;
+  outline: none;
+  box-shadow: none;
+  width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    color 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--input-ring);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: color-mix(in srgb, var(--input-bg) 85%, #000 15%);
+  color: var(--input-muted);
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+label,
+.form-label {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.small,
+.form-hint,
+.help-text {
+  color: var(--input-muted);
+  font-size: 0.9rem;
+}
+
+.is-invalid {
+  border-color: #f43f5e !important;
+  box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25) !important;
+}
+
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--input-text);
+  box-shadow: 0 0 0 1000px var(--input-bg) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+button,
+input[type="submit"],
+input[type="button"] {
+  color: var(--color-text);
 }

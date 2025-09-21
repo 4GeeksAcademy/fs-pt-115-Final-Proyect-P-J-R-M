@@ -1,6 +1,6 @@
 // src/theme/ThemeProvider.jsx
 import { useEffect, useState } from "react";
-import { ThemeContext } from "../hooks/useTheme";
+import { ThemeContext } from "../../hooks/useTheme";
 
 const preferenceKey = "theme-preference";
 

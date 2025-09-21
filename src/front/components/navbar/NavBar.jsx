@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import logoUrl from "../../assets/img/FINALLOGO.png"
 import { ButtonAvatar } from "./ButtonAvatar"
 import { UserMenuSidebar } from "./SideBar"
-import ThemeToggle from "../ThemeToggle";
+import ThemeToggle from "../theme/ThemeToggle";
 
 export const NavBar = () => {
   const { token } = useAuth();

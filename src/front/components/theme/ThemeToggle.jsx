@@ -1,4 +1,5 @@
-import { useTheme } from "../hooks/useTheme";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function ThemeToggle() {
     const { theme, setTheme } = useTheme();
@@ -16,7 +17,7 @@ export default function ThemeToggle() {
             aria-pressed={isDarkMode}
             aria-label="Cambiar tema"
         >
-            {isDarkMode ? "🌙 Modo oscuro" : "☀️ Modo claro"}
+            {isDarkMode ? <Moon size={32} color="#ffffff" absoluteStrokeWidth /> : <Sun size={32} color="#ffd700" absoluteStrokeWidth /> }
         </button>
     );
 }

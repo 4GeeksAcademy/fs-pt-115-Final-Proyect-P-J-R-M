@@ -7,7 +7,7 @@ import { StoreProvider } from './hooks/useGlobalReducer';  // Import the StorePr
 import { BackendURL } from './components/BackendURL';
 import "./index.css";
 import { AuthProvider } from './hooks/useAuth';
-import ThemeProvider from './components/ThemeProvider';
+import ThemeProvider from './components/theme/ThemeProvider';
 
 const Main = () => {
 
