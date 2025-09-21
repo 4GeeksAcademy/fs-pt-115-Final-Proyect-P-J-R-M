@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 export default function ScoreManager({ userId }) {
   const [scores, setScores] = useState([]);
   const [hovered, setHovered] = useState(null);
-  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('userScores');
@@ -14,11 +13,9 @@ export default function ScoreManager({ userId }) {
     localStorage.setItem('userScores', JSON.stringify(scores));
   }, [scores]);
 
-  const addScore = () => {
-    if (selected === null) return;
-    const updatedScores = [...scores, { userId, score: selected }];
+  const handleStarClick = (star) => {
+    const updatedScores = [...scores, { userId, score: star }];
     setScores(updatedScores);
-    setSelected(null);
     setHovered(null);
   };
 
@@ -50,30 +47,17 @@ export default function ScoreManager({ userId }) {
             key={star}
             style={{
               cursor: 'pointer',
-              color: (hovered || selected) >= star ? 'var(--color-gold)' : 'lightgray',
+              color: hovered >= star ? 'var(--color-gold)' : 'lightgray',
               transition: 'color 0.2s'
             }}
             onMouseEnter={() => setHovered(star)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => setSelected(star)}
+            onClick={() => handleStarClick(star)}
           >
             ★
           </span>
         ))}
       </div>
-      <button
-        onClick={addScore}
-        style={{
-          background: 'var(--color-gold)',
-          borderRadius: 'var(--radius-btn)',
-          padding: '0.5rem 1rem',
-          border: 'none',
-          color: '#fff',
-          boxShadow: 'var(--shadow-1)'
-        }}
-      >
-        Enviar puntuación
-      </button>
       <h4 style={{ color: getColor(getAverage()), marginTop: '1rem' }}>
         Media: {getAverage() ?? 'Sin puntuaciones'}
       </h4>
