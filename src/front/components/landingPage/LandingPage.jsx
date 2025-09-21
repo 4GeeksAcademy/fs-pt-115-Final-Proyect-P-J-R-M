@@ -5,6 +5,7 @@ import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
 import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
 import { BadgeDollarSign, Handshake, ShieldCheck, HandCoins } from "lucide-react";
+import ScoreManager from "../ScoreManager";
 
 export default function LandingPage() {
 	useEffect(() => {
@@ -221,6 +222,22 @@ export default function LandingPage() {
 					¿Aún no estás registrado?
 				</Link>
 			</section>
+
+			{/* Score Section */}
+			<section className="score-section" style={{
+				background: 'var(--color-bg-1)',
+				padding: '2rem',
+				borderRadius: 'var(--radius)',
+				boxShadow: 'var(--shadow-card)',
+				marginTop: '2rem',
+				textAlign: 'center'
+			}}>
+				<h2 style={{ color: 'var(--color-gold)', marginBottom: '1rem' }}>
+					¿Qué opinan los usuarios?
+				</h2>
+				<ScoreManager userId={1} />
+			</section>
+
 		</>
 	);
 }
