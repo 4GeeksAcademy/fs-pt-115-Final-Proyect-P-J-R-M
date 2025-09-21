@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getPosts, deletePost } from "../../services/postApi";
 import { getUsers } from "../../services/userApi";
-import { StartChatButton } from "../StartChatButton";
+import {StartChatButton} from "../startChatButton/StartChatButton"
 import "./postlist.css";
 import { PlaneLanding } from "lucide-react";
 
