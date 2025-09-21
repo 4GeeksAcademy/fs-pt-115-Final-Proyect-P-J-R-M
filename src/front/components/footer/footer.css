@@ -69,11 +69,14 @@ footer {
 @media (max-width: 360px) {
   footer {
     padding: 1.5rem 0.75rem 0.5rem;
+    font-size: 0.8rem;
   }
   .footer-links {
-    gap: 0.5rem 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
   .footer-links a {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 }

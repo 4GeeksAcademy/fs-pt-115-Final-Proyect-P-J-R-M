@@ -2,7 +2,7 @@
   min-height: 85vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   background: linear-gradient(
     135deg,
     var(--color-bg-1) 0%,
@@ -85,6 +85,6 @@
 
 @media (min-width: 320px) {
   .login-container {
-    padding: 180px 1rem 180px 1rem;
+    padding: 0px 1rem 0px 1rem;
   }
 }
