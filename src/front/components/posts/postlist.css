@@ -331,3 +331,8 @@
 
 .posts-layout > * { min-width: 0; }
 
+.posts-filter-btn.is-active {
+  background: var(--color-gold);
+  color: #fff;
+  font-weight: bold;
+}

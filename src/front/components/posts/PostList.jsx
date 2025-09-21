@@ -12,6 +12,40 @@ export const PostList = ({ refresh = 0 }) => {
   const [users, setUsers] = useState([]);
   const [filterTo, setFilterTo] = useState("");
 
+  const currencySymbols = {
+    AUD: "A$",
+    BGN: "лв",
+    BRL: "R$",
+    CAD: "C$",
+    CHF: "CHF",
+    CNY: "¥",
+    CZK: "Kč",
+    DKK: "kr",
+    EUR: "€",
+    GBP: "£",
+    HKD: "HK$",
+    HUF: "Ft",
+    IDR: "Rp",
+    ILS: "₪",
+    INR: "₹",
+    ISK: "kr",
+    JPY: "¥",
+    KRW: "₩",
+    MXN: "MX$",
+    MYR: "RM",
+    NOK: "kr",
+    NZD: "NZ$",
+    PHP: "₱",
+    PLN: "zł",
+    RON: "lei",
+    SEK: "kr",
+    SGD: "S$",
+    THB: "฿",
+    TRY: "₺",
+    USD: "$",
+    ZAR: "R",
+  };
+
   useEffect(() => {
     if (!token) return;
     getPosts(token).then(setPosts);
@@ -38,6 +72,7 @@ export const PostList = ({ refresh = 0 }) => {
 
   if (!visible.length) return <p className="posts-empty">No hay posts todavía.</p>;
 
+
   return (
     <div className="posts-layout">
       <aside className="posts-sidebar">
@@ -50,16 +85,21 @@ export const PostList = ({ refresh = 0 }) => {
           Todas
         </button>
 
-        {currencies.map((c) => (
-          <button
-            key={c}
-            onClick={() => setFilterTo(c)}
-            className="posts-filter-btn"
-            aria-pressed={filterTo === c}
-          >
-            {c}
-          </button>
-        ))}
+        {currencies.map((c) => {
+          const symbol = currencySymbols[c];
+          const isActive = filterTo === c;
+
+          return (
+            <button
+              key={c}
+              onClick={() => setFilterTo(c)}
+              className={`posts-filter-btn ${isActive ? "is-active" : ""}`}
+              aria-pressed={isActive}
+            >
+              {isActive ? (symbol || c) : c}
+            </button>
+          );
+        })}
       </aside>
 
       <ul className="posts-list">
@@ -83,12 +123,13 @@ export const PostList = ({ refresh = 0 }) => {
                   )}
                 </div>
                 <div className="post-actions">
-                  {user?.id === post.user_id && (
+                  {user?.id === post.user_id ? (
                     <button className="post-delete" onClick={() => handleDelete(post.id)}>
                       Eliminar
                     </button>
+                  ) : (
+                    <StartChatButton userTwo={post.user_id} postId={post.id} />
                   )}
-                  <StartChatButton userTwo={post.user_id} postId={post.id} />
                 </div>
               </header>
 
