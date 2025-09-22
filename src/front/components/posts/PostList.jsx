@@ -76,7 +76,7 @@ export const PostList = ({ refresh = 0 }) => {
   return (
     <div className="posts-layout">
       <aside className="posts-sidebar">
-        <h4 className="posts-sidebar-title">Divisas</h4>
+        <h4 className="posts-sidebar-title"></h4>
         <button
           onClick={() => setFilterTo("")}
           className="posts-filter-btn"
@@ -86,7 +86,7 @@ export const PostList = ({ refresh = 0 }) => {
         </button>
 
         {currencies.map((c) => {
-          const symbol = currencySymbols[c];
+          const symbol = currencySymbols[c] || c;
           const isActive = filterTo === c;
 
           return (
@@ -96,7 +96,8 @@ export const PostList = ({ refresh = 0 }) => {
               className={`posts-filter-btn ${isActive ? "is-active" : ""}`}
               aria-pressed={isActive}
             >
-              {isActive ? (symbol || c) : c}
+              <span className="front">{c}</span>
+              <span className="back">{symbol}</span>
             </button>
           );
         })}
@@ -136,7 +137,7 @@ export const PostList = ({ refresh = 0 }) => {
               <div className="post-body">
                 <h4 className="post-destination">{post.destination}</h4>{" "}
                 <div className="post-currencies">
-                  <span className="post-monto">{post.description} {post.divisas_one} →</span>
+                  <span className="post-monto">{post.description} {post.divisas_one} </span>
                   <span className="post-del">
                     <PlaneLanding />
                   </span>
