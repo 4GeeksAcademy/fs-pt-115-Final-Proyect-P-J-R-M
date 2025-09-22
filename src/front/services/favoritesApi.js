@@ -5,22 +5,32 @@ const authHeaders = () => ({
   Authorization: `Bearer ${localStorage.getItem("token")}`,
 });
 
+
+// Obtener todos los favoritos (posts y chats) sin filtro
 export const getFavorites = async () => {
   try {
-    const response = await fetch(`${apiUrl}/favorites`, {
-      method: "GET",
-      headers: authHeaders(),
-    });
+    const [postsRes, chatsRes] = await Promise.all([
+      fetch(`${apiUrl}/favorites/post`, { method: "GET", headers: authHeaders() }),
+      fetch(`${apiUrl}/favorites/chat`, { method: "GET", headers: authHeaders() }),
+    ]);
 
-    if (!response.ok) throw new Error("Error al obtener favoritos");
+    if (!postsRes.ok || !chatsRes.ok) throw new Error("Error al obtener favoritos");
 
-    return await response.json();
+    const postsData = await postsRes.json();
+    const chatsData = await chatsRes.json();
+
+    return {
+      fav_posts: postsData.fav_posts,
+      fav_chats: chatsData.fav_chats,
+    };
   } catch (error) {
     console.error("getFavorites error:", error);
     throw error;
   }
 };
 
+
+//  post a favoritos
 export const addFavoritePost = async (postId) => {
   try {
     const response = await fetch(`${apiUrl}/favorites/post`, {
@@ -38,6 +48,7 @@ export const addFavoritePost = async (postId) => {
   }
 };
 
+// post favorito como inactivo (soft delete)
 export const removeFavoritePost = async (postId) => {
   try {
     const response = await fetch(`${apiUrl}/favorites/post`, {
@@ -59,6 +70,7 @@ export const removeFavoritePost = async (postId) => {
   }
 };
 
+//  chat a favoritos
 export const addFavoriteChat = async (chatId) => {
   try {
     const response = await fetch(`${apiUrl}/favorites/chat`, {
@@ -76,6 +88,7 @@ export const addFavoriteChat = async (chatId) => {
   }
 };
 
+//  chat favorito como inactivo (soft delete)
 export const removeFavoriteChat = async (chatId) => {
   try {
     const response = await fetch(`${apiUrl}/favorites/chat`, {
