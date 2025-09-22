@@ -5,6 +5,8 @@ import { useAuth } from "../../hooks/useAuth";
 import "./createpost.css";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import Swal from "sweetalert2";
+import "../../index.css";
 countries.registerLocale(enLocale);
 
 const countryNames = countries.getNames("en", { select: "official" });
@@ -62,7 +64,21 @@ export const CreatePost = ({ onSuccess }) => {
     await createPost(payload, token);
     setForm(INITIAL);
     onSuccess?.();
-  };
+    try {
+      Swal.fire({
+        icon: "success",
+        title: "¡Post creado!",
+        text: "Tu post ha sido publicado correctamente.",
+      });
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No se pudo crear el post. Intenta otra vez.",
+      });
+    }
+  }
 
   const currentSelect = () => {
     const options = [];
@@ -77,96 +93,96 @@ export const CreatePost = ({ onSuccess }) => {
   };
 
   return (
-<form onSubmit={handleSubmit} className="create-post">
-  <h2 className="create-post__title">Nuevo intercambio</h2>
+    <form onSubmit={handleSubmit} className="create-post">
+      <h2 className="create-post__title">Nuevo intercambio</h2>
 
-  <div className="form-grid">
-    <label className="field">
-      <span className="label">Divisa origen</span>
-      <select
-        name="divisas_one"
-        value={form.divisas_one}
-        onChange={handleChange}
-        disabled={loading}
-        className="control"
-      >
-        {currentSelect()}
-      </select>
-    </label>
+      <div className="form-grid">
+        <label className="field">
+          <span className="label">Divisa origen</span>
+          <select
+            name="divisas_one"
+            value={form.divisas_one}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            {currentSelect()}
+          </select>
+        </label>
 
-    <label className="field">
-      <span className="label">Divisa destino</span>
-      <select
-        name="divisas_two"
-        value={form.divisas_two}
-        onChange={handleChange}
-        disabled={loading}
-        className="control"
-      >
-        {currentSelect()}
-      </select>
-    </label>
+        <label className="field">
+          <span className="label">Divisa destino</span>
+          <select
+            name="divisas_two"
+            value={form.divisas_two}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            {currentSelect()}
+          </select>
+        </label>
 
-    <label className="field">
-      <span className="label">País</span>
-      <select
-        name="country"
-        value={form.country}
-        onChange={handleChange}
-        disabled={loading}
-        className="control"
-      >
-        <option value="">Selecciona un país</option>
-        {countryList.map(([code, name]) => (
-          <option key={code} value={name}>{name}</option>
-        ))}
-      </select>
-    </label>
+        <label className="field">
+          <span className="label">País</span>
+          <select
+            name="country"
+            value={form.country}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          >
+            <option value="">Selecciona un país</option>
+            {countryList.map(([code, name]) => (
+              <option key={code} value={name}>{name}</option>
+            ))}
+          </select>
+        </label>
 
-    <label className="field">
-      <span className="label">Ciudad</span>
-      <input
-        type="text"
-        name="city"
-        value={form.city}
-        onChange={handleChange}
-        disabled={loading}
-        className="control"
-        placeholder="Ej. Barcelona"
-      />
-    </label>
+        <label className="field">
+          <span className="label">Ciudad</span>
+          <input
+            type="text"
+            name="city"
+            value={form.city}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+            placeholder="Ej. Barcelona"
+          />
+        </label>
 
-    <label className="field">
-      <span className="label">Cantidad prevista</span>
-      <input
-        type="number"
-        name="description"
-        value={form.description}
-        onChange={handleChange}
-        disabled={loading}
-        className="control"
-        min="0"
-        step="any"
-        placeholder="500"
-      />
-    </label>
+        <label className="field">
+          <span className="label">Cantidad prevista</span>
+          <input
+            type="number"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+            min="0"
+            step="any"
+            placeholder="500"
+          />
+        </label>
 
-    <label className="field date-actions">
-      <span className="label">Fecha prevista de intercambio</span>
-      <input
-        type="date"
-        name="exchangeDate"
-        min={todayYMD()}
-        value={form.exchangeDate}
-        onChange={handleChange}
-        disabled={loading}
-        className="control"
-      />
-      <button type="submit" disabled={loading} className="btn-create">
-        {loading ? "Creando..." : "Crear"}
-      </button>
-    </label>
-  </div>
-</form>
+        <label className="field date-actions">
+          <span className="label">Fecha prevista de intercambio</span>
+          <input
+            type="date"
+            name="exchangeDate"
+            min={todayYMD()}
+            value={form.exchangeDate}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+          />
+          <button type="submit" disabled={loading} className="btn-create">
+            {loading ? "Creando..." : "Crear"}
+          </button>
+        </label>
+      </div>
+    </form>
   );
 };
