@@ -25,7 +25,6 @@ export const router = createBrowserRouter(
 		<Route element={<RootLayout />}>
 			<Route path="/" element={<PublicLayout />}>
 				<Route index element={<Home />} />
-
 				<Route path="/posts" element={<PostsPage />} />
 			</Route>
 			<Route element={<AuthLayout />}>

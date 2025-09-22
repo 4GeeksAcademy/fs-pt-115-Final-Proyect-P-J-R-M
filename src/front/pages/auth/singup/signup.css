@@ -1,15 +1,14 @@
 .signup-container {
   display: flex;
+  height: 85vh;
   justify-content: center;
-  align-items: flex-start;
-  padding: 92px;
+  align-items: center;
   background: linear-gradient(
     135deg,
     var(--color-bg-1) 0%,
     var(--color-bg-2) 50%,
     var(--color-bg-1) 100%
   );
-
 }
 
 .signup-form {
@@ -87,4 +86,10 @@
 
 .signup-link:hover {
   color: var(--color-gold);
+}
+
+@media (min-width: 320px) {
+  .signup-container {
+    padding: 0px 1rem 0px 1rem;
+  }
 }

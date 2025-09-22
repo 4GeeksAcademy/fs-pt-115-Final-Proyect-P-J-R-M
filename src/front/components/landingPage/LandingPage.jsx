@@ -24,10 +24,8 @@ export default function LandingPage() {
 		const onScroll = () => {
 			if (!nav) return;
 			if (window.scrollY > 50) {
-				nav.style.background = "rgba(255, 255, 255, 0.98)";
 				nav.style.boxShadow = "0 2px 20px rgba(0, 0, 0, 0.1)";
 			} else {
-				nav.style.background = "rgba(255, 255, 255, 0.95)";
 				nav.style.boxShadow = "none";
 			}
 		};
