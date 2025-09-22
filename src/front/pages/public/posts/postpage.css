@@ -3,10 +3,10 @@
   min-height: 100vh;
   padding: 2rem 1rem;
   display: grid;
+  grid-template-rows: auto 1fr;
   gap: 2rem;
   justify-content: center;
 }
-
 
 @media (max-width: 600px) {
   .tittle-post-page {

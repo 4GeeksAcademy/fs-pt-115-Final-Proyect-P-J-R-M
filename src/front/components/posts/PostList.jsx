@@ -4,7 +4,7 @@ import { getPosts, deletePost } from "../../services/postApi";
 import { getUsers } from "../../services/userApi";
 import { StartChatButton } from "../StartChatButton";
 import "./postlist.css";
-import { PlaneLanding } from "lucide-react";
+import { PlaneLanding, Trash2 } from "lucide-react";
 
 export const PostList = ({ refresh = 0 }) => {
   const { token, user } = useAuth();
@@ -72,10 +72,9 @@ export const PostList = ({ refresh = 0 }) => {
 
   if (!visible.length) return <p className="posts-empty">No hay posts todavía.</p>;
 
-
   return (
     <div className="posts-layout">
-      <aside className="posts-sidebar">
+      <aside className="posts-sidebar" role="toolbar" aria-label="Filtros por divisa destino">
         <h4 className="posts-sidebar-title"></h4>
         <button
           onClick={() => setFilterTo("")}
@@ -93,7 +92,7 @@ export const PostList = ({ refresh = 0 }) => {
             <button
               key={c}
               onClick={() => setFilterTo(c)}
-              className={`posts-filter-btn ${isActive ? "is-active" : ""}`}
+              className="posts-filter-btn"
               aria-pressed={isActive}
             >
               <span className="front">{c}</span>
@@ -109,39 +108,44 @@ export const PostList = ({ refresh = 0 }) => {
 
           return (
             <li key={post.id} className="post-item">
-              <header className="post-header">
-                <img
-                  src={author?.image || "../../rigo-baby.jpg"}
-                  alt="avatar"
-                  className="post-avatar"
-                />
-                <div className="post-name">
+              <div className="post-body-horizontal">
+                <div className="post-user">
+                  <img
+                    src={author?.image || "../../rigo-baby.jpg"}
+                    alt="avatar"
+                    className="post-avatar"
+                  />
                   <h4 className="post-author">{author?.username}</h4>
-                  {post.day_exchange && (
-                    <small className="post-exchange">
-                      Fecha prevista: {post.day_exchange}
-                    </small>
-                  )}
                 </div>
+
+                <section className="post-info">
+                  <div className="detail">
+                    <span className="label">Destino</span>
+                    <span className="value">{post.destination}</span>
+                  </div>
+                  <div className="detail">
+                    <span className="label">Fecha prevista</span>
+                    <span className="value">{post.day_exchange ? post.day_exchange : "Por concretar"}</span>
+                  </div>
+                </section>
+
+                <section className="post-money">
+                  <div className="detail detail--amount">
+                    <span className="label">Cantidad</span>
+                    <span className="value">
+                      {post.description} {post.divisas_one} <PlaneLanding size={18} className="text-gold" /> {post.divisas_two}
+                    </span>
+                  </div>
+                </section>
+
                 <div className="post-actions">
                   {user?.id === post.user_id ? (
                     <button className="post-delete" onClick={() => handleDelete(post.id)}>
-                      Eliminar
+                      <Trash2 />
                     </button>
                   ) : (
                     <StartChatButton userTwo={post.user_id} postId={post.id} />
                   )}
-                </div>
-              </header>
-
-              <div className="post-body">
-                <h4 className="post-destination">{post.destination}</h4>{" "}
-                <div className="post-currencies">
-                  <span className="post-monto">{post.description} {post.divisas_one} </span>
-                  <span className="post-del">
-                    <PlaneLanding />
-                  </span>
-                  <span className="post-arra">{post.divisas_two}</span>
                 </div>
               </div>
             </li>
