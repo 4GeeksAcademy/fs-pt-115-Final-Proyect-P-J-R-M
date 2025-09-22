@@ -495,6 +495,9 @@ html.dark .commission-comparison {
   .no-commission h2 {
     font-size: 3rem;
   }
+  .commission-comparison{
+    width: 20rem;
+  }
   .cta-section {
     padding: 5rem 2rem;
   }
@@ -553,7 +556,7 @@ html.dark .commission-comparison {
   }
 }
 
-@media (min-width: 320px) {
+@media (max-width: 320px) {
   .hero-text h1 {
     font-size: 1.75rem;
   }
@@ -571,7 +574,6 @@ html.dark .commission-comparison {
   .section-title {
     font-size: 1.7rem;
   }
-  
   .commission-comparison {
     width: 15rem;
   }

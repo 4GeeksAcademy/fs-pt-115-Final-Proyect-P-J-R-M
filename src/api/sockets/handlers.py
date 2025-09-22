@@ -198,11 +198,6 @@ def register_socket_handlers(socketio, app):
                 "content": m.content,
             } for m in msgs]
 
-            next_before = payload[0]["id"] if payload else before_id
-            if payload:
-                # siguiente página: id menor al primero actual
-                next_before = payload[0]["id"]
-
         emit("messages", {
             "chat_id": chat_id,
             "items": payload,
