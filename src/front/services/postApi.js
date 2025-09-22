@@ -96,3 +96,22 @@ export const deletePost = async (id, token) => {
     throw error;
   }
 };
+
+export const getAllPosts = async (token) => {
+  try {
+    const response = await fetch(`${apiUrl}/all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) throw new Error("Error al traer todos los posts");
+
+    return await response.json();
+  } catch (error) {
+    console.error("getAllPosts error:", error);
+    throw error;
+  }
+};
