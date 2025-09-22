@@ -7,8 +7,8 @@ export const Footer = () => {
       <footer>
         <div className="footer-content">
           <div className="footer-links">
-            <a href="#">Términos y Condiciones</a>
-            <a href="#">Política de Privacidad</a>
+            <a href="/TermsAndConditions">Términos y Condiciones</a>
+            <a href="/PrivacyPolicy">Política de Privacidad</a>
             <a href="#">Soporte</a>
           </div>
           <p>
