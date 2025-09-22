@@ -37,7 +37,7 @@ export const patchUser = async (partialData) => {
     throw error;
   }
 };
-
+// ---------------------------------------------------------------------------------------------------------------------------------------------------
 export const deleteUser = async () => {
   try {
     const response = await fetch(`${apiUrl}`, {
@@ -46,7 +46,7 @@ export const deleteUser = async () => {
     });
 
     if (!response.ok) throw new Error("Error al eliminar usuario");
-
+    
     try {
       return await response.json();
     } catch {
@@ -58,6 +58,15 @@ export const deleteUser = async () => {
   }
 };
 
+//### Obtener todos los usuarios (activos y inactivos)
+export const getAllUsers = async () => {
+  const response = await fetch(`${apiUrl}/all?all=true`, {
+    headers: authHeaders(),
+  });
+  if (!response.ok) throw new Error("Error al obtener todos los usuarios");
+  return await response.json();
+};
+//---------------------------------------------------------------------------------
 // #######cloudinary
 export const uploadImge = async (file) => {
   const formData =new FormData()

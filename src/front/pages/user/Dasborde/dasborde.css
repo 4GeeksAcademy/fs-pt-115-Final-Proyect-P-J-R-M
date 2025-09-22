@@ -34,7 +34,7 @@
   max-width: 1200px;
 }
 
-/* === User Card === */
+
 .user-card {
   background-color: var(--color-surface);
   padding: 24px;
@@ -97,7 +97,7 @@
   font-weight: 500;
 }
 
-/* === Edit Form === */
+
 .user-edit-form {
   width: 100%;
   display: grid;
@@ -160,7 +160,7 @@
   background-color: #b38f10;
 }
 
-/* Icon-style buttons */
+
 .icon-button {
   background-color: var(--color-gold);
   color: #fff;
@@ -176,17 +176,15 @@
   background-color: #b38f10;
 }
 
-/* Compact select for country */
+
 .compact-select {
   max-width: 220px;
 }
 
-/* Hidden file input */
 .user-edit-form input[type="file"] {
   display: none;
 }
 
-/* === Content Sections === */
 .content-inner {
   display: flex;
   flex-direction: column;
@@ -255,7 +253,7 @@
 .edit-toggle-btn:active {
   transform: scale(0.98);
 }
-/* === Responsive === */
+
 @media (max-width: 768px) {
   .content {
     display: flex;

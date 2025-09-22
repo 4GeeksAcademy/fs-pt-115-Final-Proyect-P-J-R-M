@@ -6,8 +6,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_mail import Message
 from api.mail_config import mail
 
-post_bp = Blueprint("post", __name__, url_prefix="/posts",
-                    template_folder='../templates')
+post_bp = Blueprint("post", __name__, url_prefix="/posts")
 
 
 CORS(post_bp)
@@ -16,7 +15,7 @@ CORS(post_bp)
 @post_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_posts():
-    posts = Post.query.all()
+    posts = Post.query.filter_by(is_active=True).all()
     return jsonify([p.serialize()for p in posts]), 200
 
 
@@ -82,19 +81,26 @@ def create_post():
 
     return jsonify(new_post.serialize()), 201
 
-
+# ----------------------------------------------------------------------
 @post_bp.route("/<int:post_id>", methods=["DELETE"])
 @jwt_required()
 def delete_post(post_id):
     post = Post.query.get(post_id)
 
-    if not post:
-        return jsonify({"msg": "Post not found"}), 404
-    db.session.delete(post)
+    if not post or not post.is_active:
+        return jsonify({"msg": "Post not found or already inactive"}), 404
+
+    post.deactivate()
     db.session.commit()
+    return jsonify({"msg": "Post deactivated successfully"}), 200
 
-    return jsonify({"msg": "Post deleted successfully"}), 200
 
+@post_bp.route("/all", methods=["GET"])
+@jwt_required()
+def get_all_posts():
+    posts = Post.query.all()
+    return jsonify([p.serialize() for p in posts]), 200
+# ----------------------------------------------------------------------
 
 @post_bp.route("/<int:post_id>", methods=["PATCH"])
 @jwt_required()

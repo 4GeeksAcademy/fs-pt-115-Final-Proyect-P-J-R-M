@@ -3,10 +3,11 @@ nav {
   top: 0;
   width: 100%;
   padding: 1.2rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--nav-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  border-bottom: 1px solid var(--nav-border);
+  color: var(--nav-text);
   z-index: 1000;
   transition: all 0.3s ease;
 }
@@ -36,7 +37,7 @@ nav {
 }
 
 .logo-text {
-  font-size: 1.40rem;
+  font-size: 1.4rem;
   font-weight: 700;
   line-height: 1;
 }
@@ -50,7 +51,7 @@ nav {
 .link-login {
   position: relative;
   display: inline-block;
-  color: var(--color-text);
+  color: var(--link);
   text-decoration: none;
   font-weight: 600;
   padding: 0.25rem 0.1rem;
@@ -64,12 +65,12 @@ nav {
   bottom: -6px;
   height: 2px;
   width: 0%;
-  background: var(--color-gold);
+  background: var(--link-hover);
   transition: width 0.25s ease;
 }
 
 .link-login:hover {
-  color: var(--color-gold);
+  color: var(--link-hover);
 }
 .link-login:hover::after {
   width: 100%;
@@ -88,6 +89,10 @@ nav {
   text-decoration: none;
   white-space: nowrap;
   color: var(--color-text);
+}
+
+.navbar-actions .btn {
+  color: var(--nav-text);
 }
 
 .cta-nav {
