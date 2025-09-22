@@ -458,10 +458,6 @@ html.dark .commission-comparison {
   .tools-grid {
     gap: 2rem;
   }
-  .tool-placeholder {
-    min-height: 360px;
-    padding: 2rem;
-  }
   .no-commission h2 {
     font-size: 2.6rem;
   }
@@ -522,9 +518,6 @@ html.dark .commission-comparison {
   .feature-card {
     padding: 3rem;
   }
-  .tool-placeholder {
-    min-height: 400px;
-  }
 }
 
 @media (max-width: 425px) {
@@ -548,10 +541,6 @@ html.dark .commission-comparison {
   .feature-card {
     padding: 1.5rem;
   }
-  .tool-placeholder {
-    min-height: 300px;
-    padding: 1.25rem;
-  }
   .commission-comparison {
     padding: 0.75rem;
   }
@@ -564,7 +553,7 @@ html.dark .commission-comparison {
   }
 }
 
-@media (max-width: 320px) {
+@media (min-width: 320px) {
   .hero-text h1 {
     font-size: 1.75rem;
   }
@@ -582,9 +571,7 @@ html.dark .commission-comparison {
   .section-title {
     font-size: 1.7rem;
   }
-  .tool-placeholder {
-    min-height: 280px;
-  }
+  
   .commission-comparison {
     width: 15rem;
   }
