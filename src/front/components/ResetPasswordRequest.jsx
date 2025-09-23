@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import "../pages/auth/login/login.css";
 import "../index.css";
-
+import { CircleCheckBig, CircleX } from "lucide-react";
 
 export function ResetPasswordRequest() {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState(null); 
   const [showResendOption, setShowResendOption] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -26,10 +26,20 @@ export function ResetPasswordRequest() {
         throw new Error(data.msg || 'Error al enviar el correo');
       }
 
-      setMessage('✅ Correo enviado. Por favor, revisa tu bandeja de entrada.');
+      setMessage(
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+          <CircleCheckBig size={35} color="#d4af37" strokeWidth={0.5} />
+          <span>Correo enviado. Por favor, revisa tu bandeja de entrada.</span>
+        </div>
+      );
       setShowResendOption(true);
     } catch (error) {
-      setMessage(`❌ ${error.message}`);
+      setMessage(
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+          <CircleX size={35} color="#ed0202" strokeWidth={0.5} />
+          <span>{error.message}</span>
+        </div>
+      );
     }
   };
 
@@ -55,9 +65,9 @@ export function ResetPasswordRequest() {
         </button>
 
         {message && (
-          <p style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--color-text)' }}>
+          <div style={{ marginTop: '1.5rem', textAlign: 'center', color: 'var(--color-text)' }}>
             {message}
-          </p>
+          </div>
         )}
 
         {showResendOption && (
@@ -69,7 +79,8 @@ export function ResetPasswordRequest() {
               color: 'var(--color-muted)',
             }}
           >
-            ¿No has recibido tu correo? Revisa tu carpeta de spam o vuelve a intentarlo más tarde.
+            ¿No has recibido tu correo? <br/>
+             Revisa tu carpeta de spam o vuelve a intentarlo más tarde.
           </p>
         )}
 

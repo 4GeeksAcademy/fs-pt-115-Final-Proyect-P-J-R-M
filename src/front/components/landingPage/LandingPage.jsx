@@ -6,8 +6,10 @@ import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
 import { BadgeDollarSign, Handshake, ShieldCheck, HandCoins } from "lucide-react";
 import ScoreManager from "../ScoreManager";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function LandingPage() {
+	const { token } = useAuth();
 	useEffect(() => {
 		const anchors = Array.from(document.querySelectorAll('a[href^="#"]'));
 		const handleAnchorClick = (e) => {
@@ -222,19 +224,16 @@ export default function LandingPage() {
 			</section>
 
 			{/* Score Section */}
-			<section className="score-section" style={{
-				background: 'var(--color-bg-1)',
-				padding: '2rem',
-				borderRadius: 'var(--radius)',
-				boxShadow: 'var(--shadow-card)',
-				marginTop: '2rem',
-				textAlign: 'center'
-			}}>
-				<h2 style={{ color: 'var(--color-gold)', marginBottom: '1rem' }}>
-					¿Qué opinan los usuarios?
-				</h2>
-				<ScoreManager userId={1} />
+
+
+			<section className="score-section" style={{ textAlign: "center", marginTop: "2rem" }}>
+				<ScoreManager />
 			</section>
+
+
+
+
+
 
 		</>
 	);
