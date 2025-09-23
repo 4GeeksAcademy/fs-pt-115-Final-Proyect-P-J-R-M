@@ -72,7 +72,7 @@
 }
 
 .posts-filter-btn[aria-pressed="true"] {
-  border-color: var(--color-gold);
+  border-color: var(--color-gold-2);
   color: #fff;
   background: linear-gradient(90deg, var(--color-gold), var(--color-gold-2));
   background-size: 200% 100%;
@@ -169,16 +169,21 @@
   padding: 0.25rem 0.6rem;
   font-size: 0.85rem;
   border: 1px solid var(--color-gold);
-  border-radius: 6px;
-  background: var(--color-surface);
-  color: var(--color-text);
+  border-radius: var(--input-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .country-filter__select:hover {
-  border-color: var(--color-gold-2);
-  background: var(--color-bg-2);
+  border-color: var(--color-gold);
+}
+
+.country-filter__select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--input-ring);
+  outline: none;
 }
 
 .posts-list {
@@ -193,99 +198,15 @@
 .post-item {
   position: relative;
   z-index: 0;
-  overflow: visible;
   padding: 1rem 0.5rem;
   margin: 0;
   height: auto;
+  background: #F1F0ED;
 }
 
-.posts-list::before {
-  content: "";
-  display: block;
-  height: 2px;
-  margin: 0 calc(-1rem) 0.75rem;
-  background: linear-gradient(
-    90deg,
-    var(--color-gold),
-    var(--color-gold-2),
-    var(--color-gold)
-  );
-  opacity: 0.85;
-  border-radius: 999px;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 12%,
-    #000 88%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 12%,
-    #000 88%,
-    transparent 100%
-  );
-}
-
-.posts-list::after {
-  content: "";
-  display: block;
-  height: 2px;
-  margin: 0.75rem calc(-1rem) 0;
-  background: linear-gradient(
-    90deg,
-    var(--color-gold),
-    var(--color-gold-2),
-    var(--color-gold)
-  );
-  opacity: 0.85;
-  border-radius: 999px;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 12%,
-    #000 88%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 12%,
-    #000 88%,
-    transparent 100%
-  );
-}
-
-.post-item:not(:first-child)::before {
-  content: "";
-  display: block;
-  position: relative;
-  z-index: 1;
-  height: 2px;
-  margin: 0 calc(-1rem) 0.75rem;
-  background: linear-gradient(
-    90deg,
-    var(--color-gold),
-    var(--color-gold-2),
-    var(--color-gold)
-  );
-  opacity: 0.85;
-  border-radius: 999px;
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 12%,
-    #000 88%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 12%,
-    #000 88%,
-    transparent 100%
-  );
+.post-item + .post-item {
+  border-top: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--color-gold), var(--color-gold-2), var(--color-gold)) 1;
 }
 
 .post-body-horizontal {
@@ -317,7 +238,7 @@
   margin: 0;
   font-weight: 700;
   color: var(--color-text);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -326,7 +247,7 @@
 .post-info .detail .value {
   color: var(--color-text);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -345,13 +266,13 @@
   gap: 0.2rem;
   color: var(--color-text);
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 .post-date .detail .value {
   color: var(--color-text);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-align: center;
 }
 
@@ -361,9 +282,9 @@
 }
 
 .post-delete {
-  border: 1px solid rgba(44, 62, 80, 0.22);
-  background: #fff;
-  color: rgb(186, 2, 2);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: #dc3545;
   border-radius: var(--radius-btn);
   padding: 0.4rem 0.6rem;
   cursor: pointer;
@@ -372,7 +293,7 @@
 
 .post-delete:hover {
   border-color: var(--color-gold);
-  background: #fff5f5;
+  background: var(--color-bg-1);
   color: #c0392b;
   transform: translateY(-1px);
 }
@@ -382,40 +303,42 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  margin-top: 1.5rem;
   padding: 1rem;
+  background-color: #F1F0ED;
 }
 
 .posts-pagination button {
-  background: #fff;
-  border: 1px solid rgba(44, 62, 80, 0.2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-btn);
   padding: 0.4rem 0.8rem;
   font-size: 1.2rem;
   font-weight: bold;
   color: var(--color-gold);
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease, transform 0.1s ease, border-color 0.2s ease;
 }
 
 .posts-pagination button:hover:not(:disabled) {
-  background: var(--color-gold-2);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-2));
   color: #fff;
+  border-color: var(--color-gold);
   transform: translateY(-1px);
 }
 
 .posts-pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  color: var(--color-muted);
 }
 
 .posts-pagination span {
   font-weight: 600;
   color: var(--color-text);
-  background: #fff;
+  background: var(--color-surface);
   padding: 0.3rem 0.6rem;
   border-radius: var(--radius-btn);
-  border: 1px solid rgba(44, 62, 80, 0.15);
+  border: 1px solid var(--color-border);
 }
 
 .posts-empty {
@@ -423,6 +346,102 @@
   color: var(--color-muted);
   font-style: italic;
   padding: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--color-gold);
+  border-radius: var(--input-radius);
+  background: var(--input-bg);
+  color: var(--input-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+  border-color: var(--color-gold);
+  background: var(--color-bg-1);
+}
+
+.sort-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--input-ring);
+}
+
+.sort-icon {
+  color: var(--color-gold);
+  transition: transform 0.2s ease;
+}
+
+.sort-icon.asc { 
+  transform: rotate(180deg); 
+}
+
+.sort-icon.desc { 
+  transform: rotate(0deg); 
+}
+
+.sort-text {
+  line-height: 1;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.text-gold {
+  color: var(--color-gold);
+  transform: rotate(135deg);
+  font-size: 1.5rem;
+}
+
+.header-fecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+html.dark .post-item {
+  background: var(--color-bg-1);
+  border-color: var(--color-border);
+
+}
+
+html.dark .posts-pagination{
+  background: var(--color-bg-1);
+}
+html.dark .posts-pagination button {
+  background: var(--color-surface);
+  border-color: var(--color-gold-2);
+  box-shadow: var(--shadow-card);
+}
+
+html.dark .posts-pagination span {
+  background: var(--color-surface);
+  border-color: var(--color-gold-2);
+  box-shadow: var(--shadow-card);
+}
+
+html.dark .posts-empty {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-card);
+}
+
+html.dark .post-delete {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-card);
+}
+
+html.dark .post-delete:hover {
+  background: var(--color-bg-2);
+  box-shadow: var(--shadow-card-hover);
 }
 
 @media (max-width: 768px) {
@@ -460,14 +479,39 @@
     font-weight: 600;
     color: var(--color-muted);
   }
+  
   .post-money::before {
     content: "Intercambio: ";
     font-weight: 600;
     color: var(--color-muted);
   }
+  
   .post-date::before {
     content: "Fecha: ";
     font-weight: 600;
     color: var(--color-muted);
   }
 }
+
+html.dark .posts-filter-btn {
+  color: #f7f9fc; 
+  background: rgba(212,175,55,0.22);
+  border-color: rgba(212,175,55,0.32);
+  box-shadow: 0 0 0 0.1875rem rgba(212,175,55,0.10);
+}
+
+html.dark .posts-filter-btn:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 0.1875rem rgba(212,175,55,0.20);
+}
+
+html.dark .posts-filter-btn[aria-pressed="true"] {
+  color: #fff;
+  background: linear-gradient(90deg, var(--color-gold), var(--color-gold-2));
+  border-color: var(--color-gold);
+  box-shadow:
+    inset 0 0.0625rem 0 rgba(255,255,255,0.28),
+    inset 0 -0.0625rem 0 rgba(0,0,0,0.12),
+    0 0 0 0.1875rem rgba(212,175,55,0.28);
+}
+

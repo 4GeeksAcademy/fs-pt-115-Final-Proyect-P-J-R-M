@@ -13,3 +13,16 @@
     font-size: 1.5rem;
   }
 }
+.posts-page {
+  background: #F1F0ED;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 2rem;
+  justify-content: center;
+}
+
+html.dark .posts-page {
+  background: var(--color-bg-1);
+}

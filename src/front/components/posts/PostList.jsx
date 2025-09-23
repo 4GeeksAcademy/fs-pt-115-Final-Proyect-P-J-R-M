@@ -4,7 +4,7 @@ import { getPosts, deletePost } from "../../services/postApi";
 import { getUsers } from "../../services/userApi";
 import { StartChatButton } from "../startChatButton/StartChatButton";
 import "./postlist.css";
-import { PlaneLanding, Trash2 } from "lucide-react";
+import { Plane, Trash2, ListFilter } from "lucide-react";
 
 export const PostList = ({ refresh = 0 }) => {
   const { token, user } = useAuth();
@@ -13,6 +13,7 @@ export const PostList = ({ refresh = 0 }) => {
   const [filterTo, setFilterTo] = useState("");
   const [filterCountry, setFilterCountry] = useState("");
   const [page, setPage] = useState(1);
+  const [sortDir, setSortDir] = useState("desc");
   const pageSize = 8;
 
   const currencySymbols = {
@@ -48,6 +49,25 @@ export const PostList = ({ refresh = 0 }) => {
     });
   }, [posts, filterTo, filterCountry]);
 
+  const sorted = useMemo(() => {
+    const toTime = (s) => {
+      if (!s) return null;
+      const [d, m, y] = s.split("/").map(Number);
+      const t = new Date(y, m - 1, d).getTime();
+      return Number.isNaN(t) ? null : t;
+    };
+    const copy = [...filtered];
+    copy.sort((a, b) => {
+      const ta = toTime(a.day_exchange);
+      const tb = toTime(b.day_exchange);
+      if (ta === null && tb === null) return 0;
+      if (ta === null) return 1;
+      if (tb === null) return -1;
+      return sortDir === "asc" ? ta - tb : tb - ta;
+    });
+    return copy;
+  }, [filtered, sortDir]);
+
   const countryOptions = useMemo(() => {
     const list = posts
       .filter((p) => !filterTo || p.divisas_two === filterTo)
@@ -67,6 +87,7 @@ export const PostList = ({ refresh = 0 }) => {
       .filter(Boolean);
     return Array.from(new Set(list)).sort();
   }, [posts, filterCountry]);
+
   useEffect(() => {
     if (filterCountry && !countryOptions.includes(filterCountry)) setFilterCountry("");
   }, [countryOptions, filterCountry]);
@@ -75,15 +96,14 @@ export const PostList = ({ refresh = 0 }) => {
     setPage(1);
   }, [filterTo, filterCountry, refresh, token]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [totalPages, page]);
 
   const start = (page - 1) * pageSize;
   const end = start + pageSize;
-  const visible = filtered.slice(start, end);
+  const visible = sorted.slice(start, end);
 
   if (!filtered.length) return <p className="posts-empty">No hay posts todavía.</p>;
 
@@ -127,7 +147,18 @@ export const PostList = ({ refresh = 0 }) => {
             </select>
           </span>
           <span>Intercambio</span>
-          <span>Fecha</span>
+          <span className="header-fecha">
+            Fecha
+            <button
+              type="button"
+              className="sort-btn"
+              onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+              aria-label={`Ordenar por fecha (${sortDir === "asc" ? "ascendente" : "descendente"})`}
+              title={`Ordenar por fecha (${sortDir === "asc" ? "ascendente" : "descendente"})`}
+            >
+              <ListFilter className={`sort-icon ${sortDir}`} size={18} />
+            </button>
+          </span>
         </div>
 
         <ul className="posts-list">
@@ -149,7 +180,7 @@ export const PostList = ({ refresh = 0 }) => {
                     <div className="detail detail--amount">
                       <span className="value value--stack">
                         <span>{post.description} {post.divisas_one}</span>
-                        <PlaneLanding size={18} className="text-gold" />
+                        <Plane className="text-gold" />
                         <span>{post.divisas_two}</span>
                       </span>
                     </div>
