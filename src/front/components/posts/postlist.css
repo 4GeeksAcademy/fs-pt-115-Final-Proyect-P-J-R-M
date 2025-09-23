@@ -14,6 +14,7 @@
   }
 }
 
+/* Sidebar filters - mantenido tal como está */
 .posts-sidebar {
   background: transparent;
   border: none;
@@ -50,7 +51,6 @@
   font-weight: 700;
   font-size: 0.90rem;
   cursor: pointer;
-  margin: 0 auto;
   perspective: 800px;
   transform-style: preserve-3d;
   will-change: transform;
@@ -134,6 +134,21 @@
   }
 }
 
+/* Header y contenido principal */
+.posts-header {
+  display: grid;
+  grid-template-columns: 255px 1fr 190px 120px 80px;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-muted);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.posts-header > :first-child {
+  padding-left: 1.5rem;
+}
+
 .posts-list {
   display: grid;
   margin: 0;
@@ -149,10 +164,10 @@
   overflow: visible;
   padding: 1rem 0.5rem;
   margin: 0;
-  max-height: 150px;
   height: auto;
 }
 
+/* Líneas separadoras */
 .posts-list::before {
   content: "";
   display: block;
@@ -191,141 +206,109 @@
   mask-image: linear-gradient(90deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
 }
 
+/* Layout principal del post - MISMO GRID QUE EL HEADER */
 .post-body-horizontal {
   display: grid;
-  grid-template-areas: "user info money actions";
-  grid-template-columns: auto 1fr auto auto;
-  align-items: center;
+  grid-template-columns: 200px 1fr 160px 120px 80px;
   gap: 1rem;
-  min-height: 96px;
+  align-items: center;
+  padding: 0.5rem;
+  min-height: 70px;
 }
 
+/* Usuario */
 .post-user {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  min-width: 11rem;
+  gap: 0.8rem;
 }
 
 .post-avatar {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 0 0 0.125rem var(--color-gold), 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
-  border: 0.0625rem solid var(--color-gold);
+  border: 2px solid var(--color-gold);
+  box-shadow: none;
+  flex-shrink: 0;
 }
 
 .post-author {
   margin: 0;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-text);
-  letter-spacing: 0.00625rem;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.post-info {
-  grid-area: info;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem 1rem;
-  align-items: center;
-}
-
-.post-money {
-  grid-area: money;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.post-actions {
-  grid-area: actions;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.detail {
-  display: flex !important;
-  align-items: baseline;
-  gap: 0.5rem;
-  justify-content: flex-start;
-  width: 100%;
-}
-
-.detail .label {
-  flex: 0 0 auto;
-  color: var(--color-muted);
+/* Destino */
+.post-info .detail .value {
+  color: var(--color-text);
   font-weight: 600;
   font-size: 1rem;
-}
-
-.detail .value {
-  color: var(--color-text);
-  font-weight: 700;
-  font-size: 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.post-info .detail:first-child .value {
-  margin-left: 0;
-  text-align: left;
-}
-
-.post-info .detail:last-child {
-  justify-content: flex-end;
-}
-
-.post-info .detail:last-child .value {
-  margin-left: 0;
-  text-align: right;
-}
-
-.post-money .detail {
-  display: flex !important;
-  justify-self: start !important;
-  width: 100%;
+/* Intercambio */
+.post-money {
+  display: flex;
+  justify-content: flex-start;
+  margin-right: 5rem;
 }
 
 .post-money .detail .value {
-  margin-left: auto;
-  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1rem;
 }
 
-.detail--amount {
-  grid-column: 1 / -1;
+/* Fecha */
+.post-date .detail .value {
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+}
+
+/* Acciones */
+.post-actions {
+  display: flex;
+  justify-content: center;
 }
 
 .post-delete {
-  border: 0.0625rem solid rgba(44, 62, 80, 0.22);
+  border: 1px solid rgba(44, 62, 80, 0.22);
   background: #fff;
   color: rgb(186, 2, 2);
   border-radius: var(--radius-btn);
-  padding: 0.35rem 0.6rem;
-  margin-left: 25px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .post-delete:hover {
   border-color: var(--color-gold);
   background: #fff5f5;
   color: #c0392b;
+  transform: translateY(-1px);
 }
 
-.posts-empty {
-  text-align: center;
-  color: var(--color-muted);
-  font-style: italic;
-}
-
+/* Paginación */
 .posts-pagination {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1rem;
   margin-top: 1.5rem;
-  background-color: #F1F0ED;
+  padding: 1rem;
 }
 
 .posts-pagination button {
@@ -360,5 +343,45 @@
   border: 1px solid rgba(44, 62, 80, 0.15);
 }
 
-.posts-layout .posts-pagination { border: none !important; box-shadow: none !important; }
+.posts-empty {
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
+  padding: 2rem;
+}
 
+/* Responsive */
+@media (max-width: 768px) {
+  .posts-header,
+  .post-body-horizontal {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .posts-header {
+    display: none;
+  }
+  
+  .post-body-horizontal {
+    padding: 1rem;
+  }
+  
+  .post-user {
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .post-info,
+  .post-money,
+  .post-date {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.3rem 0;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.1);
+  }
+  
+  .post-info::before { content: "Destino: "; font-weight: 600; color: var(--color-muted); }
+  .post-money::before { content: "Intercambio: "; font-weight: 600; color: var(--color-muted); }
+  .post-date::before { content: "Fecha: "; font-weight: 600; color: var(--color-muted); }
+}

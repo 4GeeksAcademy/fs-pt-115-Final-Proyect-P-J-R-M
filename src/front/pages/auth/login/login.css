@@ -90,3 +90,8 @@
   margin-top: 20px;
   gap: 0.3rem;
 }
+@media (min-width: 320px) {
+  .login-container {
+    padding: 0px 1rem 0px 1rem;
+  }
+}

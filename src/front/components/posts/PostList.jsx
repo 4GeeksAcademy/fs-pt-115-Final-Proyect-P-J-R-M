@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getPosts, deletePost } from "../../services/postApi";
 import { getUsers } from "../../services/userApi";
-import {StartChatButton} from "../startChatButton/StartChatButton"
+import { StartChatButton } from "../startChatButton/StartChatButton"
 import "./postlist.css";
 import { PlaneLanding, Trash2 } from "lucide-react";
 
@@ -77,6 +77,12 @@ export const PostList = ({ refresh = 0 }) => {
       </aside>
 
       <div>
+        <div className="posts-header">
+          <span>Usuario</span>
+          <span>Destino</span>
+          <span>Intercambio</span>
+          <span>Fecha</span>
+        </div>
         <ul className="posts-list">
           {visible.map((post) => {
             const author = users.find((u) => u.id === post.user_id);
@@ -87,22 +93,26 @@ export const PostList = ({ refresh = 0 }) => {
                     <img src={author?.image || "../../rigo-baby.jpg"} alt="avatar" className="post-avatar" />
                     <h4 className="post-author">{author?.username}</h4>
                   </div>
+
                   <section className="post-info">
                     <div className="detail">
-                      <span className="label">Destino</span>
                       <span className="value">{post.destination}</span>
                     </div>
-                    <div className="detail">
-                      <span className="label">Fecha prevista</span>
-                      <span className="value">{post.day_exchange ? post.day_exchange : "Por concretar"}</span>
-                    </div>
                   </section>
+
                   <section className="post-money">
                     <div className="detail detail--amount">
-                      <span className="label">Cantidad</span>
-                      <span className="value">
-                        {post.description} {post.divisas_one} <PlaneLanding size={18} className="text-gold" /> {post.divisas_two}
+                      <span className="value value--stack">
+                        <span>{post.description} {post.divisas_one}</span>
+                        <PlaneLanding size={18} className="text-gold" />
+                        <span>{post.divisas_two}</span>
                       </span>
+                    </div>
+                  </section>
+
+                  <section className="post-date">
+                    <div className="detail">
+                      <span className="value">{post.day_exchange ? post.day_exchange : "Por concretar"}</span>
                     </div>
                   </section>
                   <div className="post-actions">
