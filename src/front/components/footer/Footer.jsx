@@ -1,22 +1,21 @@
 import "./footer.css"
-import { Link } from "react-router-dom"
 
 export const Footer = () => {
 
-    return (
-      <>
+  return (
+    <>
       <footer>
         <div className="footer-content">
           <div className="footer-links">
-            <Link to={"/terms-and-conditions"}>Terminos y Condiciones</Link>
-            <Link to={"/legal/privacy-policy"}>Política de Privacidad</Link>
-            <Link to={"/support"}>Soporte</Link>
+            <a href="/terms-and-conditions">Términos y Condiciones</a>
+            <a href="/legal/privacy-policy">Política de Privacidad</a>
+            <a href="/support">Soporte</a>
           </div>
           <p>
             &copy; 2025 Hand to Hand. Todos los derechos reservados.
           </p>
         </div>
       </footer>
-      </>
-    )
+    </>
+  )
 }

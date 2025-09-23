@@ -47,8 +47,16 @@
   list-style: none;
   padding: 0;
   margin: 0 0 10px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.ums-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 27px;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
 .ums-menu li {
   margin: 0;
@@ -58,6 +66,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  gap: 1rem;
   padding: 12px;
   border: none;
   background: transparent;
@@ -70,8 +79,8 @@
 }
 
 .ums-menu li button:hover {
-  background: color-mix(in srgb, var(--color-gold) 12%, #ffffff);
-  color: var(--color-text);
+  background: var(--color-bg-2);
+  color: var(--color-gold);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) inset;
 }
 
@@ -110,6 +119,21 @@
   white-space: nowrap;
   border: 0;
 }
+.ums-links {
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ums-links a {
+  display: grid;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.ums-links a:hover {
+  color: var(--color-gold);
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   .ums-overlay,
@@ -122,6 +146,6 @@
 
 @media (max-width: 420px) {
   .ums-panel {
-    width: 92vw;
+    width: 55vw;
   }
 }
