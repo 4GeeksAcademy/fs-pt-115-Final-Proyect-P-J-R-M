@@ -6,8 +6,9 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-  z-index: 2000; /* > navbar */
+  z-index: 2000;
 }
+
 .ums-overlay.show {
   opacity: 1;
   pointer-events: auto;
@@ -20,7 +21,7 @@
   bottom: 0;
   width: 320px;
   max-width: 100vw;
-  background: var(--color-surface);
+  background: var(--color-bg-1);
   color: var(--color-text);
   border-left: 1px solid color-mix(in srgb, var(--color-gold) 30%, #ffffff);
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
@@ -35,6 +36,7 @@
 }
 
 .ums-content {
+  background-color: var(--color-bg-1);
   padding: 16px;
   display: flex;
   flex-direction: column;

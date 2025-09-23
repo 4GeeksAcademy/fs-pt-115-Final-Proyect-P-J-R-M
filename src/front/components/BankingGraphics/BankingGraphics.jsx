@@ -95,7 +95,6 @@ export const BankingGraphics = () => {
   return (
     <div style={{
       width: '100%',
-      maxWidth: 900,
       margin: '2px auto',
       padding: 6,
       borderRadius: 12,

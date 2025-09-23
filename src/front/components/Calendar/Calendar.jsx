@@ -92,8 +92,15 @@ export const Calendar = ({ markedDates = [] }) => {
           '& .MuiPickersCalendarHeader-root': {
             fontSize: '1.1rem',
           },
+          '& .MuiPickersCalendarHeader-label': {
+            textTransform: 'lowercase', 
+            '&::first-letter': {
+              textTransform: 'uppercase',
+            },
+          }
         }}
       />
     </LocalizationProvider>
   );
 };
+
