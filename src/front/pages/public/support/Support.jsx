@@ -1,4 +1,4 @@
-import "./Support.css";
+import "./support.css";
 
 export const Support = () => {
   return (

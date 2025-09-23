@@ -1,4 +1,5 @@
 import "./footer.css"
+import { Link } from "react-router-dom"
 
 export const Footer = () => {
 
@@ -7,9 +8,9 @@ export const Footer = () => {
       <footer>
         <div className="footer-content">
           <div className="footer-links">
-            <a href="/TermsAndConditions">Términos y Condiciones</a>
-            <a href="/PrivacyPolicy">Política de Privacidad</a>
-            <a href="/Support">Soporte</a>
+            <Link to={"/terms-and-conditions"}>Terminos y Condiciones</Link>
+            <Link to={"/privacy-policy"}>Política de Privacidad</Link>
+            <Link to={"/support"}>Soporte</Link>
           </div>
           <p>
             &copy; 2025 Hand to Hand. Todos los derechos reservados.
