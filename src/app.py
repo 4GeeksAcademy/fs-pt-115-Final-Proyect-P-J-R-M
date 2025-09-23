@@ -26,7 +26,7 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../dist/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-CORS(app, resources={r"/users/*": {"origins": os.getenv('VITE_BACKEND_URL')}}, supports_credentials=True)
+CORS(app, resources={r"/api/*": {"origins": os.getenv('VITE_FRONTEND_URL')}}, supports_credentials=True)
 app.register_blueprint(user_bp)
 
 
