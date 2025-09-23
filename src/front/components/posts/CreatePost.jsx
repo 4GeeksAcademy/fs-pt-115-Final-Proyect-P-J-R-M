@@ -5,13 +5,16 @@ import { useAuth } from "../../hooks/useAuth";
 import "./createpost.css";
 import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
+import Swal from "sweetalert2";
+import "../../index.css";
 countries.registerLocale(enLocale);
 
 const countryNames = countries.getNames("en", { select: "official" });
 const countryList = Object.entries(countryNames);
 
 const INITIAL = {
-  destination: "",
+  country: "",
+  city: "",
   description: "",
   divisas_one: "EUR",
   divisas_two: "USD",
@@ -34,14 +37,14 @@ export const CreatePost = ({ onSuccess }) => {
   useEffect(() => {
     const loadCurrencies = async () => {
       try {
-        const data = await getCurrencies()
-        setCurrencies(data)
+        const data = await getCurrencies();
+        setCurrencies(data);
       } catch (err) {
-        setCurrencies("Error al cargar monedas")
+        setCurrencies("Error al cargar monedas");
       }
-    }
-    loadCurrencies()
-  }, [])
+    };
+    loadCurrencies();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +55,7 @@ export const CreatePost = ({ onSuccess }) => {
     e.preventDefault();
     if (!token) return;
     const payload = {
-      destination: form.destination,
+      destination: `${form.city ? form.city + (form.country ? ", " : "") : ""}${form.country || ""}`,
       description: form.description,
       divisas_one: form.divisas_one,
       divisas_two: form.divisas_two,
@@ -61,7 +64,21 @@ export const CreatePost = ({ onSuccess }) => {
     await createPost(payload, token);
     setForm(INITIAL);
     onSuccess?.();
-  };
+    try {
+      Swal.fire({
+        icon: "success",
+        title: "¡Post creado!",
+        text: "Tu post ha sido publicado correctamente.",
+      });
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No se pudo crear el post. Intenta otra vez.",
+      });
+    }
+  }
 
   const currentSelect = () => {
     const options = [];
@@ -107,19 +124,32 @@ export const CreatePost = ({ onSuccess }) => {
         </label>
 
         <label className="field">
-          <span className="label">Destino</span>
+          <span className="label">País</span>
           <select
-            name="destination"
-            value={form.destination}
+            name="country"
+            value={form.country}
             onChange={handleChange}
             disabled={loading}
             className="control"
           >
-            <option value="">Select a country</option>
+            <option value="">Selecciona un país</option>
             {countryList.map(([code, name]) => (
               <option key={code} value={name}>{name}</option>
             ))}
           </select>
+        </label>
+
+        <label className="field">
+          <span className="label">Ciudad</span>
+          <input
+            type="text"
+            name="city"
+            value={form.city}
+            onChange={handleChange}
+            disabled={loading}
+            className="control"
+            placeholder="Ej. Barcelona"
+          />
         </label>
 
         <label className="field">
@@ -137,7 +167,7 @@ export const CreatePost = ({ onSuccess }) => {
           />
         </label>
 
-        <label className="field full">
+        <label className="field date-actions">
           <span className="label">Fecha prevista de intercambio</span>
           <input
             type="date"
@@ -148,13 +178,10 @@ export const CreatePost = ({ onSuccess }) => {
             disabled={loading}
             className="control"
           />
-        </label>
-
-        <div className="actions">
           <button type="submit" disabled={loading} className="btn-create">
             {loading ? "Creando..." : "Crear"}
           </button>
-        </div>
+        </label>
       </div>
     </form>
   );

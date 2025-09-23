@@ -13,7 +13,7 @@ export function StartChatButton({ userTwo, postId, to = "/chats", label = "Chate
       className="start-chat-btn"
       title="Abrir chat"
     >
-      💬 {label}
+      {label}
     </button>
   );
 }
