@@ -18,6 +18,9 @@ import ChatPage from "./pages/chat/ChatPage";
 import { Dasborde } from "./pages/user/Dasborde/Dasborde";
 import { FormNewPassword } from "./components/FormNewPassword";
 import { AaaBox } from "./pages/3DBox/3DBox";
+import { TermsAndConditions } from "./pages/public/Terms and Conditions/TermsAndConditions";
+import { PrivacyPolicy } from "./pages/public/Privacy Policy/PrivacyPolicy";
+import { Support } from "./pages/public/Support/Support";
 
 
 export const router = createBrowserRouter(
@@ -26,6 +29,9 @@ export const router = createBrowserRouter(
 			<Route path="/" element={<PublicLayout />}>
 				<Route index element={<Home />} />
 				<Route path="/posts" element={<PostsPage />} />
+				<Route path="/TermsAndConditions" element={<TermsAndConditions />} />
+				<Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+				<Route path="/Support" element={<Support />} />
 			</Route>
 			<Route element={<AuthLayout />}>
 				<Route path="/signup" element={<SignUp />} />

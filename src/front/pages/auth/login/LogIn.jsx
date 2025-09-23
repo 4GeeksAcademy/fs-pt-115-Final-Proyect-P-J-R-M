@@ -32,10 +32,7 @@ export const LogIn = () => {
         icon: "error",
         title: "Oops...",
         html: `
-      <p>Usuario o contraseña incorrecta...</p>
-      <a href="/request-reset" style="color: #007BFF; text-decoration: none;">
-        ¿Olvidaste tu contraseña?
-      </a>`,
+      <p>Usuario o contraseña incorrecta...</p>`,
       });
     }
   };
@@ -67,11 +64,11 @@ export const LogIn = () => {
         <button className="login-button" type="submit" disabled={loading}>
           {loading ? "Cargando..." : "Login"}
         </button>
-        <div style={{ marginTop: "20px" }}>
+        <div className="reset-link">
           <Link to="/signup" className="login-link">
             ¿Aún no estás registrado?
           </Link>
-          <br></br>
+
           <Link to="/request-reset" className="login-link">
             ¿Olvidaste tu contraseña?
           </Link>

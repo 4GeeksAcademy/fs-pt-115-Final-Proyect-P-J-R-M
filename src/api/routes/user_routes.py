@@ -21,7 +21,7 @@ CORS(user_bp)
 @user_bp.route("/", methods=["GET"])
 @jwt_required()
 def get_users():
-    users = User.query.all()
+    users = User.query.filter_by(is_active=True).all()
     return jsonify([user.serialize()for user in users])
 
 
@@ -86,10 +86,12 @@ def delete_user():
     user_id = get_jwt_identity()
     user = db.session.get(User, int(user_id))
     if not user:
-        return jsonify("User not found"), 400
-    db.session.delete(user)
+        return jsonify({"msg": "User not found"}), 400
+
+    user.deactivate()
     db.session.commit()
-    return jsonify({"msg": "User successfully deleted"})
+
+    return jsonify({"msg": "User deactivated successfully"}), 200
 
 
 @user_bp.route("/", methods=["PATCH"])
@@ -139,11 +141,27 @@ def login_user():
     user = db.session.execute(db.select(User).where(
         User.email == email)).scalar_one_or_none()
 
-    if not user or not user.check_password(password):
+    if not user or not user.check_password(password) or not user.is_active:
         return jsonify({"msg": "Incorrect email or password"}), 401
 
     token = create_access_token(identity=str(user.id))
     return jsonify({"msg": "ok", "token": token}), 200
+
+# Reactivar usuarios
+@user_bp.route("/reactivate", methods=["PATCH"])
+@jwt_required()
+def reactivate_user():
+    user_id = get_jwt_identity()
+    user = db.session.get(User, int(user_id))
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    user.is_active = True
+    db.session.commit()
+    return jsonify({"msg": "Usuario reactivado exitosamente"}), 200
+
+
 
 # cloudinari endpoint
 
@@ -172,6 +190,21 @@ def upload_ing():
 
     db.session.commit()
     return jsonify({"msg": "ya esta en la nube", "imageUrl": upload_result["secure_url"]}), 200
+
+# ----------------------------------------------------------
+# Usuarios activos y desactivos.
+@user_bp.route("/all", methods=["GET"])
+@jwt_required()
+def get_all_users():
+    show_all = request.args.get("all") == "true"
+    if show_all:
+        users = User.query.all()
+    else:
+        users = User.query.filter_by(is_active=True).all()
+    return jsonify([user.serialize() for user in users])
+# ----------------------------------------------------------
+
+
 
 # ruta para restablecer contraseña
 
