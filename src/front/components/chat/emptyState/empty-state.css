@@ -1,6 +1,5 @@
 .empty-state {
   height: 100%;
-  display: grid;
   place-items: center;
   text-align: center;
   color: var(--muted);

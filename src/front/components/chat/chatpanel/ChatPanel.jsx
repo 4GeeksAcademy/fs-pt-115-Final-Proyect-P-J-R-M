@@ -2,53 +2,57 @@ import React from "react";
 import PropTypes from "prop-types";
 import "../theme.css";
 import "./chat-panel.css";
-
 import ChatHeader from "../chatHeader/ChatHeader";
 import MessageList from "../messageList/MessageList";
 import MessageBubble from "../messageBubble/MessageBubble";
 import MessageInput from "../messageInput/MessageInput";
+import EmptyState from "../emptyState/EmptyState";
+import { MessageSquareMore } from "lucide-react";
 
-/**
- * Componente puramente presentacional del panel principal.
- * Recibe props agrupadas para header, lista y input.
- */
 export default function ChatPanel({
-    headerProps,       // { chat, userId, usersById, postsById, typingOthers, onLoadOlder, canLoadOlder }
-    listRef,           // ref del contenedor scrollable
-    messages,          // array de mensajes del chat activo
-    usersById,         // mapa id->user (para autor)
-    activeChatId,      // id del chat activo (para dataset/ref)
-    isMine,            // (m) => boolean (decide si el msg es mío)
-    inputProps,        // { value, disabled, placeholder, onChange, onSend, onStartTyping, onStopTyping }
+    headerProps,
+    listRef,
+    messages,
+    usersById,
+    activeChatId,
+    isMine,
+    inputProps,
 }) {
+    const hasChat = Boolean(headerProps?.chat);
+
     return (
-        <section className="chat-panel">
-            {/* Header */}
+        <section className={`chat-panel ${hasChat ? "" : "chat-panel--empty"}`}>
             <ChatHeader {...headerProps} />
-
-            {/* Mensajes (con ref para scroll persistente) */}
-            <MessageList
-                ref={listRef}
-                messages={messages}
-                usersById={usersById}
-                activeChatId={activeChatId}
-                renderItem={(m) => {
-                    const author = usersById[m.user_id];
-                    return (
-                        <MessageBubble
-                            key={m.id}
-                            mine={isMine ? isMine(m) : undefined}
-                            content={m.content}
-                            id={m.id}
-                            authorName={author?.username}
-                            authorImg={author?.image}
-                        />
-                    );
-                }}
-            />
-
-            {/* Input */}
-            <MessageInput {...inputProps} />
+            {hasChat ? (
+                <MessageList
+                    ref={listRef}
+                    messages={messages}
+                    usersById={usersById}
+                    activeChatId={activeChatId}
+                    renderItem={(m) => {
+                        const author = usersById[m.user_id];
+                        return (
+                            <MessageBubble
+                                key={m.id}
+                                mine={isMine ? isMine(m) : undefined}
+                                content={m.content}
+                                id={m.id}
+                                authorName={author?.username}
+                                authorImg={author?.image}
+                            />
+                        );
+                    }}
+                />
+            ) : (
+                <div className="chat-panel__empty">
+                    <EmptyState
+                        title="Selecciona un chat"
+                        subtitle="Crea un chat si no tienes activos"
+                        icon={<MessageSquareMore  color="#d4af37" size={44} absoluteStrokeWidth />}
+                    />
+                </div>
+            )}
+            {hasChat ? <MessageInput {...inputProps} /> : null}
         </section>
     );
 }
@@ -70,3 +74,4 @@ ChatPanel.propTypes = {
         onStopTyping: PropTypes.func,
     }).isRequired,
 };
+
