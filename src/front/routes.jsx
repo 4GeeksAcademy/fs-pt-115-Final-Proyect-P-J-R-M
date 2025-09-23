@@ -30,7 +30,7 @@ export const router = createBrowserRouter(
 				<Route index element={<Home />} />
 				<Route path="/posts" element={<PostsPage />} />
 				<Route path="/terms-and-conditions" element={<TermsAndConditions />} />
-				<Route path="privacy-policy" element={<PrivacyPolicy/>}  />
+				<Route path="/legal/privacy-policy" element={<PrivacyPolicy/>}  />
 				<Route path="/support" element={<Support />} />
 			</Route>
 			<Route element={<AuthLayout />}>
