@@ -36,7 +36,7 @@ export function SignUp() {
       });
     }
   }, [signupSuccess, loading, error, navigate]);
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData(prev => {
@@ -140,6 +140,14 @@ export function SignUp() {
           disabled={loading}
           required
         />
+        <label
+        ><input type="checkbox"
+          name="acceptTerms"
+          checked={userData.acceptTerms}
+          onChange={handleChange}
+          disabled={loading}
+          required /> Acepto condiciones y términos</label
+        >
         {passwordError && <p className="signup-error">{passwordError}</p>}
         <button
           className="signup-button"
