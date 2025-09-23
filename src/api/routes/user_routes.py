@@ -224,8 +224,8 @@ def request_reset():
     )
     reset_url = f"{os.getenv("VITE_FRONTEND_URL")}/form-reset?token={token}"
 
-    
-    html_reset = render_template('reset.html', username=user.username, reset_url=reset_url)
+    html_reset = render_template(
+        'reset.html', username=user.username, reset_url=reset_url)
 
     msg = Message(
         subject='Restablecer Contraseña',
@@ -238,8 +238,6 @@ def request_reset():
     return jsonify({"msg": "Correo enviado correctamente"})
 
 
-
-
 # ruta para actualar contr. recibe el token en el header y actualiza la contr. al usuario
 @user_bp.route('/reset-password', methods=['PATCH'])
 @jwt_required()
@@ -248,8 +246,8 @@ def reset_password():
         user_id = get_jwt_identity()
         new_password = request.json.get('password')
 
-        if not new_password or not isinstance(new_password, str) or len(new_password.strip()) < 8:
-            return jsonify({"msg": "La contraseña debe tener al menos 8 caracteres"}), 400
+        if not new_password or not isinstance(new_password, str) or len(new_password.strip()) < 6:
+            return jsonify({"msg": "La contraseña debe tener al menos 6 caracteres"}), 400
 
         user = User.query.get(user_id)
         if not user:
@@ -261,7 +259,17 @@ def reset_password():
         return jsonify({"msg": "Contraseña actualizada correctamente"}), 200
 
     except Exception as e:
-       
+
         return jsonify({"msg": "Error interno del servidor"}), 500
 
-
+# Ruta para distribuir y contar cuántos usuarios tienen puntuación del 1 al 5
+@user_bp.route("/score-distribution", methods=["GET"])
+def score_distribution():
+    
+    distribution = {str(i): 0 for i in range(1, 6)}
+    users = User.query.all()
+    for user in users:
+        score = user.score
+        if score and str(score) in distribution:
+            distribution[str(score)] += 1
+    return jsonify({"votes": distribution}), 200
