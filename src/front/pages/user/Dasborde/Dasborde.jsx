@@ -97,7 +97,7 @@ export const Dasborde = () => {
 
     setUploading(true);
     try {
-      await uploadImge(imageFile);
+      await uploadImge(imageFile, { asAvatar: true });
       await refreshUser();
       setFile(null);
     } catch (error) {

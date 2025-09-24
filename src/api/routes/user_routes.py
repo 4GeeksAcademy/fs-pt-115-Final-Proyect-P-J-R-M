@@ -148,6 +148,8 @@ def login_user():
     return jsonify({"msg": "ok", "token": token}), 200
 
 # Reactivar usuarios
+
+
 @user_bp.route("/reactivate", methods=["PATCH"])
 @jwt_required()
 def reactivate_user():
@@ -162,7 +164,6 @@ def reactivate_user():
     return jsonify({"msg": "Usuario reactivado exitosamente"}), 200
 
 
-
 # cloudinari endpoint
 
 
@@ -174,22 +175,31 @@ def upload_ing():
     user = db.session.get(User, int(user_id))
     if not file:
         return jsonify({"error": "No se envio el archivo "}), 400
-    upload_result = cloudinary.uploader.upload(file)
 
-    # Obtenemos el public_id de la imagen subida desde upload_result
+    # sube SIEMPRE a Cloudinary
+    upload_result = cloudinary.uploader.upload(file)
+    secure_url = upload_result.get("secure_url")
     public_id = upload_result.get("public_id")
 
-    image = CloudinaryImage(public_id)
-    transformed_url = image.build_url(
-        transformation=[
-            {"crop": "fill", "gravity": "face", "width": 400, "height": 400}
-        ]
-    )
+    
+    as_avatar = request.form.get("asAvatar") in ("1", "true", "yes")
 
-    user.image = transformed_url
+    if as_avatar:
+        image = CloudinaryImage(public_id)
+        transformed_url = image.build_url(
+            transformation=[
+                {"crop": "fill", "gravity": "face", "width": 400, "height": 400}]
+        )
+        user.image = transformed_url
+        db.session.commit()
 
-    db.session.commit()
-    return jsonify({"msg": "ya esta en la nube", "imageUrl": upload_result["secure_url"]}), 200
+    return jsonify({
+        "msg": "ya esta en la nube",
+        "imageUrl": secure_url,
+        "public_id": public_id,
+        "avatarUpdated": bool(as_avatar),
+    }), 200
+
 
 # ----------------------------------------------------------
 # Usuarios activos y desactivos.
@@ -203,7 +213,6 @@ def get_all_users():
         users = User.query.filter_by(is_active=True).all()
     return jsonify([user.serialize() for user in users])
 # ----------------------------------------------------------
-
 
 
 # ruta para restablecer contraseña
@@ -263,9 +272,11 @@ def reset_password():
         return jsonify({"msg": "Error interno del servidor"}), 500
 
 # Ruta para distribuir y contar cuántos usuarios tienen puntuación del 1 al 5
+
+
 @user_bp.route("/score-distribution", methods=["GET"])
 def score_distribution():
-    
+
     distribution = {str(i): 0 for i in range(1, 6)}
     users = User.query.all()
     for user in users:

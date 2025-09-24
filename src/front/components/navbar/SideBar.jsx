@@ -21,7 +21,7 @@ export function UserMenuSidebar({ open, onClose, restoreFocusTo }) {
     logout();
     navigate("/");
   };
-
+  
   // Esc para cerrar + bloqueo de scroll + gestión de foco accesible
   useEffect(() => {
     const onKeyDown = (e) => {
@@ -87,9 +87,9 @@ export function UserMenuSidebar({ open, onClose, restoreFocusTo }) {
 
           <ul className="ums-menu">
             <header className="ums-header"><ButtonAvatar />{user?.username}</header>
-            <li><button onClick={go("/dasborde")}><CircleUserRound size={33} color="#d4af37" strokeWidth={1.25} absoluteStrokeWidth />Perfil</button></li>
-            <li><button onClick={go("/posts")}><Landmark size={32} color="#d4af37" strokeWidth={1.25} absoluteStrokeWidth />Posts</button></li>
-            <li><button onClick={go("/chats")}><MessageCircleMore size={33} color="#d4af37" strokeWidth={1.25} absoluteStrokeWidth />Chats</button></li>
+            <li><button onClick={go("/dasborde")}><CircleUserRound size={30} color="#d4af37" strokeWidth={1.25} absoluteStrokeWidth />Perfil</button></li>
+            <li><button onClick={go("/posts")}><Landmark size={30} color="#d4af37" strokeWidth={1.25} absoluteStrokeWidth />Posts</button></li>
+            <li><button onClick={go("/chats")}><MessageCircleMore size={30} color="#d4af37" strokeWidth={1.25} absoluteStrokeWidth />Chats</button></li>
           </ul>
 
           <div className="ums-links">
