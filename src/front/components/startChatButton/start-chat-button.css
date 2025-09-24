@@ -24,3 +24,6 @@
   outline: none;
   box-shadow: 0 0 0 3px rgba(212,175,55,0.35);
 }
+html.dark .start-chat-btn{
+ color:#0c233a;
+}
