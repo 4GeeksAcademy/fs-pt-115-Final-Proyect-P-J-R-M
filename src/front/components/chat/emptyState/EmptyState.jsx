@@ -1,11 +1,10 @@
-import React from "react";
 import "./empty-state.css";
 import "../theme.css";
 
 export default function EmptyState({
     title = "Selecciona un chat",
-    subtitle = "Elige una conversación en la lista de la izquierda",
-    icon = "💬",
+    subtitle = "Crea un chat",
+    icon = <MessageSquareMore />,
 }) {
     return (
         <div className="empty-state">
