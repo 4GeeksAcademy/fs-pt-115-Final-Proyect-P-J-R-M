@@ -2,16 +2,18 @@ import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getPosts, deletePost } from "../../services/postApi";
 import { getUsers } from "../../services/userApi";
-import {StartChatButton} from "../startChatButton/StartChatButton"
+import { StartChatButton } from "../startChatButton/StartChatButton";
 import "./postlist.css";
-import { PlaneLanding, Trash2 } from "lucide-react";
+import { Plane, Trash2, ListFilter } from "lucide-react";
 
 export const PostList = ({ refresh = 0 }) => {
   const { token, user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [filterTo, setFilterTo] = useState("");
+  const [filterCountry, setFilterCountry] = useState("");
   const [page, setPage] = useState(1);
+  const [sortDir, setSortDir] = useState("desc");
   const pageSize = 8;
 
   const currencySymbols = {
@@ -36,35 +38,86 @@ export const PostList = ({ refresh = 0 }) => {
     setPosts((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const currencies = useMemo(() => {
-    return Array.from(new Set(posts.map((p) => p.divisas_two))).filter(Boolean).sort();
-  }, [posts]);
+  const normalizeCountry = (dest) => (dest || "").split(",").slice(-1)[0]?.trim();
 
   const filtered = useMemo(() => {
-    return filterTo ? posts.filter((p) => p.divisas_two === filterTo) : posts;
+    return posts.filter((p) => {
+      const okTo = !filterTo || p.divisas_two === filterTo;
+      const country = normalizeCountry(p.destination);
+      const okCountry = !filterCountry || (country && country.toLowerCase() === filterCountry.toLowerCase());
+      return okTo && okCountry;
+    });
+  }, [posts, filterTo, filterCountry]);
+
+  const sorted = useMemo(() => {
+    const toTime = (s) => {
+      if (!s) return null;
+      const [d, m, y] = s.split("/").map(Number);
+      const t = new Date(y, m - 1, d).getTime();
+      return Number.isNaN(t) ? null : t;
+    };
+    const copy = [...filtered];
+    copy.sort((a, b) => {
+      const ta = toTime(a.day_exchange);
+      const tb = toTime(b.day_exchange);
+      if (ta === null && tb === null) return 0;
+      if (ta === null) return 1;
+      if (tb === null) return -1;
+      return sortDir === "asc" ? ta - tb : tb - ta;
+    });
+    return copy;
+  }, [filtered, sortDir]);
+
+  const countryOptions = useMemo(() => {
+    const list = posts
+      .filter((p) => !filterTo || p.divisas_two === filterTo)
+      .map((p) => normalizeCountry(p.destination))
+      .filter(Boolean);
+    return Array.from(new Set(list)).sort((a, b) => a.localeCompare(b, "es"));
   }, [posts, filterTo]);
+
+  const sidebarCurrencies = useMemo(() => {
+    const list = posts
+      .filter((p) => {
+        const country = (p.destination || "").split(",").slice(-1)[0]?.trim();
+        const okCountry = !filterCountry || (country && country.toLowerCase() === filterCountry.toLowerCase());
+        return okCountry;
+      })
+      .map((p) => p.divisas_two)
+      .filter(Boolean);
+    return Array.from(new Set(list)).sort();
+  }, [posts, filterCountry]);
+
+  useEffect(() => {
+    if (filterCountry && !countryOptions.includes(filterCountry)) setFilterCountry("");
+  }, [countryOptions, filterCountry]);
 
   useEffect(() => {
     setPage(1);
-  }, [filterTo, refresh, token]);
+  }, [filterTo, filterCountry, refresh, token]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   useEffect(() => {
     if (page > totalPages) setPage(totalPages);
   }, [totalPages, page]);
 
   const start = (page - 1) * pageSize;
   const end = start + pageSize;
-  const visible = filtered.slice(start, end);
+  const visible = sorted.slice(start, end);
 
   if (!filtered.length) return <p className="posts-empty">No hay posts todavía.</p>;
 
   return (
     <div className="posts-layout">
-      <aside className="posts-sidebar" role="toolbar" aria-label="Filtros por divisa destino">
-        <h4 className="posts-sidebar-title"></h4>
-        <button onClick={() => setFilterTo("")} className="posts-filter-btn" aria-pressed={!filterTo}>Todas</button>
-        {currencies.map((c) => {
+      <aside className="posts-sidebar" role="toolbar" aria-label="Filtros">
+        <button
+          onClick={() => { setFilterTo(""); setFilterCountry(""); }}
+          className="posts-filter-btn"
+          aria-pressed={!filterTo && !filterCountry}
+        >
+          Todas
+        </button>
+        {sidebarCurrencies.map((c) => {
           const symbol = currencySymbols[c] || c;
           const isActive = filterTo === c;
           return (
@@ -77,6 +130,37 @@ export const PostList = ({ refresh = 0 }) => {
       </aside>
 
       <div>
+        <div className="posts-header">
+          <span>Usuario</span>
+          <span className="filter-destino">
+            <label htmlFor="country-filter" className="filter-label">Destino:</label>
+            <select
+              id="country-filter"
+              value={filterCountry}
+              onChange={(e) => setFilterCountry(e.target.value)}
+              className="country-filter__select"
+            >
+              <option value="">Todos los países</option>
+              {countryOptions.map((name) => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
+          </span>
+          <span>Intercambio</span>
+          <span className="header-fecha">
+            Fecha
+            <button
+              type="button"
+              className="sort-btn"
+              onClick={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+              aria-label={`Ordenar por fecha (${sortDir === "asc" ? "ascendente" : "descendente"})`}
+              title={`Ordenar por fecha (${sortDir === "asc" ? "ascendente" : "descendente"})`}
+            >
+              <ListFilter className={`sort-icon ${sortDir}`} size={18} />
+            </button>
+          </span>
+        </div>
+
         <ul className="posts-list">
           {visible.map((post) => {
             const author = users.find((u) => u.id === post.user_id);
@@ -89,20 +173,21 @@ export const PostList = ({ refresh = 0 }) => {
                   </div>
                   <section className="post-info">
                     <div className="detail">
-                      <span className="label">Destino</span>
                       <span className="value">{post.destination}</span>
-                    </div>
-                    <div className="detail">
-                      <span className="label">Fecha prevista</span>
-                      <span className="value">{post.day_exchange ? post.day_exchange : "Por concretar"}</span>
                     </div>
                   </section>
                   <section className="post-money">
                     <div className="detail detail--amount">
-                      <span className="label">Cantidad</span>
-                      <span className="value">
-                        {post.description} {post.divisas_one} <PlaneLanding size={18} className="text-gold" /> {post.divisas_two}
+                      <span className="value value--stack">
+                        <span>{post.description} {post.divisas_one}</span>
+                        <Plane className="text-gold" />
+                        <span>{post.divisas_two}</span>
                       </span>
+                    </div>
+                  </section>
+                  <section className="post-date">
+                    <div className="detail">
+                      <span className="value">{post.day_exchange ? post.day_exchange : "Por concretar"}</span>
                     </div>
                   </section>
                   <div className="post-actions">
@@ -121,15 +206,9 @@ export const PostList = ({ refresh = 0 }) => {
         </ul>
 
         <nav className="posts-pagination">
-          <button onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}>
-            ‹
-          </button>
+          <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>‹</button>
           <span>{page} de {totalPages}</span>
-          <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}>
-            ›
-          </button>
+          <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>›</button>
         </nav>
       </div>
     </div>

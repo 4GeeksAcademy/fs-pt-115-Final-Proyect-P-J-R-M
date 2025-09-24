@@ -225,3 +225,23 @@ input[type=number] {
     font-size: 1.15rem;
   }
 }
+
+html.dark select.control {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+
+html.dark select.control option {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+html.dark input[type="date"].control::-webkit-calendar-picker-indicator {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(15deg);
+  cursor: pointer;
+}
+
+html.dark .btn-create{
+  color:#0c233a;
+}
