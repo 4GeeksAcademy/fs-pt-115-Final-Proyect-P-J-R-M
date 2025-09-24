@@ -1,4 +1,3 @@
-
 .btn-avatar {
   width: 36px;
   height: 36px;
@@ -34,7 +33,6 @@
   outline-offset: 2px;
 }
 
-
 .btn-avatar__img {
   width: 100%;
   height: 100%;
@@ -53,7 +51,6 @@
   color: var(--color-gold, #d4af37);
   background: color-mix(in srgb, var(--color-gold, #d4af37) 10%, #ffffff);
 }
-
 
 @media (max-width: 560px) {
   .btn-avatar {
