@@ -5,7 +5,7 @@ import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
 import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
 import { BadgeDollarSign, Handshake, ShieldCheck, HandCoins, ChartNoAxesCombined, HeartHandshake, MonitorSmartphone, Users, BriefcaseBusiness, MessagesSquare } from "lucide-react";
-import ScoreManager from "../ScoreManager";
+import PublicRating from "../PublicRating";
 import { useAuth } from "../../hooks/useAuth";
 
 export default function LandingPage() {
@@ -226,7 +226,7 @@ export default function LandingPage() {
 			{/* Score Section */}
           
 			<section className="score-section" style={{ textAlign: "center", marginTop: "2rem" }}>
-				<ScoreManager />
+				<PublicRating />
 			</section>
 		</>
 	);
