@@ -1,7 +1,11 @@
 .msg-list {
   padding: 12px;
-  overflow: auto;
-  background: linear-gradient(180deg, var(--bg), #ffffff);
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-1) 0%,
+    var(--color-bg-2) 100%
+  );
   overscroll-behavior: contain;
-  /* scroll-behavior: smooth; /* opcional, quítalo si prefieres control total por JS */
+  overflow-y: auto;
+  min-height: 0;
 }

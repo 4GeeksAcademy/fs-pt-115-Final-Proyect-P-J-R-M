@@ -185,20 +185,24 @@ export default function ChatSocketClient() {
 	);
 	const [mobileView, setMobileView] = useState(() => {
 		const hasActive = Number(localStorage.getItem("activeChatId")) > 0;
-		return hasActive ? "chat" : "list"; // en móvil: arrancar en lista o chat
+		return hasActive ? "chat" : "list";
 	});
 
 	useEffect(() => {
-		const mq = window.matchMedia("(max-width: 639px)");
-		const handler = (e) => setIsMobile(e.matches);
-		if (mq.addEventListener) mq.addEventListener("change", handler);
-		else mq.addListener(handler); // fallback Safari viejo
-		setIsMobile(mq.matches);
-		return () => {
-			if (mq.removeEventListener) mq.removeEventListener("change", handler);
-			else mq.removeListener(handler);
-		};
+		const el = document.documentElement;
+		const update = () => setIsMobile(el.clientWidth <= 639);
+		update();
+		if ("ResizeObserver" in window) {
+			const ro = new ResizeObserver(update);
+			ro.observe(el);
+			return () => ro.disconnect();
+		} else {
+			const onResize = () => update();
+			window.addEventListener("resize", onResize);
+			return () => window.removeEventListener("resize", onResize);
+		}
 	}, []);
+
 
 	useEffect(() => {
 		if (!isMobile) return;
@@ -278,7 +282,7 @@ export default function ChatSocketClient() {
 			throw err;
 		}
 	};
-	
+
 	const removeDraftImage = (url) => {
 		setDraftImages((prev) => prev.filter((x) => x.url !== url));
 	};
@@ -382,10 +386,9 @@ export default function ChatSocketClient() {
 
 			setChats(merged);
 			setChatsReady(true);
-      
-			// Unir a todos los chats y precargat posts
-			list.forEach((c) => {
-			// 2) Únete a todos y precarga posts usando la lista merged
+
+			// 2) Unir a todos los chats y precargar posts usando la lista merged
+			merged.forEach((c) => {
 				if (!joinedChatsRef.current.has(c.id)) {
 					joinChat(c.id);
 					joinedChatsRef.current.add(c.id);
@@ -528,14 +531,7 @@ export default function ChatSocketClient() {
 			joinedChatsRef.current = new Set();
 		};
 	}, [socket, token, wantChatId, wantPostId, userId]);
-
-	// refresco periódico de chats
-	useEffect(() => {
-		if (!connected) return;
-		const id = setInterval(() => loadChats(), 5000);
-		return () => clearInterval(id);
-	}, [connected]);
-
+	
 	// cambio de chat activo
 	useEffect(() => {
 		if (!activeChatId) return;
@@ -597,7 +593,9 @@ export default function ChatSocketClient() {
 	].join(" ");
 
 	return (
-		<div className={shellClasses}>
+		<div
+			className={shellClasses}
+		>
 			<div className="chat-layout">
 				{/* Sidebar (lista de chats a la izquierda) */}
 				<Sidebar

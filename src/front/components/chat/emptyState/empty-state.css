@@ -2,9 +2,9 @@
   height: 100%;
   place-items: center;
   text-align: center;
-  color: var(--muted);
+  color: var(--color-muted);
   padding: 24px;
-  background: var(--surface);
+  background: var(--color-surface);
 }
 
 .empty-state__icon {
@@ -14,10 +14,11 @@
 
 .empty-state__title {
   font-weight: 700;
-  color: var(--text);
+  color: var(--color-text);
   margin-bottom: 4px;
 }
 
 .empty-state__subtitle {
   font-size: 14px;
+  color: var(--color-muted);
 }
