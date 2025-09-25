@@ -1,18 +1,21 @@
 .chat-header {
-  background: var(--battleship-gray);
-  color: var(--accent-contrast);
+  background: var(--color-bg-2);
+  color: var(--nav-text);
   padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .chat-header--empty {
-  background: var(--battleship-gray);
-  color: var(--accent-contrast);
+  background: var(--nav-bg);
+  color: var(--nav-text);
   padding: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--nav-border);
 }
 
 .chat-header__left {
@@ -22,8 +25,8 @@
 }
 
 .chat-header__avatar {
-  width: 34px;
-  height: 34px;
+  width: 55px;
+  height: 55px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -38,26 +41,25 @@
 }
 
 .chat-header__subtitle {
-  font-size: 12px;
-  opacity: 0.9;
+  font-size: 13px;
 }
 
 .chat-header__dest {
-  font-size: 11px;
-  opacity: 0.85;
+  font-size: 13px;
 }
 
 .chat-header__older-btn {
   background: transparent;
-  color: var(--accent-contrast);
-  border: 1px solid var(--accent-contrast);
+  color: var(--nav-text);
+  border: 1px solid var(--nav-border);
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .chat-header__older-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--nav-text) 8%, transparent);
 }
 
 .chat-header__back {
@@ -71,6 +73,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  color: var(--nav-text);
 }
 
 .chat-header__back:active {
@@ -80,5 +83,39 @@
 @media (max-width: 639px) {
   .chat-header__back {
     display: inline-flex;
+  }
+}
+
+/* XS: 320–424px */
+@media (max-width: 424px) {
+  .chat-header {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .chat-header__avatar {
+    width: 28px;
+    height: 28px;
+  }
+  .chat-header__title {
+    font-size: 14px;
+  }
+  .chat-header__subtitle {
+    font-size: 11px;
+  }
+  .chat-header__dest {
+    font-size: 10px;
+  }
+  .chat-header__older-btn {
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+}
+
+/* Muy pequeño (p. ej. 320–359px): oculta el botón si no cabe */
+@media (max-width: 359px) {
+  .chat-header__older-btn {
+    display: none;
   }
 }

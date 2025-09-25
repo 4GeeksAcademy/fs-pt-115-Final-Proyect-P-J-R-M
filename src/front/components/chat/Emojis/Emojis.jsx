@@ -53,7 +53,7 @@ export default function Emojis({ getEmojis }) {
 				</span>
 			</div>
 			{showPicker && (
-				<div style={{ position: 'absolute', bottom: 120, left: 450, zIndex: 999, marginTop: '5px' }}>
+				<div style={{ position: 'absolute', bottom: 120, left: 400, zIndex: 999, marginTop: '5px' }}>
 					<emoji-picker ref={pickerRef} locale="es"></emoji-picker>
 				</div>
 			)}

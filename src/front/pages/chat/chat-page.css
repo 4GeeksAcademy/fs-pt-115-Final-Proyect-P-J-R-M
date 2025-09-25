@@ -1,58 +1,55 @@
 @import "../../components/chat/theme.css";
 
-/* Fondo general con margen para respirar */
 .chat-shell {
-  background: rgb(255, 255, 255);
-  min-height: 100vh;
-  padding: 16px;
+  height: calc(100dvh - var(--app-header-h, 95px));
+  background: #fff;
+  padding: 12px;
   box-sizing: border-box;
+  width: 100vw;
 }
 
 .chat-layout {
-  display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
-  height: 87vh;
+  height: 100%;
   max-width: 300rem;
   margin: 0 auto;
-  gap: 12px;
-}
 
-/* Layout base desktop/tablet: 2 columnas */
-.chat-layout {
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 340px minmax(0, 1fr);
   gap: 12px;
-  height: 100%;
 }
 
-/* Móvil: una sola vista a pantalla completa */
-@media (max-width: 639px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .chat-layout {
-    display: block; /* apilado */
-    height: 100dvh; /* viewport dinámico móvil */
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .chat-layout {
+    display: block;
   }
 
-  /* Clases de conmutación desde ChatSocketClient */
   .is-mobile.view-list .chat-sidebar {
     display: block;
+    height: 100%;
   }
   .is-mobile.view-list .chat-panel {
     display: none;
   }
 
+  /* Mostrar SOLO el chat */
   .is-mobile.view-chat .chat-sidebar {
     display: none;
   }
   .is-mobile.view-chat .chat-panel {
-    display: block;
-    height: 100dvh;
+    display: flex;
+    height: 100%;
   }
 }
 
-/* Desktop explícito (opcional para legibilidad) */
 .is-desktop.view-split .chat-sidebar {
   display: block;
 }
 .is-desktop.view-split .chat-panel {
-  display: block;
+  display: flex;
 }
