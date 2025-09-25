@@ -6,6 +6,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .chat-header--empty {
@@ -54,6 +57,7 @@
   border-radius: 8px;
   padding: 6px 10px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .chat-header__older-btn:hover {
@@ -82,3 +86,38 @@
     display: inline-flex;
   }
 }
+
+/* XS: 320–424px */
+@media (max-width: 424px) {
+  .chat-header {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .chat-header__avatar {
+    width: 28px;
+    height: 28px;
+  }
+  .chat-header__title {
+    font-size: 14px;
+  }
+  .chat-header__subtitle {
+    font-size: 11px;
+  }
+  .chat-header__dest {
+    font-size: 10px;
+  }
+  .chat-header__older-btn {
+    font-size: 12px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+}
+
+/* Muy pequeño (p. ej. 320–359px): oculta el botón si no cabe */
+@media (max-width: 359px) {
+  .chat-header__older-btn {
+    display: none;
+  }
+}
+
