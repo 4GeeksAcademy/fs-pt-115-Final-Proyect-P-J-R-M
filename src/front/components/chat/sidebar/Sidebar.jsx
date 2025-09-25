@@ -13,7 +13,13 @@ function Sidebar({
     activeChatId,
     unreadByChat,
     onSelectChat,
+    onDeleteChat,
 }) {
+    const handleDelete = (chatId, e) => {
+        e.stopPropagation();
+        onDeleteChat?.(chatId);
+    };
+
     return (
         <aside className="chat-sidebar" aria-label="Conversaciones">
             <div className="chat-sidebar__header">
@@ -21,46 +27,59 @@ function Sidebar({
             </div>
 
             <ul className="chat-sidebar__list">
-                {chats.map((c) => {
-                    const otherId = c.user_one === userId ? c.user_two : c.user_one;
-                    const other = usersById[otherId];
-                    const title = other?.username || `Usuario ${otherId}`;
-                    const img = other?.image;
+                {chats
+                    .filter((c) => c.is_active === true)
+                    .map((c) => {
+                        const otherId = c.user_one === userId ? c.user_two : c.user_one;
+                        const other = usersById[otherId];
+                        const title = other?.username || `Usuario ${otherId}`;
+                        const img = other?.image;
 
-                    const post = postsById[c.post_id];
-                    const subtitle = post
-                        ? `${post.description} · ${post.divisas_one} → ${post.divisas_two}`
-                        : `Post #${c.post_id}`;
+                        const post = postsById[c.post_id];
+                        const subtitle = post
+                            ? `${post.description} · ${post.divisas_one} → ${post.divisas_two}`
+                            : `Post #${c.post_id}`;
 
-                    const unread = unreadByChat?.[c.id] || 0;
-                    const isActive = c.id === activeChatId;
+                        const unread = unreadByChat?.[c.id] || 0;
+                        const isActive = c.id === activeChatId;
 
-                    return (
-                        <li key={c.id} className="chat-item__wrap">
-                            <button
-                                type="button"
-                                className={`chat-item ${isActive ? "is-active" : ""}`}
-                                onClick={() => onSelectChat?.(c.id)}
-                                aria-current={isActive ? "true" : "false"}
-                                aria-label={`Abrir chat con ${title}`}
-                            >
-                                <div className="chat-item__left">
-                                    {img ? (
-                                        <img src={img} alt={title} className="chat-item__avatar" />
-                                    ) : (
-                                        <Avatar seed={title} title={title} />
-                                    )}
-                                    <div className="chat-item__meta">
-                                        <div className="chat-item__title u-truncate">{title}</div>
-                                        <div className="chat-item__subtitle u-truncate">{subtitle}</div>
+                        return (
+                            <li key={c.id} className="chat-item__wrap">
+                                <button
+                                    type="button"
+                                    className={`chat-item ${isActive ? "is-active" : ""}`}
+                                    onClick={() => onSelectChat?.(c.id)}
+                                    aria-current={isActive ? "true" : "false"}
+                                    aria-label={`Abrir chat con ${title}`}
+                                >
+                                    <div className="chat-item__left">
+                                        {img ? (
+                                            <img src={img} alt={title} className="chat-item__avatar" />
+                                        ) : (
+                                            <Avatar seed={title} title={title} />
+                                        )}
+                                        <div className="chat-item__meta">
+                                            <div className="chat-item__title u-truncate">{title}</div>
+                                            <div className="chat-item__subtitle u-truncate">{subtitle}</div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <UnreadBadge count={unread} />
-                            </button>
-                        </li>
-                    );
-                })}
+                                    <UnreadBadge count={unread} />
+                                </button>
+
+                                {/* Botón borrar */}
+                                <button
+                                    type="button"
+                                    className="chat-item__delete"
+                                    onClick={(e) => handleDelete(c.id, e)}
+                                    aria-label={`Eliminar chat con ${title}`}
+                                    title="Eliminar chat"
+                                >
+                                    ✕
+                                </button>
+                            </li>
+                        );
+                    })}
             </ul>
         </aside>
     );
@@ -74,6 +93,7 @@ Sidebar.propTypes = {
     activeChatId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     unreadByChat: PropTypes.object,
     onSelectChat: PropTypes.func,
+    onDeleteChat: PropTypes.func,
 };
 
 export default memo(Sidebar);

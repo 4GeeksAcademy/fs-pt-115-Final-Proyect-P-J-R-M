@@ -61,6 +61,7 @@
 		"@mui/material": "^7.3.2",
 		"@mui/x-charts": "^8.11.1",
 		"@mui/x-date-pickers": "^8.11.2",
+		"axios": "^1.12.2",
 		"dayjs": "^1.11.18",
 		"emoji-picker-element": "^1.27.0",
 		"gsap": "^3.13.0",

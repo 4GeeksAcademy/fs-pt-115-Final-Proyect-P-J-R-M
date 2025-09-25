@@ -74,7 +74,7 @@
 .chat-item__meta {
   display: grid;
   gap: 2px;
-  min-width: 0; /* para truncation */
+  min-width: 0;
 }
 
 .chat-item__title {
@@ -91,4 +91,24 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.chat-item__wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-item__delete {
+  background: transparent;
+  border: none;
+  color: var(--color-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.chat-item__delete:hover {
+  color: crimson;
 }

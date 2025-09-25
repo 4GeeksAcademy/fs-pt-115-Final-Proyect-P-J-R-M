@@ -93,3 +93,39 @@
     padding: 0px 1rem 0px 1rem;
   }
 }
+
+/* === Checkbox personalizado === */
+.signup-form label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.signup-form input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid rgba(44, 62, 80, 0.35);
+  border-radius: 0.25rem;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.signup-form input[type="checkbox"]:checked {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+.signup-form input[type="checkbox"]:checked::after {
+  content: "✔";
+  font-size: 0.75rem;
+  color: #fff;
+}

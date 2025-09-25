@@ -129,8 +129,8 @@ body {
 }
 
 .swal2-actions .swal2-cancel {
-  background: #e9ecef !important;
-  color: var(--swal-text) !important;
+  background: #fff !important;
+  color: #2C3D50 !important;
   border: none !important;
 }
 
