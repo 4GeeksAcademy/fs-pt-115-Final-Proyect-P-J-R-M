@@ -531,14 +531,7 @@ export default function ChatSocketClient() {
 			joinedChatsRef.current = new Set();
 		};
 	}, [socket, token, wantChatId, wantPostId, userId]);
-
-	// refresco periódico de chats
-	useEffect(() => {
-		if (!connected) return;
-		const id = setInterval(() => loadChats(), 5000);
-		return () => clearInterval(id);
-	}, [connected]);
-
+	
 	// cambio de chat activo
 	useEffect(() => {
 		if (!activeChatId) return;

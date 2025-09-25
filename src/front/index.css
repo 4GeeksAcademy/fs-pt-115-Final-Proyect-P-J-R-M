@@ -140,7 +140,6 @@ select,
 textarea {
   background: var(--input-bg);
   color: var(--input-text);
-  border: 1px solid var(--input-border);
   border-radius: var(--input-radius);
   padding: 0.7rem 0.9rem;
   line-height: 1.25;
