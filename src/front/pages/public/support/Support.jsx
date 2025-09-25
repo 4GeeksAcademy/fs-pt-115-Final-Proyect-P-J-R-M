@@ -11,7 +11,7 @@ export const Support = () => {
             <p className="support-updated">
               <strong>Última actualización:</strong> 30 de septiembre de 2025
             </p>
-            <a href="#perretebot" className="btn btn-outline-warning">IR al chatbot</a>
+            <a href="#perretebot" className="btn btn-outline-warning">Ir al chatbot</a>
             <p>
               <strong>Plataforma:</strong>{" "}
               <span className="highlight">Hand to Hand</span>
@@ -41,7 +41,7 @@ export const Support = () => {
               <li>
                 <strong>¿Cómo protegen mis datos?</strong><br />
                 Cumplimos con el RGPD. Puedes conocer más en nuestra{" "}
-                <a href="/PrivacyPolicy">Política de Privacidad</a>.
+                <a href="/legal/privacy-policy">Política de Privacidad</a>.
               </li>
             </ul>
 
