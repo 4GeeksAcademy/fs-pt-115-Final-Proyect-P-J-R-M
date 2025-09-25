@@ -18,10 +18,6 @@ function Sidebar({
         <aside className="chat-sidebar" aria-label="Conversaciones">
             <div className="chat-sidebar__header">
                 <span>Chats</span>
-                {/* Total no leídos (opcional) */}
-                {/* <span className="chat-sidebar__total">
-          {Object.values(unreadByChat || {}).reduce((a, b) => a + b, 0)}
-        </span> */}
             </div>
 
             <ul className="chat-sidebar__list">
