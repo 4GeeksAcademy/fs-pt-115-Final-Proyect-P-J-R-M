@@ -8,6 +8,8 @@ export default function PublicRating() {
   const [distribution, setDistribution] = useState([]);
   const [thankYou, setThankYou] = useState(false);
 
+  const hasVoted = localStorage.getItem("hasVoted") === "true"
+
   const fetchSummary = () => {
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/platform-rating/summary`)
       .then(res => {
@@ -28,6 +30,10 @@ export default function PublicRating() {
   }, []);
 
   const handleRating = async (score) => {
+    if (hasVoted) {
+      alert("Ya has votado. ¡Gracias por tu opinión!");
+      return;
+    }
     setSelected(score);
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/platform-rating`, {
@@ -38,6 +44,7 @@ export default function PublicRating() {
 
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
+      localStorage.setItem("hasVoted", "true")
       setThankYou(true);
       setTimeout(() => {
         fetchSummary();
@@ -48,7 +55,7 @@ export default function PublicRating() {
     }
   };
 
-  // Reindexar distribución: índice 0 → 1★, índice 1 → 2★, etc.
+  // Reindexar distribución
   const formattedDistribution = distribution.reduce((acc, count, index) => {
     acc[index + 1] = count;
     return acc;
@@ -66,13 +73,19 @@ export default function PublicRating() {
             strokeWidth={1.25}
             color={n <= selected ? "#d4af37" : "#ccc"}
             className="star-icon"
-            onClick={() => handleRating(n)}
+            onClick={!hasVoted ? () => handleRating(n) : undefined}
+            style={{
+              cursor: hasVoted ? "not-allowed" : "pointer",
+              opacity: hasVoted ? 0.5 : 1
+            }}
           />
         ))}
       </div>
 
       {thankYou && <p className="thank-you">¡Gracias por tu opinión!</p>}
-
+      {hasVoted && !thankYou && (
+        <p className="already-voted">Ya has votado. ¡Gracias por compartir tu opinión!</p>
+      )}
       <div className="summary">
         <p>Promedio: <strong>{average.toFixed(1)} ★</strong></p>
 
