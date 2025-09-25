@@ -21,6 +21,7 @@ import { AaaBox } from "./pages/3DBox/3DBox";
 import { TermsAndConditions } from "./pages/public/termsAndConditions/TermsAndConditions";
 import { Support } from "./pages/public/support/Support";
 import { PrivacyPolicy } from "./pages/public/privacyPolicy/PrivacyPolicy";
+import { ErrorLayout } from "./layout/404.layout";
 
 
 export const router = createBrowserRouter(
@@ -42,8 +43,9 @@ export const router = createBrowserRouter(
 			<Route element={<UserLayout />}>
 				<Route path="/chats" element={<ChatPage />}></Route>
 				<Route path="/dasborde" element={<Dasborde />}></Route>
+			</Route>
+			<Route element={<ErrorLayout />}>
 				<Route path="*" element={<AaaBox />} />
-
 			</Route>
 		</Route>
 	)

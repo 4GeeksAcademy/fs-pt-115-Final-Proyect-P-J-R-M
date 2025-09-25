@@ -23,9 +23,13 @@ def _get_user_id_from_token(token: str, app=None) -> Optional[int]:
 
 
 def _user_chats(user_id: int) -> List[Chat]:
+
     return (
         Chat.query
-        .filter((Chat.user_one == user_id) | (Chat.user_two == user_id))
+        .filter(
+            ((Chat.user_one == user_id) | (Chat.user_two == user_id)) &
+            (Chat.is_active.is_(True))
+        )
         .all()
     )
 
@@ -40,6 +44,7 @@ def _serialize_chat(chat: Chat) -> Dict[str, Any]:
         "user_one": chat.user_one,
         "user_two": chat.user_two,
         "post_id": chat.post_id,
+        "is_active": bool(chat.is_active),
     }
 
 
@@ -97,6 +102,9 @@ def register_socket_handlers(socketio, app):
             if not _is_in_chat(user_id, chat):
                 emit("error", {"msg": "No perteneces a este chat"})
                 return
+            if not chat.is_active:
+                emit("error", {"msg": "El chat está inactivo"})
+                return
 
         room = f"chat:{chat_id}"
         join_room(room)
@@ -136,6 +144,9 @@ def register_socket_handlers(socketio, app):
                 emit("error", {"msg": "No perteneces a este chat"})
                 print(
                     f"[pm][error] sid={request.sid} user_id={user_id} no en chat_id={chat_id}")
+                return
+            if not chat.is_active:
+                emit("error", {"msg": "El chat está inactivo"})
                 return
 
             msg = Message(chat_id=chat_id, user_id=user_id, content=content)
@@ -182,13 +193,14 @@ def register_socket_handlers(socketio, app):
             if not _is_in_chat(user_id, chat):
                 emit("error", {"msg": "No perteneces a este chat"})
                 return
+            if not chat.is_active:
+                emit("error", {"msg": "El chat está inactivo"})
+                return
 
             q = Message.query.filter(Message.chat_id == chat_id)
             if before_id is not None:
                 q = q.filter(Message.id < before_id)
-            # usamos id como orden cronológico
             msgs = q.order_by(Message.id.desc()).limit(limit).all()
-            # devolver ascendente para pintar en orden natural
             msgs = list(reversed(msgs))
 
             payload = [{
@@ -225,6 +237,8 @@ def register_socket_handlers(socketio, app):
             chat = Chat.query.get(chat_id)
             if not chat or not _is_in_chat(user_id, chat):
                 return
+            if not chat.is_active:
+                return
 
         emit("typing", {
             "chat_id": chat_id,
@@ -253,6 +267,8 @@ def register_socket_handlers(socketio, app):
             chat = Chat.query.get(chat_id)
             if not chat or not _is_in_chat(user_id, chat):
                 return
+            if not chat.is_active:
+                return
 
         emit("messages_read", {
             "chat_id": chat_id,
@@ -274,7 +290,8 @@ def register_socket_handlers(socketio, app):
 
         with app.app_context():
             chats = _user_chats(user_id)
-            payload = [_serialize_chat(c) for c in chats]
+            payload = [_serialize_chat(c)
+                       for c in chats]
 
         emit("chats", payload)
 
@@ -309,8 +326,11 @@ def register_socket_handlers(socketio, app):
                 ).first()
             )
             if existing:
+                if not existing.is_active:
+                    emit(
+                        "error", {"msg": "Ya existe un chat inactivo para este post y usuarios"})
+                    return
                 emit("chat_exists", _serialize_chat(existing))
-                # únelo a la sala por si no estaba
                 join_room(f"chat:{existing.id}")
                 return
 
