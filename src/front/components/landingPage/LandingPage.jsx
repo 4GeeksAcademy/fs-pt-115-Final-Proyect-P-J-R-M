@@ -5,7 +5,7 @@ import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
 import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
 import { BadgeDollarSign, Handshake, ShieldCheck, HandCoins, ChartNoAxesCombined, HeartHandshake, MonitorSmartphone, Users, BriefcaseBusiness, MessagesSquare } from "lucide-react";
-import PublicRating from "../PublicRating";
+import PublicRating from "../public-rating/PublicRating"
 import { useAuth } from "../../hooks/useAuth";
 
 export default function LandingPage() {
