@@ -5,6 +5,7 @@ from api.models import Post, db, User
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask_mail import Message
 from api.mail_config import mail
+import os
 
 post_bp = Blueprint("post", __name__, url_prefix="/posts")
 
@@ -57,8 +58,8 @@ def create_post():
 
     data_created = new_post.created_data.strftime("%d/%m/%Y %H:%M")
 
-    post_url = f"https://animated-spork-v64ggp4r65v2w6rg.github.dev/posts/{new_post.id}"
-
+    post_url = f"{os.getenv('VITE_FRONTEND_URL')}/posts"
+    
     html_post = render_template(
         'new_post.html',
         username=username,
