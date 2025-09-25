@@ -5,6 +5,8 @@ import { getUsers } from "../../services/userApi";
 import { StartChatButton } from "../startChatButton/StartChatButton";
 import "./postlist.css";
 import { Plane, Trash2, ListFilter } from "lucide-react";
+import "../../index.css";
+import Swal from "sweetalert2";
 
 export const PostList = ({ refresh = 0 }) => {
   const { token, user } = useAuth();
@@ -34,8 +36,25 @@ export const PostList = ({ refresh = 0 }) => {
   }, []);
 
   const handleDelete = async (id) => {
-    await deletePost(id, token);
-    setPosts((prev) => prev.filter((p) => p.id !== id));
+    const { isConfirmed } = await Swal.fire({
+      title: "¿Eliminar post?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+      focusCancel: true,
+    });
+    if (!isConfirmed) return;
+
+      await deletePost(id, token);
+      setPosts((prev) => prev.filter((p) => p.id !== id));
+      Swal.fire({ 
+        icon: "success",
+         title: "Post eliminado", 
+         timer: 1500, 
+         showConfirmButton: false });
   };
 
   const normalizeCountry = (dest) => (dest || "").split(",").slice(-1)[0]?.trim();
