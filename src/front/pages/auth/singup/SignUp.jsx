@@ -20,6 +20,7 @@ export function SignUp() {
     image: "",
     country: "",
     score: 0,
+    acceptTerms: false
   });
 
   useEffect(() => {
@@ -37,19 +38,20 @@ export function SignUp() {
     }
   }, [signupSuccess, loading, error, navigate]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData(prev => {
-      const updateData = { ...prev, [name]: value };
-      // Validar contraseñas si ambas existen
-      if (updateData.password2 && updateData.password !== updateData.password2) {
-        setPasswordError("Las contraseñas no coinciden");
-      } else {
-        setPasswordError(null);
-      }
-      return updateData;
-    });
-  }
+const handleChange = (e) => {
+  const { name, value, type, checked } = e.target;
+  setUserData(prev => {
+    const updateData = { ...prev, [name]: type === "checkbox" ? checked : value };
+
+    // Validación de contraseñas
+    if (updateData.password2 && updateData.password !== updateData.password2) {
+      setPasswordError("Las contraseñas no coinciden");
+    } else {
+      setPasswordError(null);
+    }
+    return updateData;
+  });
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -140,14 +142,17 @@ export function SignUp() {
           disabled={loading}
           required
         />
-        <label
-        ><input type="checkbox"
-          name="acceptTerms"
-          checked={userData.acceptTerms}
-          onChange={handleChange}
-          disabled={loading}
-          required /> Acepto condiciones y términos</label
-        >
+        <label>
+          <input
+            type="checkbox"
+            name="acceptTerms"
+            checked={userData.acceptTerms}
+            onChange={handleChange}
+            disabled={loading}
+            required
+          />
+          {" "}Acepto condiciones y términos
+        </label>
         {passwordError && <p className="signup-error">{passwordError}</p>}
         <button
           className="signup-button"

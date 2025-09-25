@@ -154,8 +154,8 @@ select.control option {
   border-radius: var(--radius-btn);
   border: none;
   cursor: pointer;
-  color: #fff;
-  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-2));
+  color: var(--color-text);
+  background-color: var(--color-gold);
   box-shadow: var(--shadow-1);
   overflow: hidden;
   white-space: nowrap;
@@ -243,5 +243,5 @@ html.dark input[type="date"].control::-webkit-calendar-picker-indicator {
 }
 
 html.dark .btn-create{
-  color:#0c233a;
+  color: var(--color-text)
 }

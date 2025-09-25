@@ -6,12 +6,12 @@
   padding: 0.35rem 0.6rem;
   border-radius: var(--radius-btn);
   border: 0.0625rem solid rgba(44, 62, 80, 0.22);
-  color: #fff;
+  color: var(--color-text);
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
   overflow: hidden;
-  background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-gold-2) 50%, var(--color-gold) 100%);
+  background-color: var(--color-gold);
   background-size: 200% 100%;
   transition: background-position 0.5s ease;
 }
@@ -23,7 +23,4 @@
 .start-chat-btn:focus-visible {
   outline: none;
   box-shadow: 0 0 0 3px rgba(212,175,55,0.35);
-}
-html.dark .start-chat-btn{
- color:#0c233a;
 }
