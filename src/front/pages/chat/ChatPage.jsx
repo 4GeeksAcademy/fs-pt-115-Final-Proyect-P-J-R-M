@@ -387,7 +387,7 @@ export default function ChatSocketClient() {
 			setChats(merged);
 			setChatsReady(true);
 
-			// 2) Unir a todos los chats y precargat posts usando la lista merged
+			// 2) Unir a todos los chats y precargar posts usando la lista merged
 			merged.forEach((c) => {
 				if (!joinedChatsRef.current.has(c.id)) {
 					joinChat(c.id);
