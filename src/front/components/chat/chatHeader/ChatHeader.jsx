@@ -2,7 +2,7 @@ import React from "react";
 import "../theme.css";
 import "./chat-header.css";
 import Avatar from "../avatar/Avatar";
-
+import { ArrowLeft } from "lucide-react";
 
 export default function ChatHeader({
     chat,
@@ -12,6 +12,7 @@ export default function ChatHeader({
     typingOthers = [],
     onLoadOlder,
     canLoadOlder = false,
+    onBack,
 }) {
     if (!chat) return <div className="chat-header chat-header--empty">Selecciona un chat</div>;
 
@@ -34,6 +35,18 @@ export default function ChatHeader({
     return (
         <div className="chat-header">
             <div className="chat-header__left">
+                {onBack ? (
+                    <button
+                        type="button"
+                        className="chat-header__back"
+                        onClick={onBack}
+                        aria-label="Volver a la lista"
+                        title="Volver"
+                    >
+                        <ArrowLeft size={20} absoluteStrokeWidth />
+                    </button>
+                ) : null}
+
                 {img ? (
                     <img src={img} alt={title} className="chat-header__avatar" />
                 ) : (

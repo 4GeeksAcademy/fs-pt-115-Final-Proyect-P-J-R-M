@@ -16,3 +16,43 @@
   margin: 0 auto;
   gap: 12px;
 }
+
+/* Layout base desktop/tablet: 2 columnas */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 12px;
+  height: 100%;
+}
+
+/* Móvil: una sola vista a pantalla completa */
+@media (max-width: 639px) {
+  .chat-layout {
+    display: block; /* apilado */
+    height: 100dvh; /* viewport dinámico móvil */
+  }
+
+  /* Clases de conmutación desde ChatSocketClient */
+  .is-mobile.view-list .chat-sidebar {
+    display: block;
+  }
+  .is-mobile.view-list .chat-panel {
+    display: none;
+  }
+
+  .is-mobile.view-chat .chat-sidebar {
+    display: none;
+  }
+  .is-mobile.view-chat .chat-panel {
+    display: block;
+    height: 100dvh;
+  }
+}
+
+/* Desktop explícito (opcional para legibilidad) */
+.is-desktop.view-split .chat-sidebar {
+  display: block;
+}
+.is-desktop.view-split .chat-panel {
+  display: block;
+}

@@ -55,6 +55,30 @@
   padding: 6px 10px;
   cursor: pointer;
 }
+
 .chat-header__older-btn:hover {
   background: rgba(255, 255, 255, 0.08);
+}
+
+.chat-header__back {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 9999px;
+  margin-right: 8px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.chat-header__back:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 639px) {
+  .chat-header__back {
+    display: inline-flex;
+  }
 }

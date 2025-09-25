@@ -179,6 +179,32 @@ export default function ChatSocketClient() {
 	const listRef = useRef(null);
 	const joinedChatsRef = useRef(new Set());
 
+	// Responsive: móvil vs desktop
+	const [isMobile, setIsMobile] = useState(
+		typeof window !== "undefined" && window.matchMedia("(max-width: 639px)").matches
+	);
+	const [mobileView, setMobileView] = useState(() => {
+		const hasActive = Number(localStorage.getItem("activeChatId")) > 0;
+		return hasActive ? "chat" : "list"; // en móvil: arrancar en lista o chat
+	});
+
+	useEffect(() => {
+		const mq = window.matchMedia("(max-width: 639px)");
+		const handler = (e) => setIsMobile(e.matches);
+		if (mq.addEventListener) mq.addEventListener("change", handler);
+		else mq.addListener(handler); // fallback Safari viejo
+		setIsMobile(mq.matches);
+		return () => {
+			if (mq.removeEventListener) mq.removeEventListener("change", handler);
+			else mq.removeListener(handler);
+		};
+	}, []);
+
+	useEffect(() => {
+		if (!isMobile) return;
+		setMobileView(activeChatId ? "chat" : "list");
+	}, [isMobile, activeChatId]);
+
 	// Hidratar scroll por chat
 	useEffect(() => {
 		if (!SCROLL_KEY) return;
@@ -356,9 +382,10 @@ export default function ChatSocketClient() {
 
 			setChats(merged);
 			setChatsReady(true);
-
+      
+			// Unir a todos los chats y precargat posts
+			list.forEach((c) => {
 			// 2) Únete a todos y precarga posts usando la lista merged
-			merged.forEach((c) => {
 				if (!joinedChatsRef.current.has(c.id)) {
 					joinChat(c.id);
 					joinedChatsRef.current.add(c.id);
@@ -423,7 +450,7 @@ export default function ChatSocketClient() {
 				requestAnimationFrame(() => {
 					if (listRef.current) {
 						listRef.current.scrollTop = listRef.current.scrollHeight;
-						// Persistir scroll al fondo al recibir mensaje propio
+						// Persistir scroll al fondo al recibir un mensaje nuestro
 						scrollByChat.current[m.chat_id] = listRef.current.scrollTop;
 						persistScroll.current();
 					}
@@ -562,8 +589,15 @@ export default function ChatSocketClient() {
 
 	const messages = messagesByChat[activeChatId || -1] || [];
 
+	// Clases movil responsive
+	const shellClasses = [
+		"chat-shell",
+		isMobile ? "is-mobile" : "is-desktop",
+		isMobile ? (mobileView === "chat" ? "view-chat" : "view-list") : "view-split",
+	].join(" ");
+
 	return (
-		<div className="chat-shell">
+		<div className={shellClasses}>
 			<div className="chat-layout">
 				{/* Sidebar (lista de chats a la izquierda) */}
 				<Sidebar
@@ -576,6 +610,7 @@ export default function ChatSocketClient() {
 					onSelectChat={(id) => {
 						setActiveChatId(id);
 						localStorage.setItem("activeChatId", String(id));
+						if (isMobile) setMobileView("chat");
 					}}
 				/>
 
@@ -589,6 +624,7 @@ export default function ChatSocketClient() {
 						typingOthers,
 						onLoadOlder: handleLoadOlder,
 						canLoadOlder: !!activeChatId,
+						onBack: isMobile ? () => setMobileView("list") : undefined,
 					}}
 					listRef={listRef}
 					messages={messages}
