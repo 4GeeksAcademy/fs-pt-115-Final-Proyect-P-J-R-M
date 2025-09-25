@@ -7,6 +7,8 @@ import "./chat-page.css";
 import "../../components/chat/theme.css";
 import Sidebar from "../../components/chat/sidebar/Sidebar";
 import ChatPanel from "../../components/chat/chatpanel/ChatPanel";
+import { uploadImge } from "../../services/userApi";
+
 
 export default function ChatSocketClient() {
 	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
@@ -47,6 +49,10 @@ export default function ChatSocketClient() {
 	const [messagesByChat, setMessagesByChat] = useState({});
 	const [nextBeforeByChat, setNextBeforeByChat] = useState({});
 	const [typingByChat, setTypingByChat] = useState({});
+
+	//Composers
+	const [text, setText] = useState("");
+	const [draftImages, setDraftImages] = useState([]);
 
 	// --- Notificaciones / No leídos (persistencia) ---
 	const [unreadByChat, setUnreadByChat] = useState({});
@@ -166,7 +172,6 @@ export default function ChatSocketClient() {
 		usersByIdRef.current = usersById;
 	}, [usersById]);
 
-	const [text, setText] = useState("");
 	const typingRef = useRef(false);
 	const typingTimeout = useRef(null);
 
@@ -260,6 +265,24 @@ export default function ChatSocketClient() {
 		}
 	}
 
+	const handleUploadImage = async (file) => {
+		try {
+			const { imageUrl, secure_url } = await uploadImge(file, { asAvatar: false });
+			const url = imageUrl || secure_url;
+			if (url) {
+				setDraftImages((prev) => [...prev, { url }]);
+			}
+			return { imageUrl: url };
+		} catch (err) {
+			console.error("upload image error:", err);
+			throw err;
+		}
+	};
+	
+	const removeDraftImage = (url) => {
+		setDraftImages((prev) => prev.filter((x) => x.url !== url));
+	};
+
 	// Helpers chat
 	const ensureChatState = (chatId) => {
 		setMessagesByChat((prev) => (prev[chatId] ? prev : { ...prev, [chatId]: [] }));
@@ -279,21 +302,33 @@ export default function ChatSocketClient() {
 	};
 
 	const sendMessage = () => {
+		if (!activeChatId) return;
 		const content = text.trim();
-		if (!content || !activeChatId) return;
-		socket.emit("private_message", { chat_id: activeChatId, content });
+
+		if (draftImages.length > 0) {
+			draftImages.forEach((img) => {
+				socket.emit("private_message", { chat_id: activeChatId, content: img.url });
+			});
+		}
+
+		if (content) {
+			socket.emit("private_message", { chat_id: activeChatId, content });
+		}
+
 		setText("");
+		setDraftImages([]);
 		stopTyping();
+
 		requestAnimationFrame(() => {
 			if (listRef.current) {
 				listRef.current.scrollTop = listRef.current.scrollHeight;
-				// Persistir scroll al fondo tras enviar
 				if (activeChatId) {
 					scrollByChat.current[activeChatId] = listRef.current.scrollTop;
-					persistScroll.current();
+					persistScroll.current?.();
 				}
 			}
 		});
+
 		if (activeChatId) localStorage.setItem("activeChatId", String(activeChatId));
 	};
 
@@ -331,12 +366,25 @@ export default function ChatSocketClient() {
 		}
 
 		function onChats(payload) {
-			const list = Array.isArray(payload) ? payload : [];
-			setChats(list);
+			const incoming = Array.isArray(payload) ? payload : [];
+
+			// 1) Merge por id (sin perder los que ya tenemos)
+			const byId = new Map();
+			// existente
+			chats.forEach((c) => byId.set(c.id, c));
+			// entrante (sobrescribe campos actualizados)
+			incoming.forEach((c) => byId.set(c.id, { ...byId.get(c.id), ...c }));
+
+			const merged = Array.from(byId.values());
+
+			// (opcional) ordenar si quieres el más reciente arriba — si tienes updated_at úsalo.
+			// merged.sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0));
+
+			setChats(merged);
 			setChatsReady(true);
 
-			// Unir a todos los chats y precargat posts
-			list.forEach((c) => {
+			// 2) Unir a todos los chats y precargat posts usando la lista merged
+			merged.forEach((c) => {
 				if (!joinedChatsRef.current.has(c.id)) {
 					joinChat(c.id);
 					joinedChatsRef.current.add(c.id);
@@ -344,7 +392,8 @@ export default function ChatSocketClient() {
 				if (!postsById[c.post_id]) fetchPost(c.post_id);
 			});
 
-			const ids = new Set(list.map((c) => c.id));
+			// 3) Respetar chat activo si sigue existiendo; si no, elegir target
+			const ids = new Set(merged.map((c) => c.id));
 			let target = activeChatIdRef.current;
 
 			if (target && ids.has(target)) {
@@ -356,7 +405,7 @@ export default function ChatSocketClient() {
 				return;
 			}
 
-			target = wantChatId || (list?.[0]?.id ?? null);
+			target = wantChatId || (merged?.[0]?.id ?? null);
 			if (target) {
 				setActiveChatId(target);
 				if (!joinedChatsRef.current.has(target)) {
@@ -477,12 +526,12 @@ export default function ChatSocketClient() {
 			if (typingTimeout.current) clearTimeout(typingTimeout.current);
 			joinedChatsRef.current = new Set();
 		};
-	}, [socket, token, wantChatId, wantPostId, postsById, userId, messagesByChat, isWindowFocused]);
+	}, [socket, token, wantChatId, wantPostId, userId]);
 
 	// refresco periódico de chats
 	useEffect(() => {
 		if (!connected) return;
-		const id = setInterval(() => loadChats(), 1000);
+		const id = setInterval(() => loadChats(), 5000);
 		return () => clearInterval(id);
 	}, [connected]);
 
@@ -589,6 +638,9 @@ export default function ChatSocketClient() {
 						onSend: sendMessage,
 						onStartTyping: startTyping,
 						onStopTyping: stopTyping,
+						onUploadImage: handleUploadImage,
+						attachments: draftImages,
+						onRemoveAttachment: removeDraftImage,
 					}}
 				/>
 			</div>

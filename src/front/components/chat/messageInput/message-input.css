@@ -5,6 +5,77 @@
   background: #f0f0f0;
   align-items: center;
   border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.msg-input__attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 6px 6px 0 6px;
+  order: -1;
+  flex-basis: 100%;
+}
+
+.msg-input__attachment {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--chat-border, #d1d5db);
+  background: #fff;
+  flex: 0 0 auto;
+}
+
+.msg-input__attachment-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.msg-input__attachment-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  line-height: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.12s ease, background 0.12s ease, opacity 0.12s ease;
+  z-index: 1;
+}
+
+.msg-input__attachment-remove:hover {
+  transform: scale(1.05);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* .msg-input__icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  border: 1px solid var(--chat-border, #d1d5db);
+  background: #fff;
+  color: var(--battleship-gray);
+  cursor: pointer;
+} */
+
+.msg-input__icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .msg-input__field {
@@ -22,15 +93,29 @@
 }
 
 .msg-input__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--battleship-gray);
   color: var(--accent-contrast);
   border: none;
   border-radius: 20px;
   padding: 10px 14px;
+  min-width: 72px;
+  height: 36px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .msg-input__btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (min-width: 480px) {
+  .msg-input__attachments {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-bottom: 6px;
+  }
 }

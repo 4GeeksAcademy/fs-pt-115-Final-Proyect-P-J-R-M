@@ -43,3 +43,13 @@
   margin-bottom: 2px;
   opacity: 0.75;
 }
+.msg-image-link {
+  display: inline-block;
+  line-height: 0;
+}
+.msg-image {
+  display: block;
+  max-width: min(420px, 70vw);
+  max-height: 60vh;
+  border-radius: 8px;
+}

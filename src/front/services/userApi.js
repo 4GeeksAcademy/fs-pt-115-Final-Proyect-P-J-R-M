@@ -37,7 +37,7 @@ export const patchUser = async (partialData) => {
     throw error;
   }
 };
-// ---------------------------------------------------------------------------------------------------------------------------------------------------
+
 export const deleteUser = async () => {
   try {
     const response = await fetch(`${apiUrl}`, {
@@ -46,7 +46,7 @@ export const deleteUser = async () => {
     });
 
     if (!response.ok) throw new Error("Error al eliminar usuario");
-    
+
     try {
       return await response.json();
     } catch {
@@ -66,19 +66,18 @@ export const getAllUsers = async () => {
   if (!response.ok) throw new Error("Error al obtener todos los usuarios");
   return await response.json();
 };
-//---------------------------------------------------------------------------------
-// #######cloudinary
-export const uploadImge = async (file) => {
-  const formData =new FormData()
-  formData.append("file",file)
+
+//Cloudinary
+export const uploadImge = async (file, { asAvatar = false } = {}) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  if (asAvatar) formData.append("asAvatar", "1");
 
   const response = await fetch(`${apiUrl}/upload-img`, {
     method: "POST",
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    body: formData
-  })
-  const data =await response.json()
-  return data 
-}
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    body: formData,
+  });
+  const data = await response.json();
+  return data;
+};
