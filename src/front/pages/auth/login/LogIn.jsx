@@ -8,6 +8,8 @@ import "../../../index.css";
 
 export const LogIn = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
+  const [rememberMe, setRememeberMe] = useState(false)
+
   const { login, loading, error, token } = useAuth();
   const navigate = useNavigate();
 
@@ -24,8 +26,10 @@ export const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
     if (!userData.email || !userData.password) return;
-    const ok = await login(userData);
+    const ok = await login({ email: userData.email, password: userData.password }, { rememberMe });
 
     if (!ok) {
       Swal.fire({
@@ -60,6 +64,14 @@ export const LogIn = () => {
           onChange={handleChange}
           required
         />
+        <label>
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(e) => setRememeberMe(e.target.checked)}
+          />
+          {" "} Recuedarme
+        </label>
 
         <button className="login-button" type="submit" disabled={loading}>
           {loading ? "Cargando..." : "Login"}

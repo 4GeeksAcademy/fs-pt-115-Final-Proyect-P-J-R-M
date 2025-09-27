@@ -7,12 +7,10 @@ support_bp = Blueprint("support", __name__, url_prefix="/support")
 CORS(support_bp)
 
 
-
-
-@support_bp.route('/chat', methods=['POST'])
+@support_bp.route("/chat", methods=["POST"])
 def soporte_chat():
     data = request.get_json()
-    pregunta = data.get('message', '').lower()
+    pregunta = data.get("message", "").lower()
 
     respuesta = None
     for clave in RESPUESTAS:
@@ -25,6 +23,7 @@ def soporte_chat():
 
     return jsonify({"respuesta": respuesta})
 
-@support_bp.route('/sugerencias', methods=['GET'])
+
+@support_bp.route("/sugerencias", methods=["GET"])
 def obtener_sugerencias():
     return jsonify(list(RESPUESTAS.keys()))

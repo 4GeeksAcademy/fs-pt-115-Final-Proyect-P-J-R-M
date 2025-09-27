@@ -18,6 +18,7 @@ import cloudinary
 from flask_cors import CORS
 from api.routes.user_routes import user_bp
 from api.routes.rating_routes import rating_bp
+from datetime import timedelta
 
 
 # from models import Person
@@ -34,7 +35,9 @@ app.register_blueprint(rating_bp, url_prefix='/api')
 
 
 # Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY')
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY','change-me')
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=30)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=2)
 jwt = JWTManager(app)
 
 # database condiguration

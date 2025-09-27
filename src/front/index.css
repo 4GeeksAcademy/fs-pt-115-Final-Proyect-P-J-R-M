@@ -130,7 +130,7 @@ body {
 
 .swal2-actions .swal2-cancel {
   background: #fff !important;
-  color: #2C3D50 !important;
+  color: #2c3d50 !important;
   border: none !important;
 }
 
@@ -189,12 +189,40 @@ label,
   box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25) !important;
 }
 
+/*Neutralizar y  heredar colores de paleta en cualquier webkit*/
 input:-webkit-autofill,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-text-fill-color: var(--input-text);
-  box-shadow: 0 0 0 1000px var(--input-bg) inset;
-  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: var(--input-text) !important;
+  caret-color: var(--input-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  background-color: transparent !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--input-text) !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+}
+
+/* Firefox */
+input:autofill,
+textarea:autofill,
+select:autofill {
+  box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-text) !important;
+}
+
+form,
+.form {
+  color-scheme: light dark;
 }
 
 button,

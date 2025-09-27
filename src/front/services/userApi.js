@@ -2,7 +2,7 @@ const apiUrl = import.meta.env.VITE_BACKEND_URL + "/api/users";
 
 const authHeaders = () => ({
   "Content-Type": "application/json",
-  Authorization: `Bearer ${localStorage.getItem("token")}`,
+  Authorization: `Bearer ${localStorage.getItem("token") || sessionStorage.getItem("token")}`,
 });
 
 export const getUsers = async () => {
