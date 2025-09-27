@@ -297,8 +297,6 @@ def reset_password():
 
 
 # Ruta para distribuir y contar cuántos usuarios tienen puntuación del 1 al 5
-
-
 @user_bp.route("/score-distribution", methods=["GET"])
 def score_distribution():
 

@@ -4,6 +4,7 @@ import "../theme.css";
 import "./sidebar.css";
 import Avatar from "../avatar/Avatar";
 import UnreadBadge from "../unreadBadge/UnreadBadge";
+import { MessageCircleX } from "lucide-react";
 
 function Sidebar({
     chats,
@@ -65,18 +66,18 @@ function Sidebar({
                                     </div>
 
                                     <UnreadBadge count={unread} />
+                                    <button
+                                        type="button"
+                                        className="chat-item__delete"
+                                        onClick={(e) => handleDelete(c.id, e)}
+                                        aria-label={`Eliminar chat con ${title}`}
+                                        title="Eliminar chat"
+                                    >
+                                        <MessageCircleX size={25} strokeWidth={1.25} />
+                                    </button>
                                 </button>
 
                                 {/* Botón borrar */}
-                                <button
-                                    type="button"
-                                    className="chat-item__delete"
-                                    onClick={(e) => handleDelete(c.id, e)}
-                                    aria-label={`Eliminar chat con ${title}`}
-                                    title="Eliminar chat"
-                                >
-                                    ✕
-                                </button>
                             </li>
                         );
                     })}

@@ -3,6 +3,7 @@ import "../theme.css";
 import "./chat-header.css";
 import Avatar from "../avatar/Avatar";
 import { ArrowLeft } from "lucide-react";
+import FinalizeAndScore from "../../finalizeAndScore/FinalizeAndScore";
 
 export default function ChatHeader({
     chat,
@@ -21,7 +22,13 @@ export default function ChatHeader({
     const title = other?.username || `Usuario ${otherId}`;
     const img = other?.image;
 
-    const post = postsById?.[chat.post_id];
+    // Resolución robusta del post (por si las keys son string/number)
+    const post =
+        postsById?.[String(chat.post_id)] ??
+        postsById?.[chat.post_id] ??
+        chat.post ??
+        null;
+
     const sub = post ? `${post.description} ${post.divisas_one} → ${post.divisas_two}` : "";
     const dest = post?.destination ? `📍 ${post.destination}` : "";
 
@@ -52,6 +59,7 @@ export default function ChatHeader({
                 ) : (
                     <Avatar seed={title} title={title} size={34} />
                 )}
+
                 <div className="chat-header__meta">
                     <div className="chat-header__title">{title}</div>
                     <div className="chat-header__subtitle" aria-live="polite">
@@ -61,11 +69,29 @@ export default function ChatHeader({
                 </div>
             </div>
 
-            {canLoadOlder && (
-                <button className="chat-header__older-btn" onClick={onLoadOlder} type="button">
-                    Cargar anteriores
-                </button>
-            )}
+            <div className="chat-header__actions">
+                {/* Primero: Acuerdo finalizado */}
+                {post && (
+                    <FinalizeAndScore
+                        postId={post.id}
+                        postOwnerId={post.user_id}
+                        onPostHidden={() => {
+                            // refresca UI si procede
+                        }}
+                    />
+                )}
+
+                {/* A la derecha: Cargar anteriores */}
+                {canLoadOlder && (
+                    <button
+                        className="chat-header__older-btn"
+                        onClick={onLoadOlder}
+                        type="button"
+                    >
+                        Cargar anteriores
+                    </button>
+                )}
+            </div>
         </div>
     );
 }
