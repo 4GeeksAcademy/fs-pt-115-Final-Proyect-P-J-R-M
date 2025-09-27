@@ -1,6 +1,7 @@
 from flask_cors import CORS
 from flask import Blueprint, request, jsonify
 from api.models import PlatformRating, db
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
 
 rating_bp = Blueprint('rating_bp', __name__, url_prefix="/api")
@@ -9,14 +10,16 @@ CORS(rating_bp)
 
 
 @rating_bp.route('/platform-rating', methods=['POST'])
+@jwt_required()
 def submit_rating():
+    user_id = get_jwt_identity()
     data = request.get_json()
     score = int(data.get('score', 0))
 
     if not score or not (1 <= score <= 5):
         return jsonify({'error': 'Score must be between 1 and 5'}), 400
 
-    rating = PlatformRating(score=score)
+    rating = PlatformRating(user_id=user_id, score=score)
     db.session.add(rating)
     db.session.commit()
 
@@ -41,3 +44,31 @@ def get_rating_summary():
         'average': average,
         'distribution': distribution
     })
+
+@rating_bp.route('/platform-rating/user', methods=['GET'])
+@jwt_required() 
+def get_user_rating():
+    user_id = get_jwt_identity()
+    rating = PlatformRating.query.filter_by(user_id=user_id, is_active=True).first()
+    if rating:
+        return jsonify(rating.serialize())
+    return jsonify({'score': None})
+
+@rating_bp.route('/platform-rating', methods=['PATCH'])
+@jwt_required()
+def update_rating():
+    user_id = get_jwt_identity()
+    data = request.get_json()
+    score = int(data.get('score', 0))
+
+    if not (1 <= score <= 5):
+        return jsonify({'error': 'Score must be between 1 and 5'}), 400
+
+    rating = PlatformRating.query.filter_by(user_id=user_id).first()
+    if rating:
+        rating.score = score
+        db.session.commit()
+        return jsonify({'message': 'Rating updated successfully'}), 200
+    return jsonify({'error': 'Rating not found'}), 404
+
+

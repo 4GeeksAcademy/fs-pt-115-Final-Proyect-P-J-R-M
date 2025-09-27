@@ -129,15 +129,18 @@ class Message(db.Model):
         }
     
 class PlatformRating(db.Model):
-    id: Mapped[int]=mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    user: Mapped["User"] = relationship("User")
     score: Mapped[int]=mapped_column(Integer,nullable=False)
-    timestramp: Mapped[datetime]=mapped_column(DateTime, default=datetime.now)
+    timestamp: Mapped[datetime]=mapped_column(DateTime, default=datetime.now)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     def serialize(self):
         return{
             "id":self.id,
+            "user_id":self.user_id,
             "score":self.score,
-            "timestamp":self.timestramp.strftime("%d/%m/%Y %H:%M"),
+            "timestamp":self.timestamp.strftime("%d/%m/%Y %H:%M"),
             "is_active": self.is_active
 
         }
