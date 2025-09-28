@@ -3,7 +3,7 @@ import "../theme.css";
 import "./chat-header.css";
 import Avatar from "../avatar/Avatar";
 import { ArrowLeft } from "lucide-react";
-import FinalizeAndScore from "../../finalizeAndScore/FinalizeAndScore";
+import FinalizeAndScore from "../finalizeAndScore/FinalizeAndScore";
 
 export default function ChatHeader({
     chat,
