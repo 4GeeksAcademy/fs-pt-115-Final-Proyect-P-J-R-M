@@ -683,7 +683,8 @@ RESPUESTAS = {
     "¿Puedo editar mi perfil desde la app o solo desde la web?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758824772/Editar_perfil_lw6ips.mp4",
     "¿Cómo cambio el nombre que ven los demás usuarios?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758824772/Editar_perfil_lw6ips.mp4",
     "¿Hay un tutorial para modificar mis datos de perfil?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758824772/Editar_perfil_lw6ips.mp4",
-    # meme
+
+    # meme prueva 
     "Hola Alcides": "https://res.cloudinary.com/ddmzvbbef/image/upload/v1758712670/k3zzsbpjgbqkixhjtjy7.png",
     "Hola Marcos ": "https://res.cloudinary.com/ddmzvbbef/image/upload/v1758713747/nfpdulzt8teptbynmpgo.png",
     "Hola Ruben ": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758827816/Im_into_the_abyss_qppnot.mp4",

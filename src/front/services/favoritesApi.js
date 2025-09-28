@@ -31,11 +31,14 @@ export const getFavorites = async () => {
 
 
 //  post a favoritos
-export const addFavoritePost = async (postId) => {
+export const addFavoritePost = async (postId, token) => {
   try {
     const response = await fetch(`${apiUrl}/favorites/post`, {
       method: "POST",
-      headers: authHeaders(),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
       body: JSON.stringify({ post_id: postId }),
     });
 

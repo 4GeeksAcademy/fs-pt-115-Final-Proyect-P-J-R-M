@@ -34,33 +34,33 @@ export const Dasborde = () => {
   const usernameChanged = username !== user?.username;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token || !user) return;
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token || !user) return;
 
-        const favorites = await getFavorites()
-        const posts = await getPosts(token)
+      const favorites = await getFavorites();
+      const posts = await getPosts(token);
 
-        const favPosts = favorites.favorite_posts || []
-        const userPosts = posts.filter(post => post.user_id === user.id);
+      const favPosts = favorites.fav_posts || []; 
+      const userPosts = posts.filter(post => post.user_id === user.id);
 
-        const combinedPostsMap = new Map();
-        [...favPosts, ...userPosts].forEach(post => {
-          combinedPostsMap.set(post.id, post);
-        });
+      const combinedPostsMap = new Map();
+      [...favPosts, ...userPosts].forEach(post => {
+        combinedPostsMap.set(post.id, post);
+      });
 
-        const combinedPosts = Array.from(combinedPostsMap.values());
-        setPostFavo(combinedPosts);
-      } catch (err) {
-        console.error("Error al cargar datos:", err);
-      }
-    };
-
-    if (user) {
-      fetchData();
+      const combinedPosts = Array.from(combinedPostsMap.values());
+      setPostFavo(combinedPosts);
+    } catch (err) {
+      console.error("Error al cargar datos:", err);
     }
-  }, [user]);
+  };
+
+  if (user) {
+    fetchData();
+  }
+}, [user]);
 
   useEffect(() => {
     if (usernameChanged) {
