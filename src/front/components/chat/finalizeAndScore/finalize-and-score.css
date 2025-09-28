@@ -10,6 +10,7 @@
   justify-content: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .finalize__btn:hover:not(:disabled){ transform:translateY(-1px); box-shadow:var(--shadow-2); }
 .finalize__btn:disabled{ opacity:.7; cursor:not-allowed; }
 

@@ -2,9 +2,9 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { deletePost } from "../../services/postApi";
-import ScoreManager from "../ScoreManager";
+import { useAuth } from "../../../hooks/useAuth";
+import { deletePost } from "../../../services/postApi";
+import ScoreManager from "../../ScoreManager";
 import "./finalize-and-score.css";
 
 export default function FinalizeAndScore({ postId, postOwnerId, onPostHidden }) {

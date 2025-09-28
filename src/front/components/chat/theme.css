@@ -1,6 +1,4 @@
-/* === Chat Theme Bridge → usa la nueva paleta sin cambiar componentes === */
 :root {
-  /* Mapeos base (modo claro) */
   --bg: var(--color-bg-1);
   --sidebar-bg: var(--color-bg-2);
   --sidebar-surface: var(--color-surface);
@@ -13,17 +11,17 @@
   --accent: var(--color-gold);
   --accent-contrast: #ffffff;
 
-  /* Estados */
+
   --active: color-mix(in srgb, var(--color-gold) 10%, var(--color-bg-1) 90%);
   --hover: color-mix(in srgb, var(--color-text) 6%, var(--color-bg-1) 94%);
 
-  /* Radios: conserva tus nombres antiguos usando los nuevos tokens */
+
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: var(--radius-btn);
 }
 
-/* Modo oscuro: hereda de tu html.dark y mapea a los alias del chat */
+/* Modo oscuro */
 html.dark {
   --bg: var(--color-bg-1);
   --sidebar-bg: var(--color-bg-2);
@@ -45,7 +43,6 @@ html.dark {
   --radius-sm: var(--radius-btn);
 }
 
-/* Mantén tu utilitario */
 .u-truncate {
   overflow: hidden;
   white-space: nowrap;

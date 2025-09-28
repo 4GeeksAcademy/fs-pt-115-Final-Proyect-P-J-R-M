@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
+import Swal from "sweetalert2";
 import "../theme.css";
 import "./sidebar.css";
 import Avatar from "../avatar/Avatar";
@@ -16,9 +17,29 @@ function Sidebar({
     onSelectChat,
     onDeleteChat,
 }) {
-    const handleDelete = (chatId, e) => {
+    const handleDelete = async (chatId, title, e) => {
         e.stopPropagation();
-        onDeleteChat?.(chatId);
+
+        const confirm = await Swal.fire({
+            icon: "warning",
+            title: "¿Estás seguro de borrar este chat?",
+            html: `<p class="finalize__text">Se eliminará la conversación con <b>${title}</b>.</p>`,
+            showCancelButton: true,
+            confirmButtonText: "Sí, borrar",
+            cancelButtonText: "Cancelar",
+            reverseButtons: true,
+        });
+
+        if (confirm.isConfirmed) {
+            onDeleteChat?.(chatId);
+            await Swal.fire({
+                icon: "success",
+                title: "Chat eliminado",
+                timer: 1800,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
+        }
     };
 
     return (
@@ -69,15 +90,13 @@ function Sidebar({
                                     <button
                                         type="button"
                                         className="chat-item__delete"
-                                        onClick={(e) => handleDelete(c.id, e)}
+                                        onClick={(e) => handleDelete(c.id, title, e)}
                                         aria-label={`Eliminar chat con ${title}`}
                                         title="Eliminar chat"
                                     >
                                         <MessageCircleX size={25} strokeWidth={1.25} />
                                     </button>
                                 </button>
-
-                                {/* Botón borrar */}
                             </li>
                         );
                     })}

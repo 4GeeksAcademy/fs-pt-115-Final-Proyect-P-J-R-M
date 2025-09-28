@@ -140,7 +140,6 @@
   }
 }
 
-/* Muy pequeño (p. ej. 320–359px): oculta el botón si no cabe */
 @media (max-width: 359px) {
   .chat-header__older-btn {
     display: none;
