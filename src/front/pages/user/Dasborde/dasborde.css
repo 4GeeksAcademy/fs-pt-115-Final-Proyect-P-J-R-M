@@ -9,7 +9,6 @@
   gap: 40px;
 }
 
-/* === HEADER PERFIL === */
 .profile-header {
   display: flex;
   gap: 40px;
@@ -61,7 +60,6 @@
   box-shadow: var(--shadow-2);
 }
 
-/* === INFO CARD === */
 .profile-info {
   flex: 1;
   background: var(--color-surface);
@@ -85,7 +83,6 @@
   letter-spacing: 0.2px;
 }
 
-/* Estrellas */
 .profile-stars {
   display: flex;
   gap: 4px;
@@ -134,7 +131,6 @@
   white-space: nowrap;
 }
 
-/* Botón Editar premium */
 .edit-btn {
   margin-top: 16px;
   background: linear-gradient(90deg, var(--color-gold), var(--color-gold-2));
@@ -156,7 +152,6 @@
   transform: translateY(0);
 }
 
-/* === SECCIONES === */
 .profile-sections {
   display: grid;
   gap: 24px;
@@ -172,7 +167,6 @@
   box-shadow: var(--shadow-card);
 }
 
-/* === POSTS (tipo transacción) === */
 .favorites-list {
   list-style: none;
   padding: 0;
@@ -220,7 +214,6 @@
   font-size: 0.85rem;
 }
 
-/* === LOADER IMAGEN === */
 .loader-image {
   width: 100%;
   height: 100%;
@@ -281,7 +274,6 @@
   }
 }
 
-/* === SweetAlert2 con tu paleta === */
 .swal2-popup {
   background: var(--color-surface) !important;
   color: var(--color-text) !important;
@@ -344,7 +336,6 @@
   border: none !important;
 }
 
-/* === Responsive === */
 @media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
@@ -376,5 +367,65 @@
   }
   .chip {
     font-size: 0.75rem;
+  }
+}
+
+.swal-compact {
+  padding-top: 18px !important;
+  padding-bottom: 18px !important;
+}
+
+.edit-modal--compact {
+  display: grid;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.edit-row {
+  display: grid;
+  gap: 6px;
+}
+
+.edit-label {
+  font-weight: 700;
+  color: var(--color-muted);
+  font-size: 0.92rem;
+  margin-bottom: 2px;
+}
+
+.edit-input.swal2-input,
+.edit-input.swal2-select {
+  margin: 0 !important;
+  height: 42px !important;
+  padding: 8px 12px !important;
+  font-size: 0.95rem !important;
+  border-radius: var(--input-radius) !important;
+}
+
+.edit-sep {
+  height: 1px;
+  border: none;
+  background: var(--color-border);
+  margin: 6px 0 2px;
+}
+
+.edit-hint {
+  color: var(--color-muted);
+  font-size: 0.88rem;
+  margin: 2px 0 0;
+}
+.edit-hint.error {
+  color: #f87171;
+}
+
+@media (max-width: 520px) {
+  .edit-grid {
+    grid-template-columns: 1fr;
   }
 }

@@ -17,7 +17,6 @@ countries.registerLocale(esLocale);
 const countryNames = countries.getNames("en", { select: "official" });
 const countryList = Object.entries(countryNames);
 
-/* Estrellas solo lectura */
 function ReadOnlyStars({ value = 0 }) {
   const n = Math.max(0, Math.min(5, Number(value) || 0));
   return (
@@ -34,7 +33,6 @@ function ReadOnlyStars({ value = 0 }) {
   );
 }
 
-/* Token helper: hook → session → local */
 function useAuthToken(tokenFromAuth) {
   return (
     tokenFromAuth ||
@@ -60,7 +58,6 @@ export const Dasborde = () => {
   const [country, setCountry] = useState(user?.country || "");
   const usernameChanged = username !== user?.username;
 
-  /* Cargar favoritos + posts */
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -82,7 +79,6 @@ export const Dasborde = () => {
     if (user) fetchData();
   }, [user, authToken]);
 
-  /* Validación de username */
   useEffect(() => {
     if (!usernameChanged) return;
     const check = async () => {
@@ -101,7 +97,7 @@ export const Dasborde = () => {
     else setUsernameExists(false);
   }, [username, usernameChanged, user, authToken]);
 
-  /* Subida de imagen */
+
   const handleImageUpload = async (fileToUpload) => {
     const imageFile = fileToUpload || file;
     if (!imageFile || !imageFile.type?.startsWith("image/")) {
@@ -127,30 +123,49 @@ export const Dasborde = () => {
     }
   };
 
-  /* Modal edición (username + país) */
   const openEditModal = () => {
     Swal.fire({
       title: "Editar perfil",
+      customClass: { popup: "swal-compact" },
       html: `
-        <div class="edit-modal">
-          <label>Username</label>
-          <input id="username-input" class="swal2-input" placeholder="Nuevo username" value="${username}" />
-          <label>País</label>
-          <select id="country-select" class="swal2-select">
+      <form id="edit-form" class="edit-modal edit-modal--compact">
+        <div class="edit-row">
+          <label class="edit-label">Username</label>
+          <input id="username-input" class="swal2-input edit-input" placeholder="Nuevo username" value="${username || ""}" />
+        </div>
+
+        <div class="edit-row">
+          <label class="edit-label">País</label>
+          <select id="country-select" class="swal2-select edit-input">
             ${countryList
           .map(
             ([code, name]) =>
-              `<option value="${name}" ${name === country ? "selected" : ""
+              `<option value="${name}" ${name === (country || "") ? "selected" : ""
               }>${name}</option>`
           )
           .join("")}
           </select>
-          ${usernameExists
-          ? `<p class="form-hint error" style="margin-top:.25rem">Ese nombre ya existe.</p>`
+        </div>
+
+        <hr class="edit-sep" />
+
+        <div class="edit-grid">
+          <div class="edit-row">
+            <label class="edit-label">Nueva contraseña</label>
+            <input id="password-input" type="password" class="swal2-input edit-input" placeholder="Escriba contraseña" />
+          </div>
+          <div class="edit-row">
+            <label class="edit-label">Confirmar</label>
+            <input id="password2-input" type="password" class="swal2-input edit-input" placeholder="Repite contraseña" />
+          </div>
+        </div>
+
+        ${usernameExists
+          ? `<p class="edit-hint error">Ese nombre de usuario ya existe.</p>`
           : ""
         }
-        </div>
-      `,
+      </form>
+    `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Guardar",
@@ -158,14 +173,30 @@ export const Dasborde = () => {
       preConfirm: () => {
         const newUsername = (document.getElementById("username-input")?.value || "").trim();
         const newCountry = (document.getElementById("country-select")?.value || "").trim();
-        return { newUsername, newCountry };
+        const pass1 = (document.getElementById("password-input")?.value || "");
+        const pass2 = (document.getElementById("password2-input")?.value || "");
+
+        if ((pass1 || pass2) && pass1.length < 6) {
+          Swal.showValidationMessage("La contraseña debe tener al menos 6 caracteres.");
+          return false;
+        }
+        if (pass1 !== pass2) {
+          Swal.showValidationMessage("Las contraseñas no coinciden.");
+          return false;
+        }
+        if (newUsername && newUsername.length < 3) {
+          Swal.showValidationMessage("El username debe tener al menos 3 caracteres.");
+          return false;
+        }
+        return { newUsername, newCountry, pass1 };
       },
     }).then(async (result) => {
       if (!result.isConfirmed) return;
-      const { newUsername, newCountry } = result.value || {};
+      const { newUsername, newCountry, pass1 } = result.value || {};
 
       try {
         const ops = [];
+
         if (newUsername && newUsername !== user?.username && !usernameExists) {
           ops.push(patchUser({ username: newUsername, token: authToken }));
           setUsername(newUsername);
@@ -174,6 +205,11 @@ export const Dasborde = () => {
           ops.push(patchUser({ country: newCountry, token: authToken }));
           setCountry(newCountry);
         }
+
+        if (pass1) {
+          ops.push(patchUser({ password: pass1, token: authToken }));
+        }
+
         if (ops.length) {
           await Promise.all(ops);
           await refreshUser();
@@ -190,6 +226,7 @@ export const Dasborde = () => {
       }
     });
   };
+
 
   if (loading) return <p>Cargando...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -248,7 +285,7 @@ export const Dasborde = () => {
               <div className="info-row">
                 <span className="info-row__label">País</span>
                 <span className="info-row__value">
-                  {user.country || "Planeta Tierra"}
+                  {user.country || "Selecciona país"}
                 </span>
               </div>
             </div>
@@ -260,7 +297,6 @@ export const Dasborde = () => {
         </div>
       )}
 
-      {/* Secciones inferiores */}
       <div className="profile-sections">
         <div className="calendar-container">
           <Calendar
