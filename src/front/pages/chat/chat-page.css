@@ -2,7 +2,7 @@
 
 .chat-shell {
   height: calc(100dvh - var(--app-header-h, 95px));
-  background: #fff;
+  background: var(--color-surface);
   padding: 12px;
   box-sizing: border-box;
   width: 100vw;

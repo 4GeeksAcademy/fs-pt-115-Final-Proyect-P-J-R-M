@@ -22,7 +22,7 @@ const CustomDay = (props) => {
       sx={{
         backgroundColor: isMarked ? '#1976d2' : undefined,
         color: isMarked ? 'white' : 'inherit',
-        border: isMarked ? '2px solid #004a9f' : undefined,
+        border: isMarked ? '1px solid #ffffff' : undefined,
         position: 'relative',
         borderRadius: '50%',
         '&:hover': {
@@ -41,7 +41,7 @@ const CustomDay = (props) => {
             position: 'absolute',
             top: 20,
             right: -8,
-            color: '#340f53ff',
+            color: '#d4af37',
             // backgroundColor: 'rgba(0,0,0,0.6)',
             // borderRadius: '50%',
             // padding: '2px',

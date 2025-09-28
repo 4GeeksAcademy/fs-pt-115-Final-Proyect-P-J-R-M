@@ -683,26 +683,12 @@ RESPUESTAS = {
     "¿Puedo editar mi perfil desde la app o solo desde la web?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758824772/Editar_perfil_lw6ips.mp4",
     "¿Cómo cambio el nombre que ven los demás usuarios?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758824772/Editar_perfil_lw6ips.mp4",
     "¿Hay un tutorial para modificar mis datos de perfil?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758824772/Editar_perfil_lw6ips.mp4",
-
-
-
-
-
-
-
-
-
-
-
     # meme
     "Hola Alcides": "https://res.cloudinary.com/ddmzvbbef/image/upload/v1758712670/k3zzsbpjgbqkixhjtjy7.png",
     "Hola Marcos ": "https://res.cloudinary.com/ddmzvbbef/image/upload/v1758713747/nfpdulzt8teptbynmpgo.png",
     "Hola Ruben ": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758827816/Im_into_the_abyss_qppnot.mp4",
     "Hola Angel Ponte": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758826586/ssvid.net--Apu%C3%B1alamientos-entre-coleguillas-Made-In-Spain_qt9x0k.mp4",
     "Hola Javier": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758826588/ssvid.net---saxophone-squirtle-vibe-Monoco-clair-obscur-expedition-33_1080pFHR_o2n5bh.mp4",
-
-
-
     "¿asdjklqwueoi123?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758826938/ssvid.net--Sound-of-a-Murloc_480p_vwwjkh.mp4",
     "¿qweqweqwe???": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758826938/ssvid.net--Sound-of-a-Murloc_480p_vwwjkh.mp4",
     "¿porqueporfavornose?": "https://res.cloudinary.com/ddmzvbbef/video/upload/v1758826938/ssvid.net--Sound-of-a-Murloc_480p_vwwjkh.mp4",

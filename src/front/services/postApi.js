@@ -88,9 +88,12 @@ export const deletePost = async (id, token) => {
       },
     });
 
-    if (!response.ok) throw new Error("Error al eliminar el post");
+    if (!response.ok) throw new Error("Error al finalizar el acuerdo");
+    
+    if (response.status === 204) return { success: true };
 
-    return await response.json();
+    const text = await response.text();
+    return text ? JSON.parse(text) : { success: true };
   } catch (error) {
     console.error("deletePost error:", error);
     throw error;

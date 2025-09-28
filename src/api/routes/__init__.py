@@ -10,15 +10,10 @@ from .rating_routes import rating_bp
 
 api = Blueprint("api", __name__)
 
-api.register_blueprint(user_bp) 
-api.register_blueprint(post_bp) 
-api.register_blueprint(chat_bp) 
-api.register_blueprint(message_bp) 
-api.register_blueprint(favorites_bp) 
+api.register_blueprint(user_bp)
+api.register_blueprint(post_bp)
+api.register_blueprint(chat_bp)
+api.register_blueprint(message_bp)
+api.register_blueprint(favorites_bp)
 api.register_blueprint(support_bp)
 api.register_blueprint(rating_bp)
-
-
-
-
-
