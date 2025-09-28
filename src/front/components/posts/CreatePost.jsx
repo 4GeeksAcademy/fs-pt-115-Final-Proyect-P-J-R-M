@@ -7,6 +7,7 @@ import countries from "i18n-iso-countries";
 import enLocale from "i18n-iso-countries/langs/en.json";
 import Swal from "sweetalert2";
 import "../../index.css";
+import { City } from "country-state-city";
 countries.registerLocale(enLocale);
 
 const countryNames = countries.getNames("en", { select: "official" });
@@ -33,6 +34,7 @@ export const CreatePost = ({ onSuccess }) => {
   const [form, setForm] = useState(INITIAL);
   const { token, loading } = useAuth();
   const [currencies, setCurrencies] = useState({});
+  const [cities, setCities] = useState([]);
 
   useEffect(() => {
     const loadCurrencies = async () => {
@@ -46,8 +48,27 @@ export const CreatePost = ({ onSuccess }) => {
     loadCurrencies();
   }, []);
 
+  useEffect(() => {
+    if (!form.country) {
+      setCities([]);
+      return;
+    }
+    const iso = countries.getAlpha2Code(form.country, "en");
+    if (!iso) {
+      setCities([]);
+      return;
+    }
+    const list = City.getCitiesOfCountry(iso) || [];
+    list.sort((a, b) => a.name.localeCompare(b.name));
+    setCities(list);
+  }, [form.country]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "country") {
+      setForm((prev) => ({ ...prev, country: value, city: "" }));
+      return;
+    }
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -70,7 +91,6 @@ export const CreatePost = ({ onSuccess }) => {
         title: "¡Post creado!",
         text: "Tu post ha sido publicado correctamente.",
       });
-
     } catch (error) {
       Swal.fire({
         icon: "error",
@@ -78,7 +98,7 @@ export const CreatePost = ({ onSuccess }) => {
         text: "No se pudo crear el post. Intenta otra vez.",
       });
     }
-  }
+  };
 
   const currentSelect = () => {
     const options = [];
@@ -140,16 +160,33 @@ export const CreatePost = ({ onSuccess }) => {
         </label>
 
         <label className="field">
-          <span className="label">Ciudad</span>
-          <input
-            type="text"
-            name="city"
-            value={form.city}
-            onChange={handleChange}
-            disabled={loading}
-            className="control"
-            placeholder="Ej. Barcelona"
-          />
+          <span className="label">City</span>
+          {cities.length > 0 ? (
+            <select
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+              disabled={loading || !form.country}
+              className="control"
+            >
+              <option value="">Selecciona una ciudad</option>
+              {cities.map((c) => (
+                <option key={`${c.name}-${c.stateCode || "NA"}`} value={c.name}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="text"
+              name="city"
+              value={form.city}
+              onChange={handleChange}
+              placeholder="Ej. Madrid"
+              className="control"
+              disabled={loading || !form.country}
+            />
+          )}
         </label>
 
         <label className="field">

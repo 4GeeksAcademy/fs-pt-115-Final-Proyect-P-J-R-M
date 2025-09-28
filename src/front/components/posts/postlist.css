@@ -154,7 +154,7 @@
 }
 
 .filter-destino {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.4rem;
 }
@@ -162,6 +162,8 @@
 .filter-label {
   font-weight: 600;
   color: var(--color-text);
+  line-height: 1;
+  margin: 0;
 }
 
 .country-filter__select {
@@ -454,12 +456,61 @@ html.dark .post-delete:hover {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
+  
   .post-actions {
-    margin-top:15px;
+    margin-top: 15px;
   }
 
   .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem 0.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-btn);
+    margin-bottom: 1rem;
+  }
+
+  .posts-header > span:first-child,
+  .posts-header > span:nth-child(3) {
     display: none;
+  }
+
+  .posts-header .filter-destino {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .posts-header .filter-label {
+    font-size: 0.85rem;
+    margin: 0;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .posts-header .country-filter__select {
+    flex: 1;
+    font-size: 0.85rem;
+    height: 32px;
+  }
+
+  .posts-header .header-fecha {
+    flex-shrink: 0;
+  }
+
+  .posts-header .sort-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .posts-header .sort-btn .sort-text {
+    display: inline;
   }
 
   .post-body-horizontal {
@@ -501,6 +552,7 @@ html.dark .post-delete:hover {
     color: var(--color-muted);
   }
 }
+
 
 html.dark .posts-filter-btn {
   color: #f7f9fc; 
