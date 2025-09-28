@@ -8,6 +8,7 @@ import "../../components/chat/theme.css";
 import Sidebar from "../../components/chat/sidebar/Sidebar";
 import ChatPanel from "../../components/chat/chatpanel/ChatPanel";
 import { uploadImge } from "../../services/userApi";
+import { deleteChat } from "../../services/chatApi";
 
 
 export default function ChatSocketClient() {
@@ -17,7 +18,7 @@ export default function ChatSocketClient() {
 	const { token, user } = useAuth();
 	const userId = Number(user?.id);
 
-	// Claves por usuario para persistir
+	// Claves por usuario para scroll y chat no leidos
 	const UNREAD_KEY = useMemo(() => (userId ? `unreadByChat:${userId}` : null), [userId]);
 	const SCROLL_KEY = useMemo(() => (userId ? `scrollByChat:${userId}` : null), [userId]);
 
@@ -49,15 +50,44 @@ export default function ChatSocketClient() {
 	const [messagesByChat, setMessagesByChat] = useState({});
 	const [nextBeforeByChat, setNextBeforeByChat] = useState({});
 	const [typingByChat, setTypingByChat] = useState({});
+	const [removedChatIds, setRemovedChatIds] = useState(() => new Set());
 
 	//Composers
 	const [text, setText] = useState("");
 	const [draftImages, setDraftImages] = useState([]);
 
-	// --- Notificaciones / No leídos (persistencia) ---
+	// Notificaciones / No leídos
 	const [unreadByChat, setUnreadByChat] = useState({});
 	const [didHydrateUnread, setDidHydrateUnread] = useState(false);
 	const [chatsReady, setChatsReady] = useState(false);
+
+	//Borrado completo de chats
+	const handleDeleteChat = async (id) => {
+		try {
+			await deleteChat(id, token);
+
+			try { socket.emit?.("leave_chat", { chat_id: id }); } catch { }
+			joinedChatsRef.current.delete(id);
+
+			setChats(prev => prev.filter(c => c.id !== id));
+			setRemovedChatIds(prev => {
+				const next = new Set(prev);
+				next.add(id);
+				return next;
+			});
+
+			if (activeChatId === id) {
+				setActiveChatId(null);
+				localStorage.removeItem("activeChatId");
+			}
+
+			loadChats();
+		} catch (err) {
+			console.error("deleteChat error:", err);
+			pushError("No se pudo eliminar el chat.");
+		}
+	};
+
 
 	// Hidratar no leídos
 	useEffect(() => {
@@ -185,20 +215,24 @@ export default function ChatSocketClient() {
 	);
 	const [mobileView, setMobileView] = useState(() => {
 		const hasActive = Number(localStorage.getItem("activeChatId")) > 0;
-		return hasActive ? "chat" : "list"; // en móvil: arrancar en lista o chat
+		return hasActive ? "chat" : "list";
 	});
 
 	useEffect(() => {
-		const mq = window.matchMedia("(max-width: 639px)");
-		const handler = (e) => setIsMobile(e.matches);
-		if (mq.addEventListener) mq.addEventListener("change", handler);
-		else mq.addListener(handler); // fallback Safari viejo
-		setIsMobile(mq.matches);
-		return () => {
-			if (mq.removeEventListener) mq.removeEventListener("change", handler);
-			else mq.removeListener(handler);
-		};
+		const el = document.documentElement;
+		const update = () => setIsMobile(el.clientWidth <= 639);
+		update();
+		if ("ResizeObserver" in window) {
+			const ro = new ResizeObserver(update);
+			ro.observe(el);
+			return () => ro.disconnect();
+		} else {
+			const onResize = () => update();
+			window.addEventListener("resize", onResize);
+			return () => window.removeEventListener("resize", onResize);
+		}
 	}, []);
+
 
 	useEffect(() => {
 		if (!isMobile) return;
@@ -278,7 +312,7 @@ export default function ChatSocketClient() {
 			throw err;
 		}
 	};
-	
+
 	const removeDraftImage = (url) => {
 		setDraftImages((prev) => prev.filter((x) => x.url !== url));
 	};
@@ -368,24 +402,26 @@ export default function ChatSocketClient() {
 		function onChats(payload) {
 			const incoming = Array.isArray(payload) ? payload : [];
 
-			// 1) Merge por id (sin perder los que ya tenemos)
 			const byId = new Map();
-			// existente
 			chats.forEach((c) => byId.set(c.id, c));
-			// entrante (sobrescribe campos actualizados)
 			incoming.forEach((c) => byId.set(c.id, { ...byId.get(c.id), ...c }));
 
 			const merged = Array.from(byId.values());
+			const activeMerged = merged.filter((c) => c.is_active === true);
 
-			// (opcional) ordenar si quieres el más reciente arriba — si tienes updated_at úsalo.
-			// merged.sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0));
-
-			setChats(merged);
+			setChats(activeMerged);
 			setChatsReady(true);
-      
-			// Unir a todos los chats y precargat posts
-			list.forEach((c) => {
-			// 2) Únete a todos y precarga posts usando la lista merged
+
+			const ids = new Set(activeMerged.map((c) => c.id));
+
+			for (const joinedId of Array.from(joinedChatsRef.current)) {
+				if (!ids.has(joinedId)) {
+					try { socket.emit?.("leave_chat", { chat_id: joinedId }); } catch { }
+					joinedChatsRef.current.delete(joinedId);
+				}
+			}
+
+			activeMerged.forEach((c) => {
 				if (!joinedChatsRef.current.has(c.id)) {
 					joinChat(c.id);
 					joinedChatsRef.current.add(c.id);
@@ -393,29 +429,24 @@ export default function ChatSocketClient() {
 				if (!postsById[c.post_id]) fetchPost(c.post_id);
 			});
 
-			// 3) Respetar chat activo si sigue existiendo; si no, elegir target
-			const ids = new Set(merged.map((c) => c.id));
 			let target = activeChatIdRef.current;
-
-			if (target && ids.has(target)) {
-				if (!joinedChatsRef.current.has(target)) {
-					joinChat(target);
-					joinedChatsRef.current.add(target);
-				}
-				if (!(messagesByChat[target]?.length)) loadMessages(target);
-				return;
+			if (!target || !ids.has(target)) {
+				target = wantChatId || activeMerged[0]?.id || null;
+				setActiveChatId(target);
 			}
 
-			target = wantChatId || (merged?.[0]?.id ?? null);
 			if (target) {
-				setActiveChatId(target);
 				if (!joinedChatsRef.current.has(target)) {
 					joinChat(target);
 					joinedChatsRef.current.add(target);
 				}
-				loadMessages(target);
+				if (!(messagesByChat[target]?.length)) {
+					loadMessages(target);
+				}
 			}
 		}
+
+
 
 		function onChatCreated(chat) {
 			setChats((prev) => [chat, ...prev]);
@@ -529,13 +560,6 @@ export default function ChatSocketClient() {
 		};
 	}, [socket, token, wantChatId, wantPostId, userId]);
 
-	// refresco periódico de chats
-	useEffect(() => {
-		if (!connected) return;
-		const id = setInterval(() => loadChats(), 5000);
-		return () => clearInterval(id);
-	}, [connected]);
-
 	// cambio de chat activo
 	useEffect(() => {
 		if (!activeChatId) return;
@@ -597,7 +621,9 @@ export default function ChatSocketClient() {
 	].join(" ");
 
 	return (
-		<div className={shellClasses}>
+		<div
+			className={shellClasses}
+		>
 			<div className="chat-layout">
 				{/* Sidebar (lista de chats a la izquierda) */}
 				<Sidebar
@@ -612,7 +638,9 @@ export default function ChatSocketClient() {
 						localStorage.setItem("activeChatId", String(id));
 						if (isMobile) setMobileView("chat");
 					}}
+					onDeleteChat={handleDeleteChat}
 				/>
+
 
 				{/* Panel principal (encabezado + mensajes + input) */}
 				<ChatPanel

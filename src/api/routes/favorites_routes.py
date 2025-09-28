@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request 
+from flask import Blueprint, jsonify, request
 from flask_cors import CORS
 from api.models import User, Post, Chat, db
 from flask_jwt_extended import get_jwt_identity, jwt_required
@@ -9,7 +9,8 @@ CORS(favorites_bp)
 
 # FAVORITE POSTS
 
-@favorites_bp.route('/post', methods=['GET'])
+
+@favorites_bp.route("/post", methods=["GET"])
 @jwt_required()
 def get_favorite_posts():
     user_id = get_jwt_identity()
@@ -18,15 +19,16 @@ def get_favorite_posts():
     if not user:
         return jsonify({"error": "User not found"}), 400
 
-    active = request.args.get('active', default=None)
-    if active and active.lower() == 'true':
+    active = request.args.get("active", default=None)
+    if active and active.lower() == "true":
         fav_posts = [post.serialize() for post in user.fav_post if post.is_active]
     else:
         fav_posts = [post.serialize() for post in user.fav_post]
 
     return jsonify({"fav_posts": fav_posts}), 200
 
-@favorites_bp.route('/post', methods=['POST'])
+
+@favorites_bp.route("/post", methods=["POST"])
 @jwt_required()
 def add_favorite_post():
     data = request.get_json()
@@ -48,7 +50,8 @@ def add_favorite_post():
 
     return jsonify({"message": "Post added to favorites"}), 200
 
-@favorites_bp.route('/post', methods=['DELETE'])
+
+@favorites_bp.route("/post", methods=["DELETE"])
 @jwt_required()
 def deactivate_favorite_post():
     data = request.get_json()
@@ -73,7 +76,7 @@ def deactivate_favorite_post():
 # FAVORITE CHATS
 
 
-@favorites_bp.route('/chat', methods=['GET'])
+@favorites_bp.route("/chat", methods=["GET"])
 @jwt_required()
 def get_favorite_chats():
     user_id = get_jwt_identity()
@@ -82,15 +85,16 @@ def get_favorite_chats():
     if not user:
         return jsonify({"error": "User not found"}), 400
 
-    active = request.args.get('active', default=None)
-    if active and active.lower() == 'true':
+    active = request.args.get("active", default=None)
+    if active and active.lower() == "true":
         fav_chats = [chat.serialize() for chat in user.fav_chats if chat.is_active]
     else:
         fav_chats = [chat.serialize() for chat in user.fav_chats]
 
     return jsonify({"fav_chats": fav_chats}), 200
 
-@favorites_bp.route('/chat', methods=['POST'])
+
+@favorites_bp.route("/chat", methods=["POST"])
 @jwt_required()
 def add_favorite_chat():
     data = request.get_json()
@@ -112,7 +116,8 @@ def add_favorite_chat():
 
     return jsonify({"message": "Chat added to favorites"}), 200
 
-@favorites_bp.route('/chat', methods=['DELETE'])
+
+@favorites_bp.route("/chat", methods=["DELETE"])
 @jwt_required()
 def deactivate_favorite_chat():
     data = request.get_json()

@@ -76,7 +76,7 @@ export default function ScoreManager() {
       textAlign: "left"
     }}>
       <h2 style={{ textAlign: "center", marginBottom: "1rem", color: "var(--color-gold)" }}>
-        ¿Qué opinan los usuarios?
+        ¿Qué opinas de  este  usuario {user.username}?
       </h2>
 
       {token && (

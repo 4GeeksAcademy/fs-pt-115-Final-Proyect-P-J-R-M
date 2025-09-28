@@ -23,11 +23,11 @@ def _get_user_id_from_token(token: str, app=None) -> Optional[int]:
 
 
 def _user_chats(user_id: int) -> List[Chat]:
-    return (
-        Chat.query
-        .filter((Chat.user_one == user_id) | (Chat.user_two == user_id))
-        .all()
-    )
+
+    return Chat.query.filter(
+        ((Chat.user_one == user_id) | (Chat.user_two == user_id))
+        & (Chat.is_active.is_(True))
+    ).all()
 
 
 def _is_in_chat(user_id: int, chat: Chat) -> bool:
@@ -40,23 +40,24 @@ def _serialize_chat(chat: Chat) -> Dict[str, Any]:
         "user_one": chat.user_one,
         "user_two": chat.user_two,
         "post_id": chat.post_id,
+        "is_active": bool(chat.is_active),
     }
 
 
 def register_socket_handlers(socketio, app):
 
-    @socketio.on('connect')
+    @socketio.on("connect")
     def on_connect():
         print("[connect]", request.sid)
 
-    @socketio.on('disconnect')
+    @socketio.on("disconnect")
     def on_disconnect():
         _sid_user.pop(request.sid, None)
         print("[disconnect]", request.sid)
 
     # -------------------- AUTH / ROOMS --------------------
 
-    @socketio.on('identify')
+    @socketio.on("identify")
     def handle_identify(data):
         token = (data or {}).get("token")
         user_id = _get_user_id_from_token(token, app) if token else None
@@ -77,7 +78,7 @@ def register_socket_handlers(socketio, app):
         emit("identified", {"user_id": user_id, "joined_rooms": rooms})
         print(f"[identify] sid={request.sid} user_id={user_id} rooms={rooms}")
 
-    @socketio.on('join_chat')
+    @socketio.on("join_chat")
     def handle_join_chat(data):
         user_id = _sid_user.get(request.sid)
         if not user_id:
@@ -97,6 +98,9 @@ def register_socket_handlers(socketio, app):
             if not _is_in_chat(user_id, chat):
                 emit("error", {"msg": "No perteneces a este chat"})
                 return
+            if not chat.is_active:
+                emit("error", {"msg": "El chat está inactivo"})
+                return
 
         room = f"chat:{chat_id}"
         join_room(room)
@@ -105,7 +109,7 @@ def register_socket_handlers(socketio, app):
 
     # -------------------- MENSAJERÍA --------------------
 
-    @socketio.on('private_message')
+    @socketio.on("private_message")
     def handle_private_message(data):
         user_id = _sid_user.get(request.sid)
         if not user_id:
@@ -129,13 +133,16 @@ def register_socket_handlers(socketio, app):
             chat = Chat.query.get(chat_id)
             if not chat:
                 emit("error", {"msg": "El chat no existe"})
-                print(
-                    f"[pm][error] sid={request.sid} chat_id={chat_id} no existe")
+                print(f"[pm][error] sid={request.sid} chat_id={chat_id} no existe")
                 return
             if not _is_in_chat(user_id, chat):
                 emit("error", {"msg": "No perteneces a este chat"})
                 print(
-                    f"[pm][error] sid={request.sid} user_id={user_id} no en chat_id={chat_id}")
+                    f"[pm][error] sid={request.sid} user_id={user_id} no en chat_id={chat_id}"
+                )
+                return
+            if not chat.is_active:
+                emit("error", {"msg": "El chat está inactivo"})
                 return
 
             msg = Message(chat_id=chat_id, user_id=user_id, content=content)
@@ -150,10 +157,9 @@ def register_socket_handlers(socketio, app):
             }
 
         emit("new_message", payload, room=f"chat:{chat_id}")
-        print(
-            f"[pm] user_id={user_id} -> chat_id={chat_id} content='{content[:80]}'")
+        print(f"[pm] user_id={user_id} -> chat_id={chat_id} content='{content[:80]}'")
 
-    @socketio.on('get_messages')
+    @socketio.on("get_messages")
     def handle_get_messages(data):
         """
         data = { chat_id: int, limit?: int=50, before_id?: int }
@@ -182,29 +188,36 @@ def register_socket_handlers(socketio, app):
             if not _is_in_chat(user_id, chat):
                 emit("error", {"msg": "No perteneces a este chat"})
                 return
+            if not chat.is_active:
+                emit("error", {"msg": "El chat está inactivo"})
+                return
 
             q = Message.query.filter(Message.chat_id == chat_id)
             if before_id is not None:
                 q = q.filter(Message.id < before_id)
-            # usamos id como orden cronológico
             msgs = q.order_by(Message.id.desc()).limit(limit).all()
-            # devolver ascendente para pintar en orden natural
             msgs = list(reversed(msgs))
 
-            payload = [{
-                "id": m.id,
-                "chat_id": m.chat_id,
-                "user_id": m.user_id,
-                "content": m.content,
-            } for m in msgs]
+            payload = [
+                {
+                    "id": m.id,
+                    "chat_id": m.chat_id,
+                    "user_id": m.user_id,
+                    "content": m.content,
+                }
+                for m in msgs
+            ]
 
-        emit("messages", {
-            "chat_id": chat_id,
-            "items": payload,
-            "next_before_id": payload[0]["id"] if payload else None
-        })
+        emit(
+            "messages",
+            {
+                "chat_id": chat_id,
+                "items": payload,
+                "next_before_id": payload[0]["id"] if payload else None,
+            },
+        )
 
-    @socketio.on('typing')
+    @socketio.on("typing")
     def handle_typing(data):
         """
         data = { chat_id: int, is_typing: bool }
@@ -225,14 +238,17 @@ def register_socket_handlers(socketio, app):
             chat = Chat.query.get(chat_id)
             if not chat or not _is_in_chat(user_id, chat):
                 return
+            if not chat.is_active:
+                return
 
-        emit("typing", {
-            "chat_id": chat_id,
-            "user_id": user_id,
-            "is_typing": is_typing
-        }, room=f"chat:{chat_id}", include_self=False)
+        emit(
+            "typing",
+            {"chat_id": chat_id, "user_id": user_id, "is_typing": is_typing},
+            room=f"chat:{chat_id}",
+            include_self=False,
+        )
 
-    @socketio.on('read_messages')
+    @socketio.on("read_messages")
     def handle_read_messages(data):
         """
         data = { chat_id: int, up_to_id: int }
@@ -253,16 +269,19 @@ def register_socket_handlers(socketio, app):
             chat = Chat.query.get(chat_id)
             if not chat or not _is_in_chat(user_id, chat):
                 return
+            if not chat.is_active:
+                return
 
-        emit("messages_read", {
-            "chat_id": chat_id,
-            "user_id": user_id,
-            "up_to_id": up_to_id
-        }, room=f"chat:{chat_id}", include_self=False)
+        emit(
+            "messages_read",
+            {"chat_id": chat_id, "user_id": user_id, "up_to_id": up_to_id},
+            room=f"chat:{chat_id}",
+            include_self=False,
+        )
 
     # -------------------- UTILIDADES --------------------
 
-    @socketio.on('list_chats')
+    @socketio.on("list_chats")
     def handle_list_chats():
         """
         Devuelve los chats del usuario autenticado.
@@ -278,7 +297,7 @@ def register_socket_handlers(socketio, app):
 
         emit("chats", payload)
 
-    @socketio.on('create_chat')
+    @socketio.on("create_chat")
     def handle_create_chat(data):
         """
         data = { user_two: int, post_id: int }
@@ -301,16 +320,19 @@ def register_socket_handlers(socketio, app):
             return
 
         with app.app_context():
-            existing = (
-                Chat.query.filter(
-                    Chat.post_id == post_id,
-                    ((Chat.user_one == user_one) & (Chat.user_two == user_two)) |
-                    ((Chat.user_one == user_two) & (Chat.user_two == user_one))
-                ).first()
-            )
+            existing = Chat.query.filter(
+                Chat.post_id == post_id,
+                ((Chat.user_one == user_one) & (Chat.user_two == user_two))
+                | ((Chat.user_one == user_two) & (Chat.user_two == user_one)),
+            ).first()
             if existing:
+                if not existing.is_active:
+                    emit(
+                        "error",
+                        {"msg": "Ya existe un chat inactivo para este post y usuarios"},
+                    )
+                    return
                 emit("chat_exists", _serialize_chat(existing))
-                # únelo a la sala por si no estaba
                 join_room(f"chat:{existing.id}")
                 return
 
@@ -323,4 +345,5 @@ def register_socket_handlers(socketio, app):
         join_room(f"chat:{payload['id']}")
         emit("chat_created", payload)
         print(
-            f"[create_chat] {user_one} <-> {user_two} post_id={post_id} chat_id={payload['id']}")
+            f"[create_chat] {user_one} <-> {user_two} post_id={post_id} chat_id={payload['id']}"
+        )

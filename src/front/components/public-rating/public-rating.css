@@ -1,0 +1,124 @@
+.rating-box {
+  background-color: var(--color-surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  padding: 2rem;
+  margin: 2rem;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+  font-family: "Poltawski Nowy", serif;
+}
+
+.rating-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text);
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.star-icon {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.star-icon:hover {
+  transform: scale(1.2);
+}
+
+.score-label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--color-gold);
+  margin: 0;
+}
+
+.thank-you {
+  margin-top: 0.5rem;
+  color: var(--color-gold);
+  font-weight: 500;
+  font-size: 1rem;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.summary {
+  margin-top: 1.5rem;
+}
+
+.summary p {
+  font-size: 1rem;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.histogram {
+  margin-top: 1rem;
+  text-align: left;
+  max-width: 500px;
+  margin-inline: auto;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px;
+  gap: 1rem;
+}
+
+.bar-stars {
+  width: 120px;
+  display: flex;
+  gap: 4px;
+}
+
+.bar-track {
+  flex-grow: 1;
+  background-color: var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 14px;
+}
+
+.bar-fill {
+  height: 100%;
+  background-color: var(--color-gold);
+  transition: width 0.3s ease;
+}
+
+.bar-count {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  min-width: 16px;
+}
+
+@media (min-width: 1440px) {
+  .rating-box {
+    max-width: 700px;
+    margin: 2rem auto;
+  }
+}
+
+.rating-message {
+  color: #d4af37;
+
+  
+}
+

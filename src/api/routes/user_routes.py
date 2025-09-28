@@ -1,8 +1,7 @@
-
 from flask import Blueprint, jsonify, request, render_template
 from flask_cors import CORS
 from api.models import User, db
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, create_refresh_token
 from flask_mail import Message
 from api.mail_config import mail
 import cloudinary
@@ -12,8 +11,9 @@ from cloudinary import CloudinaryImage
 from datetime import timedelta
 
 
-user_bp = Blueprint("users", __name__, url_prefix="/users",
-                    template_folder='../templates')
+user_bp = Blueprint(
+    "users", __name__, url_prefix="/users", template_folder="../templates"
+)
 
 CORS(user_bp)
 
@@ -22,7 +22,7 @@ CORS(user_bp)
 @jwt_required()
 def get_users():
     users = User.query.filter_by(is_active=True).all()
-    return jsonify([user.serialize()for user in users])
+    return jsonify([user.serialize() for user in users])
 
 
 @user_bp.route("/profile", methods=["GET"])
@@ -50,8 +50,9 @@ def post_user():
 
     if not all([username, email, password, dni]):
         return jsonify({"msg": "Missing data to be filled in"}), 400
-    user_is_exist = db.session.execute(db.select(User).where(
-        User.email == email)).scalar_one_or_none()
+    user_is_exist = db.session.execute(
+        db.select(User).where(User.email == email)
+    ).scalar_one_or_none()
     if user_is_exist:
         return jsonify({"msg": "User already exists"}), 400
 
@@ -65,13 +66,13 @@ def post_user():
     )
     new_user.set_password(password)
 
-    html_welcome = render_template('welcome.html', username=username)
+    html_welcome = render_template("welcome.html", username=username)
     msg = Message(
-
-        subject='Bienvenido',
-        sender=('Hand to Hand', 'handtohand87@gmail.com'),
+        subject="Bienvenido",
+        sender=("Hand to Hand", "handtohand87@gmail.com"),
         recipients=[email],
-        html=html_welcome)
+        html=html_welcome,
+    )
 
     mail.send(msg)
 
@@ -138,18 +139,28 @@ def login_user():
     if not email or not password:
         return jsonify({"msg": "Missing email or password"}), 400
 
-    user = db.session.execute(db.select(User).where(
-        User.email == email)).scalar_one_or_none()
+    user = db.session.execute(
+        db.select(User).where(User.email == email)
+    ).scalar_one_or_none()
 
     if not user or not user.check_password(password) or not user.is_active:
         return jsonify({"msg": "Incorrect email or password"}), 401
 
     token = create_access_token(identity=str(user.id))
-    return jsonify({"msg": "ok", "token": token}), 200
+    refresh_token = create_refresh_token(identity=str(user.id))
+
+    return jsonify({"msg": "ok", "token": token, "refresh_token": refresh_token}), 200
+
+# Refresh token
+@user_bp.post("/refresh")
+@jwt_required(refresh=True)
+def refresh_access():
+    identity = get_jwt_identity()  # str
+    new_access = create_access_token(identity=str(identity))
+    return jsonify({"access_token": new_access}), 200
+
 
 # Reactivar usuarios
-
-
 @user_bp.route("/reactivate", methods=["PATCH"])
 @jwt_required()
 def reactivate_user():
@@ -165,8 +176,6 @@ def reactivate_user():
 
 
 # cloudinari endpoint
-
-
 @user_bp.route("/upload-img", methods=["POST"])
 @jwt_required()
 def upload_ing():
@@ -181,24 +190,29 @@ def upload_ing():
     secure_url = upload_result.get("secure_url")
     public_id = upload_result.get("public_id")
 
-    
     as_avatar = request.form.get("asAvatar") in ("1", "true", "yes")
 
     if as_avatar:
         image = CloudinaryImage(public_id)
         transformed_url = image.build_url(
             transformation=[
-                {"crop": "fill", "gravity": "face", "width": 400, "height": 400}]
+                {"crop": "fill", "gravity": "face", "width": 400, "height": 400}
+            ]
         )
         user.image = transformed_url
         db.session.commit()
 
-    return jsonify({
-        "msg": "ya esta en la nube",
-        "imageUrl": secure_url,
-        "public_id": public_id,
-        "avatarUpdated": bool(as_avatar),
-    }), 200
+    return (
+        jsonify(
+            {
+                "msg": "ya esta en la nube",
+                "imageUrl": secure_url,
+                "public_id": public_id,
+                "avatarUpdated": bool(as_avatar),
+            }
+        ),
+        200,
+    )
 
 
 # ----------------------------------------------------------
@@ -212,15 +226,17 @@ def get_all_users():
     else:
         users = User.query.filter_by(is_active=True).all()
     return jsonify([user.serialize() for user in users])
+
+
 # ----------------------------------------------------------
 
 
 # ruta para restablecer contraseña
 
 
-@user_bp.route('/request-reset', methods=['POST'])
+@user_bp.route("/request-reset", methods=["POST"])
 def request_reset():
-    email = request.json.get('email')
+    email = request.json.get("email")
     if not email or not isinstance(email, str):
         return jsonify({"msg": "Email inválido"}), 400
 
@@ -234,13 +250,14 @@ def request_reset():
     reset_url = f"{os.getenv("VITE_FRONTEND_URL")}/form-reset?token={token}"
 
     html_reset = render_template(
-        'reset.html', username=user.username, reset_url=reset_url)
+        "reset.html", username=user.username, reset_url=reset_url
+    )
 
     msg = Message(
-        subject='Restablecer Contraseña',
-        sender=('Hand to Hand', 'handtohand87@gmail.com'),
+        subject="Restablecer Contraseña",
+        sender=("Hand to Hand", "handtohand87@gmail.com"),
         recipients=[email],
-        html=html_reset
+        html=html_reset,
     )
 
     mail.send(msg)
@@ -248,15 +265,22 @@ def request_reset():
 
 
 # ruta para actualar contr. recibe el token en el header y actualiza la contr. al usuario
-@user_bp.route('/reset-password', methods=['PATCH'])
+@user_bp.route("/reset-password", methods=["PATCH"])
 @jwt_required()
 def reset_password():
     try:
         user_id = get_jwt_identity()
-        new_password = request.json.get('password')
+        new_password = request.json.get("password")
 
-        if not new_password or not isinstance(new_password, str) or len(new_password.strip()) < 6:
-            return jsonify({"msg": "La contraseña debe tener al menos 6 caracteres"}), 400
+        if (
+            not new_password
+            or not isinstance(new_password, str)
+            or len(new_password.strip()) < 6
+        ):
+            return (
+                jsonify({"msg": "La contraseña debe tener al menos 6 caracteres"}),
+                400,
+            )
 
         user = User.query.get(user_id)
         if not user:
@@ -271,9 +295,8 @@ def reset_password():
 
         return jsonify({"msg": "Error interno del servidor"}), 500
 
+
 # Ruta para distribuir y contar cuántos usuarios tienen puntuación del 1 al 5
-
-
 @user_bp.route("/score-distribution", methods=["GET"])
 def score_distribution():
 

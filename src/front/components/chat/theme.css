@@ -1,30 +1,51 @@
+/* === Chat Theme Bridge → usa la nueva paleta sin cambiar componentes === */
 :root {
-  --dutch-white: #e2d4b7;
-  --battleship-gray: #9c9583;
-  --ash-gray: #a1a499;
-  --silver: #b0bbbf;
-  --ash-green: #cadbc8;
+  /* Mapeos base (modo claro) */
+  --bg: var(--color-bg-1);
+  --sidebar-bg: var(--color-bg-2);
+  --sidebar-surface: var(--color-surface);
+  --surface: var(--color-surface);
 
-  --bg: var(--dutch-white);
-  --sidebar-bg: var(--ash-green);
-  --sidebar-surface: #ffffff;
-  --surface: #ffffff;
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --border: var(--color-border);
 
-  --text: #1f2937;
-  --muted: #6b7280;
-  --border: var(--silver);
-
-  --accent: var(--battleship-gray);
+  --accent: var(--color-gold);
   --accent-contrast: #ffffff;
 
-  --active: #e7efe9;
-  --hover: #f6f6f6;
+  /* Estados */
+  --active: color-mix(in srgb, var(--color-gold) 10%, var(--color-bg-1) 90%);
+  --hover: color-mix(in srgb, var(--color-text) 6%, var(--color-bg-1) 94%);
 
-  --radius-lg: 14px;
-  --radius-md: 12px;
-  --radius-sm: 10px;
+  /* Radios: conserva tus nombres antiguos usando los nuevos tokens */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius-btn);
 }
 
+/* Modo oscuro: hereda de tu html.dark y mapea a los alias del chat */
+html.dark {
+  --bg: var(--color-bg-1);
+  --sidebar-bg: var(--color-bg-2);
+  --sidebar-surface: var(--color-surface);
+  --surface: var(--color-surface);
+
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --border: var(--color-border);
+
+  --accent: var(--color-gold);
+  --accent-contrast: #ffffff;
+
+  --active: color-mix(in srgb, var(--color-gold) 14%, var(--color-bg-1) 86%);
+  --hover: color-mix(in srgb, var(--color-text) 8%, var(--color-bg-1) 92%);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius-btn);
+}
+
+/* Mantén tu utilitario */
 .u-truncate {
   overflow: hidden;
   white-space: nowrap;
