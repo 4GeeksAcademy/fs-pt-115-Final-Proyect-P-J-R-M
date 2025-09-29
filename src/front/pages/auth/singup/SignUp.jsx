@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 import "../../../index.css";
 
 export function SignUp() {
-  const [passwordError, setPasswordError] = useState(null) // Solo para errores de contraseña local
-  const { signUp, error, loading } = useAuth() // Usar estados del hook
+  const [passwordError, setPasswordError] = useState(null)
+  const { signUp, error, loading } = useAuth()
   const navigate = useNavigate()
-  const [signupSuccess, setSignupSuccess] = useState(false) // Estado para controlar el éxito
+  const [signupSuccess, setSignupSuccess] = useState(false)
   const [userData, setUserData] = useState({
     username: "",
     dni: "",
@@ -33,25 +33,25 @@ export function SignUp() {
         showConfirmButton: false,
       }).then(() => {
         navigate("/login");
-        setSignupSuccess(false); // Reset del estado
+        setSignupSuccess(false);
       });
     }
   }, [signupSuccess, loading, error, navigate]);
 
-const handleChange = (e) => {
-  const { name, value, type, checked } = e.target;
-  setUserData(prev => {
-    const updateData = { ...prev, [name]: type === "checkbox" ? checked : value };
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setUserData(prev => {
+      const updateData = { ...prev, [name]: type === "checkbox" ? checked : value };
 
-    // Validación de contraseñas
-    if (updateData.password2 && updateData.password !== updateData.password2) {
-      setPasswordError("Las contraseñas no coinciden");
-    } else {
-      setPasswordError(null);
-    }
-    return updateData;
-  });
-};
+      // Validación de contraseñas
+      if (updateData.password2 && updateData.password !== updateData.password2) {
+        setPasswordError("Las contraseñas no coinciden");
+      } else {
+        setPasswordError(null);
+      }
+      return updateData;
+    });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -85,7 +85,7 @@ const handleChange = (e) => {
       score: userData.score || 0,
       country: userData.country || ""
     });
-    // Marcar que se intentó el signup - el useEffect manejará el resultado
+    
     setSignupSuccess(true);
   };
   return (
@@ -161,7 +161,7 @@ const handleChange = (e) => {
         >
           {loading ? "Creando cuenta..." : "Crear cuenta"}
         </button>
-        <div style={{ marginTop: "20px" }}>
+        <div className="reset-link" style={{ marginTop: "20px" }}>
           <Link to="/login" className="signup-link">
             ¿Ya estás registrado?
           </Link>

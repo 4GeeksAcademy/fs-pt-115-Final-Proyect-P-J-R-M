@@ -20,7 +20,6 @@ const HandBadge = ({ selected = false }) => (
       display: "inline-flex",
       alignItems: "center",
       justifyContent: "center",
-      // fondo suave según estado
       background: selected
         ? "rgba(255,255,255,.22)"
         : "color-mix(in srgb, var(--color-gold) 20%, transparent)",
@@ -76,13 +75,11 @@ const CustomDay = (props) => {
             "color-mix(in srgb, var(--color-gold) 35%, var(--color-border))",
         },
 
-        // hoy con anillo fino
         "&.MuiPickersDay-today": {
           boxShadow: "inset 0 0 0 2px var(--color-gold)",
           backgroundColor: "transparent",
         },
 
-        // seleccionado dorado con glow
         "&.Mui-selected, &.Mui-selected:hover": {
           background:
             "linear-gradient(90deg, var(--color-gold), var(--color-gold-2))",
@@ -91,7 +88,6 @@ const CustomDay = (props) => {
           boxShadow: "0 6px 18px rgba(212,175,55,.35)",
         },
 
-        // fuera de mes / disabled
         "&.MuiPickersDay-dayOutsideMonth, &.Mui-disabled": {
           opacity: 0.45,
           color: "var(--color-muted)",

@@ -18,8 +18,7 @@ export const BankingGraphics = () => {
   const [xAxisDates, setXAxisDates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Colores personalizados por moneda (puedes ajustar)
+
   const currencyColors = {
     EUR: '#1976d2', // Azul
     JPY: '#d32f2f', // Rojo
@@ -29,7 +28,7 @@ export const BankingGraphics = () => {
   const currencies = ['EUR', 'JPY', 'GBP', 'CAD'];
   const baseCurrency = 'USD';
   const startDate = '2023-01-01';
-  const endDate = new Date().toISOString().split('T')[0]; // Fecha actual
+  const endDate = new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +70,7 @@ export const BankingGraphics = () => {
             type: 'line',
             label: currency,
             data,
-            color: currencyColors[currency] || undefined, // color por moneda
+            color: currencyColors[currency] || undefined, 
             highlightScope: { highlight: 'item' }
           };
         });
@@ -98,7 +97,7 @@ export const BankingGraphics = () => {
       margin: '2px auto',
       padding: 6,
       borderRadius: 12,
-      backgroundColor: '#fff',//pendiente de modificar
+      backgroundColor: '#fff',
       boxShadow: '0 8px 16px rgba(0,0,0,0.1)'
     }}>
       <Typography variant="h6" align="center" gutterBottom>
