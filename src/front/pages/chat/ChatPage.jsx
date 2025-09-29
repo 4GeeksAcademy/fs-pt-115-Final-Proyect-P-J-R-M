@@ -33,8 +33,11 @@ export default function ChatSocketClient() {
 		() =>
 			io(BACKEND_URL, {
 				path: "/socket.io",
-				transports: ["websocket"],
+				transports: ["websocket", "polling"],
 				autoConnect: false,
+				reconnection: true,
+				reconnectionAttempts: 5,
+				reconnectionDelay: 1000,
 			}),
 		[BACKEND_URL]
 	);
@@ -202,6 +205,11 @@ export default function ChatSocketClient() {
 		usersByIdRef.current = usersById;
 	}, [usersById]);
 
+	const postsByIdRef = useRef({});
+	useEffect(() => {
+		postsByIdRef.current = postsById;
+	}, [postsById]);
+
 	const typingRef = useRef(false);
 	const typingTimeout = useRef(null);
 
@@ -245,7 +253,7 @@ export default function ChatSocketClient() {
 		try {
 			const raw = localStorage.getItem(SCROLL_KEY);
 			if (raw) {
-				const parsed = JSON.parse(raw);
+				const parsed = JSON.json(raw);
 				if (parsed && typeof parsed === "object") {
 					scrollByChat.current = parsed;
 				}
@@ -277,8 +285,8 @@ export default function ChatSocketClient() {
 		return () => el.removeEventListener("scroll", onScroll);
 	}, [activeChatId]);
 
-	// Fetch helpers
-	async function fetchUsers() {
+	// Fetch helpers - Memoizados para evitar recreación
+	const fetchUsers = useRef(async () => {
 		try {
 			const list = await getUsers();
 			const map = {};
@@ -287,9 +295,9 @@ export default function ChatSocketClient() {
 		} catch (error) {
 			console.error("getUsers error:", error);
 		}
-	}
+	});
 
-	async function fetchPost(postId) {
+	const fetchPost = useRef(async (postId) => {
 		if (!postId) return;
 		try {
 			const data = await getPostById(postId, token);
@@ -297,7 +305,7 @@ export default function ChatSocketClient() {
 		} catch (error) {
 			console.error("getPostById error:", error);
 		}
-	}
+	});
 
 	const handleUploadImage = async (file) => {
 		try {
@@ -317,23 +325,24 @@ export default function ChatSocketClient() {
 		setDraftImages((prev) => prev.filter((x) => x.url !== url));
 	};
 
-	// Helpers chat
-	const ensureChatState = (chatId) => {
+	// Helpers chat - Memoizados con useRef
+	const ensureChatState = useRef((chatId) => {
 		setMessagesByChat((prev) => (prev[chatId] ? prev : { ...prev, [chatId]: [] }));
 		setTypingByChat((prev) => (prev[chatId] ? prev : { ...prev, [chatId]: new Set() }));
-	};
+	});
 
-	const loadChats = () => socket.emit("list_chats");
-	const joinChat = (chatId) => socket.emit("join_chat", { chat_id: chatId });
-	const createChatSocket = (userTwo, postId) =>
-		socket.emit("create_chat", { user_two: Number(userTwo), post_id: Number(postId) });
+	const loadChats = useRef(() => socket.emit("list_chats"));
+	const joinChat = useRef((chatId) => socket.emit("join_chat", { chat_id: chatId }));
+	const createChatSocket = useRef((userTwo, postId) =>
+		socket.emit("create_chat", { user_two: Number(userTwo), post_id: Number(postId) })
+	);
 
-	const loadMessages = (chatId, beforeId = null, limit = 30) => {
-		ensureChatState(chatId);
+	const loadMessages = useRef((chatId, beforeId = null, limit = 30) => {
+		ensureChatState.current(chatId);
 		const payload = { chat_id: chatId, limit };
 		if (beforeId) payload.before_id = beforeId;
 		socket.emit("get_messages", payload);
-	};
+	});
 
 	const sendMessage = () => {
 		if (!activeChatId) return;
@@ -373,6 +382,7 @@ export default function ChatSocketClient() {
 		if (typingTimeout.current) clearTimeout(typingTimeout.current);
 		typingTimeout.current = setTimeout(stopTyping, 1500);
 	};
+
 	const stopTyping = () => {
 		if (!activeChatId) return;
 		typingRef.current = false;
@@ -380,95 +390,118 @@ export default function ChatSocketClient() {
 		socket.emit("typing", { chat_id: activeChatId, is_typing: false });
 	};
 
-	// SOCKET listeners
+	// SOCKET listeners - CORREGIDO ✅
 	useEffect(() => {
 		function onConnect() {
+			console.log("✅ Socket conectado");
 			setConnected(true);
 			socket.emit("identify", { token });
 		}
+
 		function onDisconnect() {
+			console.log("❌ Socket desconectado");
 			setConnected(false);
 		}
+
 		function onError(e) {
+			console.error("Socket error:", e);
 			pushError(e?.msg || e || "Error desconocido");
 		}
 
 		function onIdentified() {
-			fetchUsers();
-			if (wantUserTwo && wantPostId) createChatSocket(wantUserTwo, wantPostId);
-			else loadChats();
+			console.log("🔐 Identificado");
+			fetchUsers.current();
+			if (wantUserTwo && wantPostId) {
+				createChatSocket.current(wantUserTwo, wantPostId);
+			} else {
+				loadChats.current();
+			}
 		}
 
 		function onChats(payload) {
+			console.log("📋 Chats recibidos:", payload);
 			const incoming = Array.isArray(payload) ? payload : [];
 
-			const byId = new Map();
-			chats.forEach((c) => byId.set(c.id, c));
-			incoming.forEach((c) => byId.set(c.id, { ...byId.get(c.id), ...c }));
+			setChats(prevChats => {
+				const byId = new Map();
+				prevChats.forEach((c) => byId.set(c.id, c));
+				incoming.forEach((c) => byId.set(c.id, { ...byId.get(c.id), ...c }));
 
-			const merged = Array.from(byId.values());
-			const activeMerged = merged.filter((c) => c.is_active === true);
+				const merged = Array.from(byId.values());
+				const activeMerged = merged.filter((c) => c.is_active === true);
 
-			setChats(activeMerged);
-			setChatsReady(true);
+				const ids = new Set(activeMerged.map((c) => c.id));
 
-			const ids = new Set(activeMerged.map((c) => c.id));
-
-			for (const joinedId of Array.from(joinedChatsRef.current)) {
-				if (!ids.has(joinedId)) {
-					try { socket.emit?.("leave_chat", { chat_id: joinedId }); } catch { }
-					joinedChatsRef.current.delete(joinedId);
+				// Limpiar chats eliminados
+				for (const joinedId of Array.from(joinedChatsRef.current)) {
+					if (!ids.has(joinedId)) {
+						try { socket.emit("leave_chat", { chat_id: joinedId }); } catch { }
+						joinedChatsRef.current.delete(joinedId);
+					}
 				}
-			}
 
-			activeMerged.forEach((c) => {
-				if (!joinedChatsRef.current.has(c.id)) {
-					joinChat(c.id);
-					joinedChatsRef.current.add(c.id);
+				// Unirse a chats y cargar posts
+				activeMerged.forEach((c) => {
+					if (!joinedChatsRef.current.has(c.id)) {
+						joinChat.current(c.id);
+						joinedChatsRef.current.add(c.id);
+					}
+					if (!postsByIdRef.current[c.post_id]) {
+						fetchPost.current(c.post_id);
+					}
+				});
+
+				// Seleccionar chat activo
+				let target = activeChatIdRef.current;
+				if (!target || !ids.has(target)) {
+					target = wantChatId || activeMerged[0]?.id || null;
+					setActiveChatId(target);
 				}
-				if (!postsById[c.post_id]) fetchPost(c.post_id);
+
+				if (target) {
+					if (!joinedChatsRef.current.has(target)) {
+						joinChat.current(target);
+						joinedChatsRef.current.add(target);
+					}
+
+					// Cargar mensajes si no existen
+					setMessagesByChat(prevMsgs => {
+						if (!(prevMsgs[target]?.length)) {
+							loadMessages.current(target);
+						}
+						return prevMsgs;
+					});
+				}
+
+				return activeMerged;
 			});
 
-			let target = activeChatIdRef.current;
-			if (!target || !ids.has(target)) {
-				target = wantChatId || activeMerged[0]?.id || null;
-				setActiveChatId(target);
-			}
-
-			if (target) {
-				if (!joinedChatsRef.current.has(target)) {
-					joinChat(target);
-					joinedChatsRef.current.add(target);
-				}
-				if (!(messagesByChat[target]?.length)) {
-					loadMessages(target);
-				}
-			}
+			setChatsReady(true);
 		}
 
-
-
 		function onChatCreated(chat) {
+			console.log("✨ Chat creado:", chat);
 			setChats((prev) => [chat, ...prev]);
 			setActiveChatId(chat.id);
 			localStorage.setItem("activeChatId", String(chat.id));
-			joinChat(chat.id);
+			joinChat.current(chat.id);
 			joinedChatsRef.current.add(chat.id);
-			fetchPost(chat.post_id);
-			loadMessages(chat.id);
+			fetchPost.current(chat.post_id);
+			loadMessages.current(chat.id);
 		}
 
 		function onChatExists(chat) {
+			console.log("♻️ Chat ya existe:", chat);
 			setActiveChatId(chat.id);
 			localStorage.setItem("activeChatId", String(chat.id));
-			joinChat(chat.id);
+			joinChat.current(chat.id);
 			joinedChatsRef.current.add(chat.id);
-			fetchPost(chat.post_id);
-			loadMessages(chat.id);
+			fetchPost.current(chat.post_id);
+			loadMessages.current(chat.id);
 		}
 
-		// Mensajes + notificaciones
 		function onNewMessage(m) {
+			console.log("💬 Nuevo mensaje:", m);
 			setMessagesByChat((prev) => {
 				const list = prev[m.chat_id] || [];
 				return { ...prev, [m.chat_id]: [...list, m] };
@@ -481,7 +514,6 @@ export default function ChatSocketClient() {
 				requestAnimationFrame(() => {
 					if (listRef.current) {
 						listRef.current.scrollTop = listRef.current.scrollHeight;
-						// Persistir scroll al fondo al recibir un mensaje nuestro
 						scrollByChat.current[m.chat_id] = listRef.current.scrollTop;
 						persistScroll.current();
 					}
@@ -508,6 +540,7 @@ export default function ChatSocketClient() {
 		}
 
 		function onMessages({ chat_id, items, next_before_id }) {
+			console.log(`📨 Mensajes cargados para chat ${chat_id}:`, items.length);
 			setMessagesByChat((prev) => {
 				const cur = prev[chat_id] || [];
 				const merged = [...items, ...cur];
@@ -521,7 +554,6 @@ export default function ChatSocketClient() {
 				requestAnimationFrame(() => {
 					if (listRef.current) {
 						listRef.current.scrollTop = listRef.current.scrollHeight;
-						// Persistir scroll al fondo tras cargar mensajes del chat activo
 						scrollByChat.current[chat_id] = listRef.current.scrollTop;
 						persistScroll.current();
 					}
@@ -538,6 +570,7 @@ export default function ChatSocketClient() {
 			});
 		}
 
+		// Registrar listeners
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
 		socket.on("error", onError);
@@ -549,25 +582,42 @@ export default function ChatSocketClient() {
 		socket.on("messages", onMessages);
 		socket.on("typing", onTyping);
 
+		// Conectar socket
 		socket.connect();
+
+		// Cleanup
 		return () => {
-			// Guardar scrolls antes de desmontar
+			console.log("🧹 Limpiando socket listeners");
 			persistScroll.current?.();
+			socket.off("connect", onConnect);
+			socket.off("disconnect", onDisconnect);
+			socket.off("error", onError);
+			socket.off("identified", onIdentified);
+			socket.off("chats", onChats);
+			socket.off("chat_created", onChatCreated);
+			socket.off("chat_exists", onChatExists);
+			socket.off("new_message", onNewMessage);
+			socket.off("messages", onMessages);
+			socket.off("typing", onTyping);
 			socket.disconnect();
-			socket.removeAllListeners();
 			if (typingTimeout.current) clearTimeout(typingTimeout.current);
-			joinedChatsRef.current = new Set();
 		};
-	}, [socket, token, wantChatId, wantPostId, userId]);
+	}, [socket, token, wantChatId, wantUserTwo, wantPostId, userId, isWindowFocused]);
 
 	// cambio de chat activo
 	useEffect(() => {
 		if (!activeChatId) return;
-		ensureChatState(activeChatId);
-		joinChat(activeChatId);
-		if (!(messagesByChat[activeChatId]?.length)) loadMessages(activeChatId);
+		ensureChatState.current(activeChatId);
+		joinChat.current(activeChatId);
 
-		// restaurar scroll (o al final si es primera vez)
+		setMessagesByChat(prev => {
+			if (!(prev[activeChatId]?.length)) {
+				loadMessages.current(activeChatId);
+			}
+			return prev;
+		});
+
+		// restaurar scroll
 		requestAnimationFrame(() => {
 			if (!listRef.current) return;
 			const saved = scrollByChat.current[activeChatId];
@@ -575,7 +625,7 @@ export default function ChatSocketClient() {
 			else listRef.current.scrollTop = listRef.current.scrollHeight;
 		});
 
-		// limpiar no leídos al entrar en el chat
+		// limpiar no leídos
 		setUnreadByChat((prev) => {
 			if (!prev[activeChatId]) return prev;
 			const { [activeChatId]: _omit, ...rest } = prev;
@@ -604,7 +654,7 @@ export default function ChatSocketClient() {
 	const handleLoadOlder = () => {
 		if (!activeChatId) return;
 		const beforeId = nextBeforeByChat[activeChatId];
-		if (beforeId) loadMessages(activeChatId, beforeId);
+		if (beforeId) loadMessages.current(activeChatId, beforeId);
 	};
 
 	const typingOthers = Array.from(typingByChat[activeChatId || -1] || []).filter(
@@ -621,11 +671,8 @@ export default function ChatSocketClient() {
 	].join(" ");
 
 	return (
-		<div
-			className={shellClasses}
-		>
+		<div className={shellClasses}>
 			<div className="chat-layout">
-				{/* Sidebar (lista de chats a la izquierda) */}
 				<Sidebar
 					chats={chats}
 					usersById={usersById}
@@ -641,8 +688,6 @@ export default function ChatSocketClient() {
 					onDeleteChat={handleDeleteChat}
 				/>
 
-
-				{/* Panel principal (encabezado + mensajes + input) */}
 				<ChatPanel
 					headerProps={{
 						chat: chats.find((ch) => ch.id === activeChatId),
