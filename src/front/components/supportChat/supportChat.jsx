@@ -12,6 +12,11 @@ export const SupportChat = () => {
 
   const messagesEndRef = useRef(null);
 
+  // Mensaje inicial del bot
+  useEffect(() => {
+    setMessages([{ sender: 'bot', text: '¿En qué puedo ayudarte?' }]);
+  }, []);
+
   useEffect(() => {
     const fetchSugerencias = async () => {
       try {

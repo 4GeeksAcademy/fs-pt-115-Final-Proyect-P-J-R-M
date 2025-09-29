@@ -42,7 +42,7 @@ export const TermsAndConditions = () => {
           <h2>6. Protección de Datos</h2>
           <p>
             Cumplimos con el Reglamento General de Protección de Datos (RGPD). Consulta nuestra Política de Privacidad para más información.
-            Puedes ejercer tus derechos escribiendo a <a href="mailto:privacidad@handtohand.exchange">privacidad@handtohand.exchange</a>.
+            Puedes ejercer tus derechos escribiendo a <a href="mailto:privacidad@handtohand.exchange" className="subgold" >privacidad@handtohand.exchange</a>.
           </p>
 
           <h2>7. Modificaciones</h2>
@@ -58,7 +58,7 @@ export const TermsAndConditions = () => {
 
           <h2>9. Contacto</h2>
           <p>
-            Para cualquier consulta, puedes escribirnos a <a href="mailto:contacto@handtohand.exchange">contacto@handtohand.exchange</a>.
+            Para cualquier consulta, puedes escribirnos a <a href="mailto:contacto@handtohand.exchange" className="subgold">contacto@handtohand.exchange</a>.
           </p>
         </article>
 

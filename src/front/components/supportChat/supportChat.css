@@ -21,6 +21,10 @@
   padding: 10px;
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
+  background-image: url('https://res.cloudinary.com/ddmzvbbef/image/upload/v1757434718/FINALLOGO_xearnq.png');
+  background-size: contain; /* o 'cover', dependiendo de cómo quieras que se ajuste */
+  background-repeat: no-repeat;
+  background-position: center;
   border-radius: var(--radius-btn);
   scroll-behavior: smooth;
 }

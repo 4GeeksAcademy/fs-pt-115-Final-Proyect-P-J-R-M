@@ -230,3 +230,9 @@ input[type="submit"],
 input[type="button"] {
   color: var(--color-text);
 }
+
+.subgold {
+  color: var(--color-gold);
+  text-decoration: underline;
+  text-decoration-color: var(--color-gold);
+}

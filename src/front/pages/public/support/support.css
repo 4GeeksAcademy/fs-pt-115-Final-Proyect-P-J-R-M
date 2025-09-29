@@ -73,3 +73,9 @@
   color: var(--color-text);
   line-height: 1.6;
 }
+
+.subgold {
+  color: var(--color-gold);
+  text-decoration: underline;
+  text-decoration-color: var(--color-gold);
+}

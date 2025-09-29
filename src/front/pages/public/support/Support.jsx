@@ -34,14 +34,14 @@ export const Support = () => {
               <li>
                 <strong>¿Puedo eliminar mi cuenta?</strong><br />
                 Sí. Puedes solicitar la eliminación de tu cuenta escribiéndonos a{" "}
-                <a href="mailto:soporte@handtohand.exchange">
+                <a href="mailto:soporte@handtohand.exchange" className="subgold" >
                   soporte@handtohand.exchange
                 </a>.
               </li>
               <li>
                 <strong>¿Cómo protegen mis datos?</strong><br />
                 Cumplimos con el RGPD. Puedes conocer más en nuestra{" "}
-                <a href="/legal/privacy-policy">Política de Privacidad</a>.
+                <a href="/legal/privacy-policy" className="subgold">Política de Privacidad</a>.
               </li>
             </ul>
 
@@ -53,19 +53,19 @@ export const Support = () => {
             <ul className="contact-list">
               <li>
                 <strong>Soporte general:</strong>{" "}
-                <a href="mailto:soporte@handtohand.exchange">
+                <a href="mailto:soporte@handtohand.exchange" className="subgold">
                   soporte@handtohand.exchange
                 </a>
               </li>
               <li>
                 <strong>Privacidad y datos personales:</strong>{" "}
-                <a href="mailto:privacidad@handtohand.exchange">
+                <a href="mailto:privacidad@handtohand.exchange" className="subgold">
                   privacidad@handtohand.exchange
                 </a>
               </li>
               <li>
                 <strong>Consultas legales:</strong>{" "}
-                <a href="mailto:legal@handtohand.exchange">
+                <a href="mailto:legal@handtohand.exchange" className="subgold">
                   legal@handtohand.exchange
                 </a>
               </li>
@@ -75,7 +75,7 @@ export const Support = () => {
             <p>
               Si detectas una conducta sospechosa, estafa o uso indebido de la
               plataforma, por favor repórtalo inmediatamente a{" "}
-              <a href="mailto:seguridad@handtohand.exchange">
+              <a href="mailto:seguridad@handtohand.exchange" className="subgold">
                 seguridad@handtohand.exchange
               </a>. Tu colaboración es clave para mantener una comunidad segura.
             </p>

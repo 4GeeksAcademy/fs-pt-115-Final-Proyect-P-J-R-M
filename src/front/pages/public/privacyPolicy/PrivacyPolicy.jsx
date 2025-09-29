@@ -13,7 +13,7 @@ export const PrivacyPolicy = () => {
             <h2>1. Responsable del Tratamiento</h2>
             <p>
               <strong>Titular:</strong> Hand to Hand<br />
-              <strong>Contacto:</strong> <a href="mailto:privacidad@handtohand.exchange">privacidad@handtohand.exchange</a>
+              <strong>Contacto:</strong> <a href="mailto:privacidad@handtohand.exchange" className="subgold">privacidad@handtohand.exchange</a>
             </p>
 
             <h2>2. Datos que Recopilamos</h2>
@@ -68,23 +68,17 @@ export const PrivacyPolicy = () => {
             <h2>8. Derechos del Usuario</h2>
             <p>
               Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a:
-              <a href="mailto:privacidad@handtohand.exchange"> privacidad@handtohand.exchange</a>
+              <a href="mailto:privacidad@handtohand.exchange" className="subgold" > privacidad@handtohand.exchange</a>
             </p>
-
-            <h2>9. Cookies</h2>
-            <p>
-              Utilizamos cookies técnicas necesarias. Consulta nuestra Política de Cookies para más detalles.
-            </p>
-
-            <h2>10. Modificaciones</h2>
+            <h2>9. Modificaciones</h2>
             <p>
               Nos reservamos el derecho de modificar esta política. Los cambios serán publicados en esta sección.
             </p>
 
-            <h2>11. Contacto</h2>
+            <h2>10. Contacto</h2>
             <p>
               Para cualquier consulta, escribe a:
-              <a href="mailto:privacidad@handtohand.exchange"> privacidad@handtohand.exchange</a>
+              <a href="mailto:privacidad@handtohand.exchange" className="subgold" > privacidad@handtohand.exchange</a>
             </p>
           </article>
         </div>
