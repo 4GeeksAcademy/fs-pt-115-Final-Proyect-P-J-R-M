@@ -43,9 +43,9 @@ def create_post():
     ):
         return jsonify({"msg": "Missing data to be filled in"}), 400
 
-    user = User.query.get(use_id)
-    username = user.username
-    email = user.email
+    # user = User.query.get(use_id)
+    # username = user.username
+    # email = user.email
 
     new_post = Post(
         user_id=int(use_id),
@@ -59,29 +59,29 @@ def create_post():
     db.session.add(new_post)
     db.session.commit()
 
-    data_created = new_post.created_data.strftime("%d/%m/%Y %H:%M")
+    # data_created = new_post.created_data.strftime("%d/%m/%Y %H:%M")
 
-    post_url = f"{os.getenv('VITE_FRONTEND_URL')}/posts"
+    # post_url = f"{os.getenv('VITE_FRONTEND_URL')}/posts"
 
-    html_post = render_template(
-        "new_post.html",
-        username=username,
-        destination=new_post.destination,
-        description=new_post.description,
-        day_exchange=new_post.day_exchange,
-        divisas_one=new_post.divisas_one,
-        divisas_two=new_post.divisas_two,
-        data_created=data_created,
-        post_url=post_url,
-    )
-    msg = Message(
-        subject="Has creado un nuevo post en Hand to Hand",
-        sender=("Hand to Hand", "handtohand87@gmail.com"),
-        recipients=[email],
-        html=html_post,
-    )
+    # html_post = render_template(
+    #     "new_post.html",
+    #     username=username,
+    #     destination=new_post.destination,
+    #     description=new_post.description,
+    #     day_exchange=new_post.day_exchange,
+    #     divisas_one=new_post.divisas_one,
+    #     divisas_two=new_post.divisas_two,
+    #     data_created=data_created,
+    #     post_url=post_url,
+    # )
+    # msg = Message(
+    #     subject="Has creado un nuevo post en Hand to Hand",
+    #     sender=("Hand to Hand", "handtohand87@gmail.com"),
+    #     recipients=[email],
+    #     html=html_post,
+    # )
 
-    mail.send(msg)
+    # mail.send(msg)
 
     return jsonify(new_post.serialize()), 201
 
