@@ -122,7 +122,7 @@ input[type="checkbox"]:checked::after {
 .reset-link {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: end;
   margin-top: 20px;
   gap: 0.3rem;
 }

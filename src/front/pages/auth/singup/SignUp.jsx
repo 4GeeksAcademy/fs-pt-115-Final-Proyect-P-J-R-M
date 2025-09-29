@@ -161,7 +161,7 @@ const handleChange = (e) => {
         >
           {loading ? "Creando cuenta..." : "Crear cuenta"}
         </button>
-        <div style={{ marginTop: "20px" }}>
+        <div  className="reset-link"  style={{ marginTop: "20px"}}>
           <Link to="/login" className="signup-link">
             ¿Ya estás registrado?
           </Link>
