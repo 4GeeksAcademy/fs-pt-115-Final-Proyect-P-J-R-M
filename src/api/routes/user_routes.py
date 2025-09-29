@@ -247,7 +247,7 @@ def request_reset():
     token = create_access_token(
         identity=str(user.id), expires_delta=timedelta(minutes=30)
     )
-    reset_url = f"{os.getenv("VITE_FRONTEND_URL")}/form-reset?token={token}"
+    reset_url = f"{os.getenv('VITE_FRONTEND_URL')}/form-reset?token={token}"
 
     html_reset = render_template(
         "reset.html", username=user.username, reset_url=reset_url
