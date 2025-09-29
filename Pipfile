@@ -25,6 +25,7 @@ cloudinary = "*"
 flask-socketio = "*"
 eventlet = "*"
 flask-migrate = "*"
+tomli = "*"
 
 [requires]
 python_version = "3.13"
