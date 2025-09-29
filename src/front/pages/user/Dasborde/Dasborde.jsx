@@ -296,7 +296,7 @@ export const Dasborde = () => {
               </div>
               <div className="info-row">
                 <span className="info-row__label">País</span>
-                <span className="info-row__value">{user.country || "Planeta Tierra"}</span>
+                <span className="info-row__value">{user.country || "Selecciona país"}</span>
               </div>
             </div>
 

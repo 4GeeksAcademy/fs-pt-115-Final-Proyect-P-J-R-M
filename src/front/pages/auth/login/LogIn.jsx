@@ -70,7 +70,7 @@ export const LogIn = () => {
             checked={rememberMe}
             onChange={(e) => setRememeberMe(e.target.checked)}
           />
-          {" "} Recuedarme
+          {" "} Recuerdame
         </label>
 
         <button className="login-button" type="submit" disabled={loading}>
