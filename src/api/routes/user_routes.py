@@ -66,6 +66,9 @@ def post_user():
     )
     new_user.set_password(password)
 
+    db.session.add(new_user)
+    db.session.commit()
+
     html_welcome = render_template("welcome.html", username=username)
     msg = Message(
         subject="Bienvenido",
@@ -76,8 +79,6 @@ def post_user():
 
     mail.send(msg)
 
-    db.session.add(new_user)
-    db.session.commit()
     return jsonify({"msg": "User created"})
 
 
@@ -152,6 +153,8 @@ def login_user():
     return jsonify({"msg": "ok", "token": token, "refresh_token": refresh_token}), 200
 
 # Refresh token
+
+
 @user_bp.post("/refresh")
 @jwt_required(refresh=True)
 def refresh_access():
