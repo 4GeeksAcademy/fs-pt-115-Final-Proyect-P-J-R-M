@@ -1,0 +1,32 @@
+.chat-panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chat-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.chat-panel > .msg-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  background: linear-gradient(180deg, var(--color-bg-1), var(--color-bg-1));
+}
+
+.chat-panel > .msg-input {
+  flex: 0 0 auto;
+  padding-bottom: max(10px, env(safe-area-inset-bottom));
+  background: var(--color-bg-2);
+  color: var(--input-text);
+  border-top: 1px solid var(--color-border);
+}

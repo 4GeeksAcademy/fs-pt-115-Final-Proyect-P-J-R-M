@@ -1,30 +1,51 @@
 // Import necessary components and functions from react-router-dom.
-
 import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route,
+	createBrowserRouter,
+	createRoutesFromElements,
+	Route,
 } from "react-router-dom";
-import { Layout } from "./pages/Layout";
+import { RootLayout } from "./layout/Root.layout";
+import { PublicLayout } from "./layout/Public.layout";
+import { AuthLayout } from "./layout/Auth.layout";
+import { UserLayout } from "./layout/User.layout";
 import { Home } from "./pages/Home";
-import { Single } from "./pages/Single";
-import { Demo } from "./pages/Demo";
+import { SignUp } from "./pages/auth/singup/SignUp"
+import { LogIn } from "./pages/auth/login/LogIn"
+import { PostsPage } from "./pages/public/posts/PostPage";
+import { ResetPasswordRequest } from "./components/ResetPasswordRequest";
+import ChatPage from "./pages/chat/ChatPage";
+import { Dasborde } from "./pages/user/Dasborde/Dasborde";
+import { FormNewPassword } from "./components/FormNewPassword";
+import { AaaBox } from "./pages/3DBox/3DBox";
+import { TermsAndConditions } from "./pages/public/termsAndConditions/TermsAndConditions";
+import { Support } from "./pages/public/support/Support";
+import { PrivacyPolicy } from "./pages/public/privacyPolicy/PrivacyPolicy";
+import { ErrorLayout } from "./layout/404.layout";
+
 
 export const router = createBrowserRouter(
-    createRoutesFromElements(
-    // CreateRoutesFromElements function allows you to build route elements declaratively.
-    // Create your routes here, if you want to keep the Navbar and Footer in all views, add your new routes inside the containing Route.
-    // Root, on the contrary, create a sister Route, if you have doubts, try it!
-    // Note: keep in mind that errorElement will be the default page when you don't get a route, customize that page to make your project more attractive.
-    // Note: The child paths of the Layout element replace the Outlet component with the elements contained in the "element" attribute of these child paths.
-
-      // Root Route: All navigation will start from here.
-      <Route path="/" element={<Layout />} errorElement={<h1>Not found!</h1>} >
-
-        {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
-        <Route path= "/" element={<Home />} />
-        <Route path="/single/:theId" element={ <Single />} />  {/* Dynamic route for single items */}
-        <Route path="/demo" element={<Demo />} />
-      </Route>
-    )
+	createRoutesFromElements(
+		<Route element={<RootLayout />}>
+			<Route path="/" element={<PublicLayout />}>
+				<Route index element={<Home />} />
+				<Route path="/posts" element={<PostsPage />} />
+				<Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+				<Route path="/legal/privacy-policy" element={<PrivacyPolicy />} />
+				<Route path="/support" element={<Support />} />
+			</Route>
+			<Route element={<AuthLayout />}>
+				<Route path="/signup" element={<SignUp />} />
+				<Route path="/login" element={<LogIn />} />
+				<Route path="/form-reset" element={<FormNewPassword />} />
+				<Route path="/request-reset" element={<ResetPasswordRequest />} />
+			</Route>
+			<Route element={<UserLayout />}>
+				<Route path="/chats" element={<ChatPage />}></Route>
+				<Route path="/dasborde" element={<Dasborde />}></Route>
+			</Route>
+			<Route element={<ErrorLayout />}>
+				<Route path="*" element={<AaaBox />} />
+			</Route>
+		</Route>
+	)
 );

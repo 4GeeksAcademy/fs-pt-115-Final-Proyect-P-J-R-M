@@ -1,0 +1,9 @@
+.chat-avatar {
+  border-radius: 9999px;
+  background: var(--color-bg-1);
+  color: var(--color-text);
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  user-select: none;
+}

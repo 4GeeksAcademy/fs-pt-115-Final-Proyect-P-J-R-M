@@ -1,0 +1,11 @@
+.msg-list {
+  padding: 12px;
+  background: linear-gradient(
+    180deg,
+    var(--color-bg-1) 0%,
+    var(--color-bg-2) 100%
+  );
+  overscroll-behavior: contain;
+  overflow-y: auto;
+  min-height: 0;
+}

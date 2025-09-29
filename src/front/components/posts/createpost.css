@@ -1,0 +1,229 @@
+.create-post {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0.5rem 0;
+  display: grid;
+  gap: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  box-shadow: none;
+  position: static;
+  overflow: visible;
+  min-height: 140px;
+}
+
+.create-post__title {
+  margin: 0 0 0.5rem 0;
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  min-height: 80px;
+}
+
+.field { 
+  display: grid; 
+  gap: 0.35rem; 
+  min-width: 0;
+  min-height: 60px;
+}
+
+.field.full { 
+  grid-column: 1 / -1; 
+}
+
+.field.date-actions {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: stretch;
+  min-height: 60px;
+}
+
+.field.date-actions .label { 
+  grid-column: 1 / -1; 
+}
+
+.field.date-actions .btn-create {
+  height: 100%;
+  padding: 0 1.5rem;
+  white-space: nowrap;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.1;
+  color: var(--color-muted);
+  height: 16px;
+}
+
+.control {
+  width: 100%;
+  min-width: 0;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid #d7dce2;
+  border-radius: var(--radius-btn);
+  background: #fff;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  height: 38px;
+  box-sizing: border-box;
+}
+
+.control::placeholder { 
+  color: var(--color-muted); 
+  opacity: 0.9; 
+}
+
+.control:focus::placeholder { 
+  color: transparent; 
+}
+
+.control:hover {
+  border-color: #cbd3da;
+  background: #fffef8;
+}
+
+.control:focus,
+.control:focus-visible {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.20);
+  background: #ffffff;
+}
+
+.control:disabled {
+  background: #f6f6f6;
+  color: rgba(44,62,80,0.55);
+  border-color: rgba(212,175,55,0.25);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+select.control {
+  height: 38px;
+  line-height: 1.2;
+}
+
+select.control:empty {
+  min-height: 38px;
+}
+
+select.control option {
+  padding: 4px 8px;
+  min-height: 20px;
+}
+
+.btn-create {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 1.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  background-color: var(--color-gold);
+  box-shadow: var(--shadow-1);
+  overflow: hidden;
+  white-space: nowrap;
+  height: 38px;
+  width: 260px;
+  box-sizing: border-box;
+}
+
+.btn-create::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+  transform: skewX(-20deg);
+}
+
+.btn-create:hover::after { 
+  left: 100%; 
+  transition: left 0.7s ease; 
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+input[type=number] { 
+  -moz-appearance: textfield; 
+}
+
+@media (max-width: 900px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    min-height: 120px;
+  }
+  .field.date-actions {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr auto;
+  }
+  .btn-create {
+    width: auto;
+    height: 38px;
+    padding: 0 1rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    min-height: 160px;
+  }
+  .field.date-actions {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .btn-create {
+    width: 100%;
+    height: 38px;
+    margin-top: 0.25rem;
+  }
+  .create-post__title {
+    font-size: 1.15rem;
+  }
+}
+
+html.dark select.control {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+
+html.dark select.control option {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+html.dark input[type="date"].control::-webkit-calendar-picker-indicator {
+  filter: invert(1) sepia(1) saturate(5) hue-rotate(15deg);
+  cursor: pointer;
+}
+
+html.dark .btn-create{
+  color: var(--color-text)
+}

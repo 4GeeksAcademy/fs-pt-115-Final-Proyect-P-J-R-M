@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nuevo post creado</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 20px;
+      background-color: #ffffff;
+      font-family: 'Poltawski Nowy', serif;
+    "
+  >
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="
+        max-width: 600px;
+        margin: auto;
+        background: linear-gradient(135deg, #ffd700, #f8f9fa);
+        border-radius: 8px;
+        padding: 4px;
+      "
+    >
+      <tr>
+        <td
+          style="
+            background-color: #f0f0f0;
+            padding: 30px;
+            border-radius: 12px;
+            color: #2c3e50;
+          "
+        >
+          <div style="text-align: center; margin-bottom: 20px">
+            <img
+              src="https://res.cloudinary.com/ddmzvbbef/image/upload/v1757434718/FINALLOGO_xearnq.png"
+              alt="Hand to Hand Logo"
+              style="max-width: 120px; border-radius: 8px"
+            />
+          </div>
+          <h2
+            style="
+              color: #d4af37;
+              font-size: 24px;
+              margin-bottom: 20px;
+              text-align: center;
+            "
+          >
+            ¡Hola, {{ username }}!
+          </h2>
+          <p style="font-size: 16px; line-height: 1.6; margin: 0.5em 0">
+            Has creado un nuevo post en
+            <strong style="color: #d4af37; font-weight: bold"
+              >Hand to Hand</strong
+            >
+            🤝🏼
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0.5em 0">
+            <li style="padding: 0.3em 0">
+              <strong>Destino:</strong> {{ destination }}
+            </li>
+            <li style="padding: 0.3em 0">
+              <strong>Descripción:</strong> {{ description }}
+            </li>
+            <li style="padding: 0.3em 0">
+              <strong>Divisa que ofreces:</strong> {{ divisas_one }}
+            </li>
+            <li style="padding: 0.3em 0">
+              <strong>Divisa que necesitas:</strong> {{ divisas_two }}
+            </li>
+            <li style="padding: 0.3em 0">
+              <strong>Fecha de creación:</strong> {{ data_created }}
+            </li>
+          </ul>
+          <p style="font-size: 16px; line-height: 1.6; margin: 1em 0">
+            Puedes ver tu post aquí:
+          </p>
+
+      
+          <table
+            role="presentation"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            style="margin: 10px auto"
+          >
+            <tr>
+              <td
+                align="center"
+                style="
+                  border-radius: 6px;
+                  background: linear-gradient(135deg, #d4af37, #ffd700);
+                  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+                "
+              >
+                <a
+                  href="{{ post_url }}"
+                  target="_blank"
+                  style="
+                    display: inline-block;
+                    padding: 0.65rem 1.1rem;
+                    font-family: 'Poltawski Nowy', serif;
+                    font-size: 16px;
+                    font-weight: 600;
+                    line-height: 1.2;
+                    color: #ffffff;
+                    text-decoration: none;
+                    white-space: nowrap;
+                    border-radius: 6px;
+                  "
+                >
+                  Ver mi post
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <p
+            style="
+              font-size: 14px;
+              color: #b0bec5;
+              margin-top: 30px;
+              text-align: center;
+              border-top: 1px solid #ccc;
+              padding-top: 10px;
+            "
+          >
+            ¡El equipo de Hand to Hand agradece el uso de nuestros servicios!
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

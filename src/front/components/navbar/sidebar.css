@@ -1,0 +1,151 @@
+.ums-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 2000;
+}
+
+.ums-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ums-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 100vw;
+  background: var(--color-bg-1);
+  color: var(--color-text);
+  border-left: 1px solid color-mix(in srgb, var(--color-gold) 30%, #ffffff);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.12);
+  transform: translateX(106%);
+  transition: transform 0.36s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 2001;
+}
+.ums-panel.open {
+  transform: translateX(0);
+}
+
+.ums-content {
+  background-color: var(--color-bg-1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ums-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+.ums-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 27px;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+.ums-menu li {
+  margin: 0;
+}
+
+.ums-menu li button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  border-radius: 12px;
+  cursor: pointer;
+  font: inherit;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.06s ease,
+    box-shadow 0.16s ease;
+}
+
+.ums-menu li button:hover {
+  background: var(--color-bg-2);
+  color: var(--color-gold);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04) inset;
+}
+
+.ums-menu li button:active {
+  transform: translateY(0.5px);
+}
+
+.btn-logout.ums-full {
+  width: 100%;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #cc5a52, #a0433c); /* rojo elegante */
+  color: white;
+  border: none;
+  padding: 11px 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.06s ease, box-shadow 0.16s ease;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+.btn-logout.ums-full:hover {
+  background: linear-gradient(135deg, #b44e48, #893935);
+}
+.btn-logout.ums-full:active {
+  transform: translateY(0.5px);
+}
+
+.ums-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.ums-links {
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ums-links a {
+  display: grid;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.ums-links a:hover {
+  color: var(--color-gold);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .ums-overlay,
+  .ums-panel,
+  .ums-menu li button,
+  .btn-logout.ums-full {
+    transition: none !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .ums-panel {
+    width: 55vw;
+  }
+}

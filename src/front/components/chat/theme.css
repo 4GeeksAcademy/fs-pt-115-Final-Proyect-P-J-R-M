@@ -1,0 +1,50 @@
+:root {
+  --bg: var(--color-bg-1);
+  --sidebar-bg: var(--color-bg-2);
+  --sidebar-surface: var(--color-surface);
+  --surface: var(--color-surface);
+
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --border: var(--color-border);
+
+  --accent: var(--color-gold);
+  --accent-contrast: #ffffff;
+
+
+  --active: color-mix(in srgb, var(--color-gold) 10%, var(--color-bg-1) 90%);
+  --hover: color-mix(in srgb, var(--color-text) 6%, var(--color-bg-1) 94%);
+
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius-btn);
+}
+
+/* Modo oscuro */
+html.dark {
+  --bg: var(--color-bg-1);
+  --sidebar-bg: var(--color-bg-2);
+  --sidebar-surface: var(--color-surface);
+  --surface: var(--color-surface);
+
+  --text: var(--color-text);
+  --muted: var(--color-muted);
+  --border: var(--color-border);
+
+  --accent: var(--color-gold);
+  --accent-contrast: #ffffff;
+
+  --active: color-mix(in srgb, var(--color-gold) 14%, var(--color-bg-1) 86%);
+  --hover: color-mix(in srgb, var(--color-text) 8%, var(--color-bg-1) 92%);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: var(--radius-btn);
+}
+
+.u-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

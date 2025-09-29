@@ -1,0 +1,77 @@
+.msg-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  opacity: 1;
+}
+.msg-row.is-ephemeral {
+  opacity: 0.7;
+}
+.msg-row.is-mine {
+  justify-content: flex-end;
+}
+.msg-row.is-other {
+  justify-content: flex-start;
+}
+
+.msg-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.msg-bubble {
+  max-width: 560px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.03);
+  color: var(--color-text);
+}
+
+/* MODO CLARO */
+.msg-bubble--mine {
+  background: color-mix(in srgb, var(--color-gold-2) 10%, var(--color-surface) 90%);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, var(--color-border));
+  color: var(--color-text);
+}
+.msg-bubble--other {
+  background: var(--color-bg-2);
+  border-color: color-mix(in srgb, var(--color-text) 10%, var(--color-border));
+  color: var(--color-text);
+}
+
+/* MODO OSCURO */
+html.dark .msg-bubble--mine {
+  background: color-mix(in srgb, var(--color-gold) 22%, var(--color-bg-1) 78%);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, var(--color-border));
+  color: var(--color-text);
+}
+html.dark .msg-bubble--other {
+  background: color-mix(in srgb, #ffffff 6%, var(--color-surface) 94%);
+  border-color: color-mix(in srgb, var(--color-text) 18%, var(--color-border));
+  color: var(--color-text);
+}
+
+
+.msg-author {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  opacity: 0.75;
+  color: var(--color-gold)
+}
+
+.msg-image-link {
+  display: inline-block;
+  line-height: 0;
+}
+.msg-image {
+  display: block;
+  max-width: min(420px, 70vw);
+  max-height: 60vh;
+  border-radius: 8px;
+}

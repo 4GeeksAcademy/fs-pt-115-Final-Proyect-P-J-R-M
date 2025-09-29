@@ -1,0 +1,26 @@
+.start-chat-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-btn);
+  border: 0.0625rem solid rgba(44, 62, 80, 0.22);
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  overflow: hidden;
+  background-color: var(--color-gold);
+  background-size: 200% 100%;
+  transition: background-position 0.5s ease;
+}
+
+.start-chat-btn:hover {
+  background-position: 100% 0;
+}
+
+.start-chat-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.35);
+}

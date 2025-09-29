@@ -1,0 +1,131 @@
+.signup-container {
+  display: flex;
+  height: 85vh;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    135deg,
+    var(--color-bg-1) 0%,
+    var(--color-bg-2) 50%,
+    var(--color-bg-1) 100%
+  );
+}
+
+.signup-form {
+  background-color: var(--color-surface);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 420px;
+  border: 1px solid rgba(44, 62, 80, 0.12);
+  border-top: 4px solid var(--color-gold);
+}
+
+.signup-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.signup-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(44, 62, 80, 0.25);
+  border-radius: var(--radius-btn);
+  font-size: 1rem;
+  background: var(--color-surface);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.signup-input:focus {
+  border-color: var(--color-gold);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25);
+}
+
+.signup-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(
+    90deg,
+    var(--color-gold) 0%,
+    var(--color-gold-2) 50%,
+    var(--color-gold) 100%
+  );
+  background-size: 200% 100%;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: background-position 0.5s ease, transform 0.2s ease;
+}
+
+.signup-button:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-1);
+}
+
+.signup-error {
+  color: #d9534f;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+.signup-link {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.signup-link:hover {
+  color: var(--color-gold);
+}
+
+@media (min-width: 320px) {
+  .signup-container {
+    padding: 0px 1rem 0px 1rem;
+  }
+}
+
+/* === Checkbox personalizado === */
+.signup-form label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+.signup-form input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid rgba(44, 62, 80, 0.35);
+  border-radius: 0.25rem;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.signup-form input[type="checkbox"]:checked {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+.signup-form input[type="checkbox"]:checked::after {
+  content: "✔";
+  font-size: 0.75rem;
+  color: #fff;
+}

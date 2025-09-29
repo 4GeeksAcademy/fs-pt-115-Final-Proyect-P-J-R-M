@@ -1,0 +1,55 @@
+@import "../../components/chat/theme.css";
+
+.chat-shell {
+  height: calc(100dvh - var(--app-header-h, 95px));
+  background: var(--color-surface);
+  padding: 12px;
+  box-sizing: border-box;
+  width: 100vw;
+}
+
+.chat-layout {
+  height: 100%;
+  max-width: 300rem;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .chat-layout {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .chat-layout {
+    display: block;
+  }
+
+  .is-mobile.view-list .chat-sidebar {
+    display: block;
+    height: 100%;
+  }
+  .is-mobile.view-list .chat-panel {
+    display: none;
+  }
+
+  /* Mostrar SOLO el chat */
+  .is-mobile.view-chat .chat-sidebar {
+    display: none;
+  }
+  .is-mobile.view-chat .chat-panel {
+    display: flex;
+    height: 100%;
+  }
+}
+
+.is-desktop.view-split .chat-sidebar {
+  display: block;
+}
+.is-desktop.view-split .chat-panel {
+  display: flex;
+}
