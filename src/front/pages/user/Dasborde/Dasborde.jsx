@@ -11,7 +11,7 @@ import enLocale from "i18n-iso-countries/langs/en.json";
 import esLocale from "i18n-iso-countries/langs/es.json";
 import dayjs from "dayjs";
 import { Send } from "lucide-react";
-import FinalLogo from "../../../assets/img/FINALLOGO.png";
+import Perrete from "../../../assets/img/Perretefile.png"
 import "./dasborde.css";
 
 countries.registerLocale(enLocale);
@@ -156,11 +156,11 @@ export const Dasborde = () => {
           <div class="edit-grid">
             <div class="edit-row">
               <label class="edit-label">Nueva contraseña</label>
-              <input id="password-input" type="password" class="swal2-input edit-input" placeholder="••••••••" />
+              <input id="password-input" type="password" class="swal2-input edit-input" placeholder="Contraseña" />
             </div>
             <div class="edit-row">
               <label class="edit-label">Confirmar</label>
-              <input id="password2-input" type="password" class="swal2-input edit-input" placeholder="Repite contraseña" />
+              <input id="password2-input" type="password" class="swal2-input edit-input" placeholder="Confirmar contraseña" />
             </div>
           </div>
           ${usernameExists ? `<p class="edit-hint error">Ese nombre de usuario ya existe.</p>` : ""}
@@ -258,7 +258,7 @@ export const Dasborde = () => {
             {uploading ? (
               <div className="loader-image"></div>
             ) : (
-              <img src={user.image || FinalLogo} alt="Foto de perfil" className="profile-avatar" />
+              <img src={user.image || Perrete} alt="Foto de perfil" className="profile-avatar" />
             )}
             <button
               type="button"
@@ -338,7 +338,7 @@ export const Dasborde = () => {
                   <li key={post.id} className="post-item">
                     <div className="post-body-horizontal">
                       <div className="post-user">
-                        <img className="post-avatar" src={image || FinalLogo} alt={name} loading="lazy" />
+                        <img className="post-avatar" src={image || Perrete} alt={name} loading="lazy" />
                         <h4 className="post-author" title={name}>{name}</h4>
                       </div>
                       <div className="post-info">

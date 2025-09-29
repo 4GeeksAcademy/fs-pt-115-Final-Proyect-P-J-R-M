@@ -933,7 +933,7 @@
 .delete-btn:active {
   transform: scale(0.98);
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .profile-actions {
     flex-direction: column;
     align-items: stretch;
