@@ -96,7 +96,7 @@ export function UserMenuSidebar({ open, onClose, restoreFocusTo }) {
             <Mail size={16} color="#d4af37" strokeWidth={1.25} />
             <a href="/support">Contacto</a>
             <CircleQuestionMark size={16} color="#d4af37" strokeWidth={1.25} />
-            <a href="/support">Preguntas Frecuentes</a>
+            <a href="/support">Preguntas Frecuentes / Chatbot</a>
           </div>
 
           <button className="btn-logout ums-full" onClick={handleLogout}>
