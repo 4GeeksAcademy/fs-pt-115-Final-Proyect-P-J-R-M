@@ -271,11 +271,11 @@ export default function LandingPage() {
 						<div className="tools-grid">
 							<div className="tool-placeholder">
 								<h3>📊 Monitor de tipos de cambio</h3>
-								<BankingGraphics />
+								{/* <BankingGraphics /> */}
 							</div>
 							<div className="tool-placeholder">
 								<h3>🧮 Calculadora de conversión</h3>
-								<CurrencyConverter />
+								{/* <CurrencyConverter /> */}
 							</div>
 						</div>
 					</div>
@@ -299,7 +299,7 @@ export default function LandingPage() {
 				className="score-section"
 				style={{ textAlign: "center", marginTop: "2rem" }}
 			>
-				<PublicRating />
+				{/* <PublicRating /> */}
 			</section>
 		</>
 	);
