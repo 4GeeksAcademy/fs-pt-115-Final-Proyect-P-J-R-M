@@ -6,7 +6,7 @@ const ThemeContext = createContext({
     toggleTheme: () => { },
 });
 
-export function ThemeProvider({ children }) {
+export default function ThemeProvider({ children }) {
 
     const [theme, setTheme] = useState(() => {
         try {
