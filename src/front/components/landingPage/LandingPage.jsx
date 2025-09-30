@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./landing-page.css";
 import { VideoPerrete } from "../VideoPerrete/VideoPerrete";
-import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
-import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
+// import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
+// import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
 import {
 	BadgeDollarSign,
@@ -17,63 +17,95 @@ import {
 	MessagesSquare
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import PublicRating from "../public-rating/PublicRating";
+// import PublicRating from "../public-rating/PublicRating";
 
 export default function LandingPage() {
 	const { token } = useAuth();
+	const [debug, setDebug] = useState(["Landing start"]); // overlay debug
+
+	const addDebug = (msg) => {
+		setDebug((prev) => [...prev, msg]);
+	};
 
 	useEffect(() => {
+		addDebug("useEffect start");
+
 		const anchors = Array.from(document.querySelectorAll('a[href^="#"]'));
 		const handleAnchorClick = (e) => {
 			const href = e.currentTarget.getAttribute("href");
-			const target = document.querySelector(href);
+			const target = href ? document.querySelector(href) : null;
 			if (target) {
 				e.preventDefault();
-				// ⚠️ CAMBIO 1: en iOS el smooth puede romper -> usar "auto"
-				target.scrollIntoView({ behavior: "auto", block: "start" });
+				try {
+					target.scrollIntoView({ behavior: "auto", block: "start" });
+					addDebug("scrollIntoView ok");
+				} catch {
+					target.scrollIntoView();
+					addDebug("scrollIntoView fallback");
+				}
 			}
 		};
 		anchors.forEach((a) => a.addEventListener("click", handleAnchorClick));
+		addDebug("anchors ok");
 
 		const nav = document.querySelector("nav");
 		const onScroll = () => {
 			if (!nav) return;
-			if (window.scrollY > 50) {
-				nav.style.boxShadow = "0 2px 20px rgba(0, 0, 0, 0.1)";
-			} else {
-				nav.style.boxShadow = "none";
-			}
+			nav.style.boxShadow =
+				window.scrollY > 50 ? "0 2px 20px rgba(0,0,0,0.1)" : "none";
 		};
-		window.addEventListener("scroll", onScroll);
+		window.addEventListener("scroll", onScroll, { passive: true });
+		addDebug("scroll listener ok");
 
-		// ⚠️ CAMBIO 2: usar clases en vez de estilos inline para animaciones
-		const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add("is-visible"); // añadimos clase
-				}
+		let observer = null;
+		if ("IntersectionObserver" in window) {
+			observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						entry.target.classList.add("is-visible");
+					}
+				});
 			});
-		}, observerOptions);
-
-		const cards = Array.from(
-			document.querySelectorAll(".value-card, .feature-card")
-		);
-		cards.forEach((card) => {
-			if (!card) return;
-			observer.observe(card);
-		});
+			const cards = Array.from(
+				document.querySelectorAll(".value-card, .feature-card")
+			);
+			cards.forEach((card) => card && observer.observe(card));
+			addDebug("observer ok");
+		} else {
+			addDebug("observer missing");
+		}
 
 		return () => {
 			anchors.forEach((a) => a.removeEventListener("click", handleAnchorClick));
 			window.removeEventListener("scroll", onScroll);
-			cards.forEach((card) => observer.unobserve(card));
-			observer.disconnect();
+			if (observer) observer.disconnect();
 		};
 	}, []);
 
 	return (
 		<>
+			{/* Overlay de debug arriba a la izquierda */}
+			<div
+				style={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+					zIndex: 99999,
+					background: "rgba(0,0,0,0.7)",
+					color: "lime",
+					fontSize: "12px",
+					padding: "4px",
+					maxWidth: "100vw",
+					maxHeight: "50vh",
+					overflowY: "auto",
+					whiteSpace: "pre-wrap"
+				}}
+			>
+				{debug.map((d, i) => (
+					<div key={i}>{d}</div>
+				))}
+			</div>
+
 			<main className="container">
 				<section className="hero" id="inicio">
 					<div className="hero-content">
@@ -99,11 +131,7 @@ export default function LandingPage() {
 							<div className="value-cards">
 								<div className="value-card">
 									<div className="value-icon">
-										<BadgeDollarSign
-											size={35}
-											color="#2c3e50"
-											strokeWidth={1.5}
-										/>
+										<BadgeDollarSign size={35} color="#2c3e50" strokeWidth={1.5} />
 									</div>
 									<h3>0% Comisiones</h3>
 									<p>
@@ -183,11 +211,7 @@ export default function LandingPage() {
 						<div className="features-grid">
 							<div className="feature-card">
 								<div className="feature-icon">
-									<ChartNoAxesCombined
-										size={44}
-										color="#2c3e50"
-										strokeWidth={1.5}
-									/>
+									<ChartNoAxesCombined size={44} color="#2c3e50" strokeWidth={1.5} />
 								</div>
 								<h3>Tipos de cambio reales</h3>
 								<p>
@@ -197,11 +221,7 @@ export default function LandingPage() {
 							</div>
 							<div className="feature-card">
 								<div className="feature-icon">
-									<HeartHandshake
-										size={44}
-										color="#2c3e50"
-										strokeWidth={1.5}
-									/>
+									<HeartHandshake size={44} color="#2c3e50" strokeWidth={1.5} />
 								</div>
 								<h3>Intercambio HTH</h3>
 								<p>
@@ -211,11 +231,7 @@ export default function LandingPage() {
 							</div>
 							<div className="feature-card">
 								<div className="feature-icon">
-									<MonitorSmartphone
-										size={44}
-										color="#2c3e50"
-										strokeWidth={1.5}
-									/>
+									<MonitorSmartphone size={44} color="#2c3e50" strokeWidth={1.5} />
 								</div>
 								<h3>Plataforma moderna</h3>
 								<p>
@@ -235,11 +251,7 @@ export default function LandingPage() {
 							</div>
 							<div className="feature-card">
 								<div className="feature-icon">
-									<BriefcaseBusiness
-										size={44}
-										color="#2c3e50"
-										strokeWidth={1.5}
-									/>
+									<BriefcaseBusiness size={44} color="#2c3e50" strokeWidth={1.5} />
 								</div>
 								<h3>Gestión flexible</h3>
 								<p>
@@ -249,11 +261,7 @@ export default function LandingPage() {
 							</div>
 							<div className="feature-card">
 								<div className="feature-icon">
-									<MessagesSquare
-										size={44}
-										color="#2c3e50"
-										strokeWidth={1.5}
-									/>
+									<MessagesSquare size={44} color="#2c3e50" strokeWidth={1.5} />
 								</div>
 								<h3>Chat integrado</h3>
 								<p>
