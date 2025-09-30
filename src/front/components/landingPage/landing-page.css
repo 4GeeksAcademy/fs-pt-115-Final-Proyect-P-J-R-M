@@ -255,10 +255,16 @@
   display: inline-block;
   width: 20rem;
   background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
   padding: 1rem;
   border-radius: var(--radius);
   margin-top: 1rem;
+}
+
+/* ✅ Fallback seguro para iOS */
+@supports (backdrop-filter: blur(10px)) {
+  .commission-comparison {
+    backdrop-filter: blur(10px);
+  }
 }
 
 .comparison-row {
@@ -495,7 +501,7 @@ html.dark .commission-comparison {
   .no-commission h2 {
     font-size: 3rem;
   }
-  .commission-comparison{
+  .commission-comparison {
     width: 20rem;
   }
   .cta-section {

@@ -87,7 +87,7 @@ function Sidebar({
                                     </div>
 
                                     <UnreadBadge count={unread} />
-                                    <button
+                                    <span
                                         type="button"
                                         className="chat-item__delete"
                                         onClick={(e) => handleDelete(c.id, title, e)}
@@ -95,7 +95,7 @@ function Sidebar({
                                         title="Eliminar chat"
                                     >
                                         <MessageCircleX size={25} strokeWidth={1.25} />
-                                    </button>
+                                    </span>
                                 </button>
                             </li>
                         );

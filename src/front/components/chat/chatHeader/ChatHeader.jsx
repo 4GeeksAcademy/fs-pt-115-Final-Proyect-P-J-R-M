@@ -55,10 +55,16 @@ export default function ChatHeader({
                 ) : null}
 
                 {img ? (
-                    <img src={img} alt={title} className="chat-header__avatar" />
+                    <img
+                        src={img}
+                        alt={title}
+                        className="chat-header__avatar"
+                        onError={(e) => { e.currentTarget.style.display = "none"; }}
+                    />
                 ) : (
                     <Avatar seed={title} title={title} size={34} />
                 )}
+
 
                 <div className="chat-header__meta">
                     <div className="chat-header__title">{title}</div>
@@ -70,7 +76,7 @@ export default function ChatHeader({
             </div>
 
             <div className="chat-header__actions">
-                {/* Primero: Acuerdo finalizado */}
+                
                 {post && (
                     <FinalizeAndScore
                         postId={post.id}
@@ -81,7 +87,6 @@ export default function ChatHeader({
                     />
                 )}
 
-                {/* A la derecha: Cargar anteriores */}
                 {canLoadOlder && (
                     <button
                         className="chat-header__older-btn"
