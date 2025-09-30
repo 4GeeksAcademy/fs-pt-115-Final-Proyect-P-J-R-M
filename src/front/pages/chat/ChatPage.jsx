@@ -10,7 +10,6 @@ import ChatPanel from "../../components/chat/chatpanel/ChatPanel";
 import { uploadImge } from "../../services/userApi";
 import { deleteChat } from "../../services/chatApi";
 
-
 export default function ChatSocketClient() {
 	const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001";
 
@@ -90,7 +89,6 @@ export default function ChatSocketClient() {
 			pushError("No se pudo eliminar el chat.");
 		}
 	};
-
 
 	// Hidratar no leídos
 	useEffect(() => {
@@ -241,7 +239,6 @@ export default function ChatSocketClient() {
 		}
 	}, []);
 
-
 	useEffect(() => {
 		if (!isMobile) return;
 		setMobileView(activeChatId ? "chat" : "list");
@@ -253,7 +250,7 @@ export default function ChatSocketClient() {
 		try {
 			const raw = localStorage.getItem(SCROLL_KEY);
 			if (raw) {
-				const parsed = JSON.json(raw);
+				const parsed = JSON.parse(raw);
 				if (parsed && typeof parsed === "object") {
 					scrollByChat.current = parsed;
 				}
@@ -390,8 +387,13 @@ export default function ChatSocketClient() {
 		socket.emit("typing", { chat_id: activeChatId, is_typing: false });
 	};
 
-	// SOCKET listeners - CORREGIDO ✅
+	// 🚩 NUEVO: solo conecta el socket si estás en /chat (o /chat/...)
+	const isChatPage = window.location.pathname.startsWith("/chats");
+
+	// SOCKET listeners
 	useEffect(() => {
+		if (!isChatPage) return;
+
 		function onConnect() {
 			console.log("✅ Socket conectado");
 			setConnected(true);
@@ -602,7 +604,7 @@ export default function ChatSocketClient() {
 			socket.disconnect();
 			if (typingTimeout.current) clearTimeout(typingTimeout.current);
 		};
-	}, [socket, token, wantChatId, wantUserTwo, wantPostId, userId, isWindowFocused]);
+	}, [isChatPage, socket, token, wantChatId, wantUserTwo, wantPostId, userId, isWindowFocused]);
 
 	// cambio de chat activo
 	useEffect(() => {
