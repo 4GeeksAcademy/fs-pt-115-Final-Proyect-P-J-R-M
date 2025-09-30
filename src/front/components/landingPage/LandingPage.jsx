@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./landing-page.css";
 import { VideoPerrete } from "../VideoPerrete/VideoPerrete";
-// import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
-// import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
+import { CurrencyConverter } from "../currencyConverter/CurrencyConverter";
+import { BankingGraphics } from "../BankingGraphics/BankingGraphics";
 import { Link } from "react-router-dom";
 import {
 	BadgeDollarSign,
@@ -17,19 +17,12 @@ import {
 	MessagesSquare
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-// import PublicRating from "../public-rating/PublicRating";
+import PublicRating from "../public-rating/PublicRating";
 
 export default function LandingPage() {
 	const { token } = useAuth();
-	const [debug, setDebug] = useState(["Landing start"]); // overlay debug
-
-	const addDebug = (msg) => {
-		setDebug((prev) => [...prev, msg]);
-	};
 
 	useEffect(() => {
-		addDebug("useEffect start");
-
 		const anchors = Array.from(document.querySelectorAll('a[href^="#"]'));
 		const handleAnchorClick = (e) => {
 			const href = e.currentTarget.getAttribute("href");
@@ -38,15 +31,12 @@ export default function LandingPage() {
 				e.preventDefault();
 				try {
 					target.scrollIntoView({ behavior: "auto", block: "start" });
-					addDebug("scrollIntoView ok");
 				} catch {
 					target.scrollIntoView();
-					addDebug("scrollIntoView fallback");
 				}
 			}
 		};
 		anchors.forEach((a) => a.addEventListener("click", handleAnchorClick));
-		addDebug("anchors ok");
 
 		const nav = document.querySelector("nav");
 		const onScroll = () => {
@@ -55,7 +45,6 @@ export default function LandingPage() {
 				window.scrollY > 50 ? "0 2px 20px rgba(0,0,0,0.1)" : "none";
 		};
 		window.addEventListener("scroll", onScroll, { passive: true });
-		addDebug("scroll listener ok");
 
 		let observer = null;
 		if ("IntersectionObserver" in window) {
@@ -70,9 +59,6 @@ export default function LandingPage() {
 				document.querySelectorAll(".value-card, .feature-card")
 			);
 			cards.forEach((card) => card && observer.observe(card));
-			addDebug("observer ok");
-		} else {
-			addDebug("observer missing");
 		}
 
 		return () => {
@@ -84,28 +70,6 @@ export default function LandingPage() {
 
 	return (
 		<>
-			{/* Overlay de debug arriba a la izquierda */}
-			<div
-				style={{
-					position: "fixed",
-					top: 0,
-					left: 0,
-					zIndex: 99999,
-					background: "rgba(0,0,0,0.7)",
-					color: "lime",
-					fontSize: "12px",
-					padding: "4px",
-					maxWidth: "100vw",
-					maxHeight: "50vh",
-					overflowY: "auto",
-					whiteSpace: "pre-wrap"
-				}}
-			>
-				{debug.map((d, i) => (
-					<div key={i}>{d}</div>
-				))}
-			</div>
-
 			<main className="container">
 				<section className="hero" id="inicio">
 					<div className="hero-content">
@@ -279,11 +243,11 @@ export default function LandingPage() {
 						<div className="tools-grid">
 							<div className="tool-placeholder">
 								<h3>📊 Monitor de tipos de cambio</h3>
-								{/* <BankingGraphics /> */}
+								<BankingGraphics />
 							</div>
 							<div className="tool-placeholder">
 								<h3>🧮 Calculadora de conversión</h3>
-								{/* <CurrencyConverter /> */}
+								<CurrencyConverter />
 							</div>
 						</div>
 					</div>
@@ -307,7 +271,7 @@ export default function LandingPage() {
 				className="score-section"
 				style={{ textAlign: "center", marginTop: "2rem" }}
 			>
-				{/* <PublicRating /> */}
+				<PublicRating />
 			</section>
 		</>
 	);

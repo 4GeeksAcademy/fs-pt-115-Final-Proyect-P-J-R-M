@@ -387,7 +387,7 @@ export default function ChatSocketClient() {
 		socket.emit("typing", { chat_id: activeChatId, is_typing: false });
 	};
 
-	// 🚩 NUEVO: solo conecta el socket si estás en /chat (o /chat/...)
+	// 🚩 NUEVO: solo conecta el socket si estás en /chats
 	const isChatPage = window.location.pathname.startsWith("/chats");
 
 	// SOCKET listeners
