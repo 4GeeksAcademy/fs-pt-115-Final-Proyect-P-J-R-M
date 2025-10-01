@@ -102,7 +102,7 @@
 }
 
 .msg-input__btn:disabled {
-display: none;
+  display: none;
 }
 
 @media (min-width: 480px) {
@@ -157,5 +157,11 @@ display: none;
   .msg-input__btn {
     padding: 8px 10px;
     font-size: 13.5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .emojis-container {
+    display: none !important;
   }
 }

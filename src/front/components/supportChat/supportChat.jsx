@@ -9,9 +9,11 @@ export const SupportChat = () => {
 	const [sugerencias, setSugerencias] = useState([]);
 	const [filtradas, setFiltradas] = useState([]);
 	const messagesEndRef = useRef(null);
+
 	useEffect(() => {
 		setMessages([{ sender: 'bot', text: '¿En qué puedo ayudarte?' }]);
 	}, []);
+
 	useEffect(() => {
 		const fetchSugerencias = async () => {
 			try {
@@ -23,11 +25,13 @@ export const SupportChat = () => {
 		};
 		fetchSugerencias();
 	}, []);
+
 	useEffect(() => {
 		if (messagesEndRef.current) {
 			messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
 	}, [messages]);
+
 	const sendMessage = async () => {
 		if (!input.trim()) return;
 		const userMsg = { sender: 'user', text: input };
@@ -45,6 +49,7 @@ export const SupportChat = () => {
 			setMessages(prev => [...prev, botMsg]);
 		}
 	};
+
 	const handleInputChange = (e) => {
 		const valor = e.target.value;
 		setInput(valor);
@@ -57,10 +62,12 @@ export const SupportChat = () => {
 			setFiltradas([]);
 		}
 	};
+
 	const seleccionarSugerencia = (texto) => {
 		setInput(texto);
 		setFiltradas([]);
 	};
+
 	return (
 		<div className="chatbot-support-container">
 			<div className="chatbot-messages">

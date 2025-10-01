@@ -44,7 +44,10 @@ export default function MessageInput({
                 </div>
             )}
 
-            <Emojis getEmojis={getEmojis} />
+            <div className="emojis-container">
+                <Emojis getEmojis={getEmojis} />
+            </div>
+
 
             <SendImages
                 uploader={onUploadImage}
