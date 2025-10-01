@@ -76,14 +76,11 @@ export default function ChatHeader({
             </div>
 
             <div className="chat-header__actions">
-                
                 {post && (
                     <FinalizeAndScore
                         postId={post.id}
                         postOwnerId={post.user_id}
-                        onPostHidden={() => {
-                            // refresca UI si procede
-                        }}
+                        onPostHidden={() => { }}
                     />
                 )}
 
