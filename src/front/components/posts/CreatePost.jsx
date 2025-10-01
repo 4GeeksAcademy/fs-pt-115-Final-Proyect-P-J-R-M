@@ -195,7 +195,11 @@ export const CreatePost = ({ onSuccess }) => {
             type="number"
             name="description"
             value={form.description}
-            onChange={handleChange}
+            onChange={(e) => {
+              let value = e.target.value;
+              if (value.length > 8) value = value.slice(0, 8);
+              handleChange({ target: { name: "description", value } });
+            }}
             disabled={loading}
             className="control"
             min="0"

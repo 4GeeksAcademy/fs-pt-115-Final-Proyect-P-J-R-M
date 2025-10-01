@@ -28,15 +28,15 @@
   min-height: 80px;
 }
 
-.field { 
-  display: grid; 
-  gap: 0.35rem; 
+.field {
+  display: grid;
+  gap: 0.35rem;
   min-width: 0;
   min-height: 60px;
 }
 
-.field.full { 
-  grid-column: 1 / -1; 
+.field.full {
+  grid-column: 1 / -1;
 }
 
 .field.date-actions {
@@ -48,8 +48,8 @@
   min-height: 60px;
 }
 
-.field.date-actions .label { 
-  grid-column: 1 / -1; 
+.field.date-actions .label {
+  grid-column: 1 / -1;
 }
 
 .field.date-actions .btn-create {
@@ -77,17 +77,18 @@
   color: var(--color-text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-  height: 38px;
+  height: auto;
+  line-height: 1.5;
   box-sizing: border-box;
 }
 
-.control::placeholder { 
-  color: var(--color-muted); 
-  opacity: 0.9; 
+.control::placeholder {
+  color: var(--color-muted);
+  opacity: 0.9;
 }
 
-.control:focus::placeholder { 
-  color: transparent; 
+.control:focus::placeholder {
+  color: transparent;
 }
 
 .control:hover {
@@ -98,14 +99,14 @@
 .control:focus,
 .control:focus-visible {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(212,175,55,0.20);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
   background: #ffffff;
 }
 
 .control:disabled {
   background: #f6f6f6;
-  color: rgba(44,62,80,0.55);
-  border-color: rgba(212,175,55,0.25);
+  color: rgba(44, 62, 80, 0.55);
+  border-color: rgba(212, 175, 55, 0.25);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -113,6 +114,8 @@
 select.control {
   height: 38px;
   line-height: 1.2;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 
 select.control:empty {
@@ -149,25 +152,32 @@ select.control option {
 .btn-create::after {
   content: "";
   position: absolute;
-  top: 0; left: -100%;
-  width: 50%; height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
   transform: skewX(-20deg);
 }
 
-.btn-create:hover::after { 
-  left: 100%; 
-  transition: left 0.7s ease; 
+.btn-create:hover::after {
+  left: 100%;
+  transition: left 0.7s ease;
 }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-input[type=number] { 
-  -moz-appearance: textfield; 
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 
 @media (max-width: 900px) {
@@ -214,7 +224,6 @@ html.dark select.control {
   border: 1px solid var(--color-border);
 }
 
-
 html.dark select.control option {
   background: var(--color-surface);
   color: var(--color-text);
@@ -224,6 +233,6 @@ html.dark input[type="date"].control::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-html.dark .btn-create{
-  color: var(--color-text)
+html.dark .btn-create {
+  color: var(--color-text);
 }
