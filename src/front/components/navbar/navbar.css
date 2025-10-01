@@ -106,6 +106,18 @@ nav {
   box-shadow: var(--shadow-2);
 }
 
+.nav-container.chat-layout {
+  justify-content: space-between;
+}
+
+.nav-container.chat-layout .logo {
+  margin-right: auto;
+}
+
+.nav-container.chat-layout .navbar-actions {
+  margin-left: auto;
+}
+
 @media (max-width: 1024px) {
   nav {
     padding: 1rem 1.25rem;
