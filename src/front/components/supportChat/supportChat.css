@@ -11,7 +11,6 @@
   color: var(--color-text);
   box-shadow: var(--shadow-card);
 }
-
 .chatbot-messages {
   display: flex;
   flex-direction: column;
@@ -21,10 +20,13 @@
   padding: 10px;
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
+  background-image: url("https://res.cloudinary.com/ddmzvbbef/image/upload/v1757434718/FINALLOGO_xearnq.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   border-radius: var(--radius-btn);
   scroll-behavior: smooth;
 }
-
 .chatbot-message {
   max-width: 80%;
   padding: 8px 10px;
@@ -33,7 +35,6 @@
   word-wrap: break-word;
   display: block;
 }
-
 .chatbot-message.user {
   align-self: flex-end;
   background-color: var(--color-gold-2);
@@ -41,7 +42,6 @@
   border-radius: 12px 12px 0 var(--radius-btn);
   text-align: left;
 }
-
 .chatbot-message.bot {
   align-self: flex-start;
   background-color: var(--color-bg-2);
@@ -49,18 +49,15 @@
   border-radius: 12px 12px var(--radius-btn) 0;
   text-align: left;
 }
-
 .chatbot-input-box {
   display: flex;
   flex-direction: column;
   position: relative;
 }
-
 .chatbot-input-wrapper {
   position: relative;
   width: 100%;
 }
-
 .chatbot-autocomplete {
   position: absolute;
   top: 100%;
@@ -74,17 +71,14 @@
   overflow-y: auto;
   border-radius: 0 0 var(--radius-btn) var(--radius-btn);
 }
-
 .chatbot-suggestion {
   padding: 10px;
   cursor: pointer;
   border-bottom: 1px solid var(--color-border);
 }
-
 .chatbot-suggestion:hover {
   background: var(--color-bg-2);
 }
-
 .chatbot-input-box input[type="text"] {
   width: 100%;
   padding: 10px;
@@ -95,16 +89,13 @@
   background: var(--input-bg);
   color: var(--input-text);
 }
-
 .chatbot-input-box input[type="text"]::placeholder {
   color: var(--input-placeholder);
 }
-
 .chatbot-input-box input[type="text"]:focus {
   border-color: var(--color-gold);
   box-shadow: 0 0 0 3px var(--input-ring);
 }
-
 .chatbot-input-box button {
   margin-top: 8px;
   padding: 10px;
@@ -116,7 +107,7 @@
   cursor: pointer;
   transition: background 0.3s ease;
 }
-
 .chatbot-input-box button:hover {
   background: linear-gradient(90deg, var(--color-gold-2), var(--color-gold));
 }
+
