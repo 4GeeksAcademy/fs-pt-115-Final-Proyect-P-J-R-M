@@ -2,13 +2,12 @@ from flask import Blueprint, jsonify, request, render_template
 from flask_cors import CORS
 from api.models import User, db
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, create_refresh_token
-from flask_mail import Message
-from api.mail_config import mail
 import cloudinary
 import cloudinary.uploader
 import os
 from cloudinary import CloudinaryImage
 from datetime import timedelta
+from api.mail_config import send_email, EmailError
 
 
 user_bp = Blueprint(
@@ -69,15 +68,15 @@ def post_user():
     db.session.add(new_user)
     db.session.commit()
 
-    # html_welcome = render_template("welcome.html", username=username)
-    # msg = Message(
-    #     subject="Bienvenido",
-    #     sender=("Hand to Hand", "handtohand87@gmail.com"),
-    #     recipients=[email],
-    #     html=html_welcome,
-    # )
-
-    # mail.send(msg)
+    html_welcome = render_template("welcome.html", username=username)
+    try:
+        send_email(
+            to_email=email,
+            subject="Bienvenido a Hand to Hand",
+            html=html_welcome,
+        )
+    except EmailError as e:
+        print(f'[email] error enviando bienvenida:{e}')
 
     return jsonify({"msg": "User created"})
 
@@ -236,66 +235,66 @@ def get_all_users():
 
 # ruta para restablecer contraseña
 
-# @user_bp.route("/request-reset", methods=["POST"])
-# def request_reset():
-#     email = request.json.get("email")
-#     if not email or not isinstance(email, str):
-#         return jsonify({"msg": "Email inválido"}), 400
+@user_bp.route("/request-reset", methods=["POST"])
+def request_reset():
+    email = request.json.get("email")
+    if not email or not isinstance(email, str):
+        return jsonify({"msg": "Email inválido"}), 400
 
-#     user = User.query.filter_by(email=email).first()
-#     if not user:
-#         return jsonify({"msg": "Usuario no encontrado"}), 404
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
 
-#     token = create_access_token(
-#         identity=str(user.id), expires_delta=timedelta(minutes=30)
-#     )
-#     reset_url = f"{os.getenv('VITE_FRONTEND_URL')}/form-reset?token={token}"
+    token = create_access_token(
+        identity=str(user.id), expires_delta=timedelta(minutes=30)
+    )
+    reset_url = f"{os.getenv('VITE_FRONTEND_URL')}/form-reset?token={token}"
 
-#     html_reset = render_template(
-#         "reset.html", username=user.username, reset_url=reset_url
-#     )
+    html_reset = render_template(
+        "reset.html", username=user.username, reset_url=reset_url
+    )
+    try:
+        send_email(
+            to_email=email,
+            subject="Restablecer contraseña",
+            html=html_reset,
+        )
+    except EmailError as e:
+        print(f'[email] error enviando bienvenida:{e}')
 
-#     msg = Message(
-#         subject="Restablecer Contraseña",
-#         sender=("Hand to Hand", "handtohand87@gmail.com"),
-#         recipients=[email],
-#         html=html_reset,
-#     )
-
-#     mail.send(msg)
-#     return jsonify({"msg": "Correo enviado correctamente"})
+    return jsonify({"msg": "Correo enviado correctamente"})
 
 
 # # ruta para actualar contr. recibe el token en el header y actualiza la contr. al usuario
-# @user_bp.route("/reset-password", methods=["PATCH"])
-# @jwt_required()
-# def reset_password():
-#     try:
-#         user_id = get_jwt_identity()
-#         new_password = request.json.get("password")
+@user_bp.route("/reset-password", methods=["PATCH"])
+@jwt_required()
+def reset_password():
+    try:
+        user_id = get_jwt_identity()
+        new_password = request.json.get("password")
 
-#         if (
-#             not new_password
-#             or not isinstance(new_password, str)
-#             or len(new_password.strip()) < 6
-#         ):
-#             return (
-#                 jsonify({"msg": "La contraseña debe tener al menos 6 caracteres"}),
-#                 400,
-#             )
+        if (
+            not new_password
+            or not isinstance(new_password, str)
+            or len(new_password.strip()) < 6
+        ):
+            return (
+                jsonify({"msg": "La contraseña debe tener al menos 6 caracteres"}),
+                400,
+            )
 
-#         user = User.query.get(user_id)
-#         if not user:
-#             return jsonify({"msg": "Usuario no válido"}), 404
+        user = User.query.get(user_id)
+        if not user:
+            return jsonify({"msg": "Usuario no válido"}), 404
 
-#         user.set_password(new_password)
-#         db.session.commit()
+        user.set_password(new_password)
+        db.session.commit()
 
-#         return jsonify({"msg": "Contraseña actualizada correctamente"}), 200
+        return jsonify({"msg": "Contraseña actualizada correctamente"}), 200
 
-#     except Exception as e:
+    except Exception as e:
 
-#         return jsonify({"msg": "Error interno del servidor"}), 500
+        return jsonify({"msg": "Error interno del servidor"}), 500
 
 
 # Ruta para distribuir y contar cuántos usuarios tienen puntuación del 1 al 5

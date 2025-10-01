@@ -2,10 +2,8 @@ from flask import Blueprint, jsonify, request, render_template
 from flask_cors import CORS
 from api.models import Post, db, User
 from flask_jwt_extended import get_jwt_identity, jwt_required
-from flask_mail import Message
-from api.mail_config import mail
 import os
-
+from api.mail_config import send_email, EmailError
 post_bp = Blueprint("post", __name__, url_prefix="/posts")
 
 
@@ -43,9 +41,9 @@ def create_post():
     ):
         return jsonify({"msg": "Missing data to be filled in"}), 400
 
-    # user = User.query.get(use_id)
-    # username = user.username
-    # email = user.email
+    user = User.query.get(use_id)
+    username = user.username
+    email = user.email
 
     new_post = Post(
         user_id=int(use_id),
@@ -59,29 +57,30 @@ def create_post():
     db.session.add(new_post)
     db.session.commit()
 
-    # data_created = new_post.created_data.strftime("%d/%m/%Y %H:%M")
+    data_created = new_post.created_data.strftime("%d/%m/%Y %H:%M")
 
-    # post_url = f"{os.getenv('VITE_FRONTEND_URL')}/posts"
+    post_url = f"{os.getenv('VITE_FRONTEND_URL')}/posts"
 
-    # html_post = render_template(
-    #     "new_post.html",
-    #     username=username,
-    #     destination=new_post.destination,
-    #     description=new_post.description,
-    #     day_exchange=new_post.day_exchange,
-    #     divisas_one=new_post.divisas_one,
-    #     divisas_two=new_post.divisas_two,
-    #     data_created=data_created,
-    #     post_url=post_url,
-    # )
-    # msg = Message(
-    #     subject="Has creado un nuevo post en Hand to Hand",
-    #     sender=("Hand to Hand", "handtohand87@gmail.com"),
-    #     recipients=[email],
-    #     html=html_post,
-    # )
+    html_post = render_template(
+        "new_post.html",
+        username=username,
+        destination=new_post.destination,
+        description=new_post.description,
+        day_exchange=new_post.day_exchange,
+        divisas_one=new_post.divisas_one,
+        divisas_two=new_post.divisas_two,
+        data_created=data_created,
+        post_url=post_url,
+    )
 
-    # mail.send(msg)
+    try:
+        send_email(
+            to_email=email,
+            subject="Has  creado un nuevo post en Hand to Hand",
+            html=html_post,
+        )
+    except EmailError as e:
+        print(f'[email] error enviando bienvenida:{e}')
 
     return jsonify(new_post.serialize()), 201
 
@@ -124,7 +123,7 @@ def update_post(post_id):
     if "description" in data:
         post.description = data["description"]
     if "day_exchange" in data:
-        post.day_exchange = data["day_exchangue"]
+        post.day_exchange = data["day_exchange"]
     if "divisas_one" in data:
         post.divisas_one = data["divisas_one"]
     if "divisas_two" in data:

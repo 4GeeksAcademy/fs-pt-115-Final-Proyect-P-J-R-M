@@ -26,6 +26,8 @@ flask-socketio = "*"
 eventlet = "*"
 flask-migrate = "*"
 tomli = "*"
+requests = "*"
+sendgrid = "*"
 
 [requires]
 python_version = "3.13"
